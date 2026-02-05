@@ -3,44 +3,92 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 80px;
+  height: 120px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
-  background-color: transparent;
+  background-color: white;
   z-index: 100;
 }
 
-.menu-btn,
-.cart-btn {
-  background-color: #8b2332;
-  color: white;
+.menu-btn {
+  background-color: transparent;
   border: none;
-  width: 50px;
-  height: 50px;
+  width: 180px;
+
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  padding: 8px;
 }
 
-.menu-btn:hover,
+.cart-btn {
+  background-color: transparent;
+  color: white;
+  border: none;
+  width: 90px;
+  height: 90px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding: 8px;
+}
+
+.menu-btn:hover {
+  background-color: #6d1b27;
+  height: 90px;
+
+}
+
 .cart-btn:hover {
   background-color: #6d1b27;
+  width: 90px;
+  height: 90px;
+}
+
+.menu-icon,
+.cart-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .logo {
-  background-color: #8b2332;
-  padding: 10px 30px;
+  padding: 12px 40px;
   border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
 }
 
-.logo-text {
-  color: white;
-  font-size: 32px;
-  font-weight: bold;
-  font-family: 'Georgia', serif;
+.logo-image {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .header {
+    height: 70px;
+    padding: 0 15px;
+  }
+
+  .menu-btn,
+  .cart-btn {
+    width: 45px;
+    height: 45px;
+  }
+
+  .logo {
+    padding: 6px 20px;
+    height: 45px;
+  }
 }

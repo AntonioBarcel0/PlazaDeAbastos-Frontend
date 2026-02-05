@@ -1,4 +1,3 @@
-import { X } from 'lucide-react';
 import './Sidebar.css';
 
 function Sidebar({ isOpen, onClose }) {
@@ -10,15 +9,13 @@ function Sidebar({ isOpen, onClose }) {
       />
 
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-        <button className="close-btn" onClick={onClose} aria-label="Cerrar menú">
-          <X size={28} />
-        </button>
+        
 
         <div className="sidebar-content">
           <div className="sidebar-column">
             <nav className="menu-section">
-              <h2 className="menu-title">Puestos</h2>
               <ul className="menu-list">
+                <li><a href="#" className="menu-link">Puestos</a></li>
                 <li><a href="#" className="menu-link">A domicilio</a></li>
                 <li><a href="#" className="menu-link">Elige tu cesta</a></li>
                 <li><a href="#" className="menu-link">Mi perfil</a></li>

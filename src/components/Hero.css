@@ -1,7 +1,7 @@
 .hero {
   width: 100%;
   height: 100vh;
-  background-image: url('/market-background.jpg');
+  background-image: url('https://res.cloudinary.com/dlmnchkjg/image/upload/v1770289449/main_page_w78s3e.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -14,26 +14,44 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.2), transparent);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.hero-title {
-  background-color: #8b2332;
-  color: white;
-  padding: 30px 80px;
-  font-size: 72px;
-  font-weight: bold;
-  text-align: center;
+.hero-title-wrapper {
+  
+  padding: 20px 60px;
   border-radius: 0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-title-image {
+  height: 130px;
+  width: auto;
+  object-fit: contain;
 }
 
 @media (max-width: 768px) {
-  .hero-title {
-    font-size: 48px;
-    padding: 20px 40px;
+  .hero-title-wrapper {
+    padding: 15px 40px;
+  }
+
+  .hero-title-image {
+    height: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title-wrapper {
+    padding: 10px 30px;
+  }
+
+  .hero-title-image {
+    height: 45px;
   }
 }
