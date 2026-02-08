@@ -12,6 +12,12 @@
   z-index: 100;
 }
 
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .menu-btn {
   background-color: transparent;
   border: none;
@@ -26,8 +32,9 @@
   padding: 8px;
 }
 
-.cart-btn {
-  background-color: transparent;
+.cart-btn,
+.log-btn {
+  background-color: #8b2332;
   color: white;
   border: none;
   width: 90px;
@@ -47,14 +54,14 @@
 
 }
 
-.cart-btn:hover {
+.cart-btn:hover,
+.log-btn:hover {
   background-color: #6d1b27;
-  width: 90px;
-  height: 90px;
 }
 
 .menu-icon,
-.cart-icon {
+.cart-icon,
+.log-icon {
   width: 100%;
   height: 100%;
   object-fit: contain;
