@@ -22,7 +22,6 @@
   background-color: transparent;
   border: none;
   width: 180px;
-
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -51,7 +50,6 @@
 .menu-btn:hover {
   background-color: #6d1b27;
   height: 90px;
-
 }
 
 .cart-btn:hover,
@@ -74,6 +72,19 @@
   align-items: center;
   justify-content: center;
   height: 120px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.logo:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+.logo:active {
+  transform: scale(0.98);
 }
 
 .logo-image {

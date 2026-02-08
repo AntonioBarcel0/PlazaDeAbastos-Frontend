@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+
+.register-page {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #8b2332;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  padding-top: 140px; /* Espacio para el header */
+}
+
+.register-container {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.register-title {
+  font-family: 'Alfa Slab One', cursive;
+  font-size: 48px;
+  font-weight: 400;
+  color: white;
+  text-align: center;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.register-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.register-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 15px 25px;
+  font-size: 16px;
+  font-family: 'Alfa Slab One', cursive;
+  color: #8b2332;
+  background-color: white;
+  border: none;
+  border-radius: 50px;
+  outline: none;
+  text-align: center;
+}
+
+.register-input::placeholder {
+  color: #8b2332;
+  opacity: 0.8;
+}
+
+.register-button {
+  padding: 12px 50px;
+  font-size: 18px;
+  font-family: 'Alfa Slab One', cursive;
+  font-weight: 400;
+  color: #8b2332;
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 15px;
+}
+
+.register-button:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.05);
+}
+
+.register-button:active {
+  transform: scale(0.98);
+}
+
+.register-link-button {
+  background: none;
+  border: none;
+  color: white;
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 10px;
+  transition: opacity 0.2s ease;
+  margin-top: 10px;
+}
+
+.register-link-button:hover {
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .register-page {
+    padding-top: 90px;
+  }
+
+  .register-title {
+    font-size: 36px;
+  }
+
+  .register-input {
+    font-size: 14px;
+    padding: 12px 20px;
+  }
+
+  .register-button {
+    font-size: 16px;
+    padding: 10px 40px;
+  }
+
+  .register-link-button {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-title {
+    font-size: 28px;
+  }
+
+  .register-container {
+    gap: 30px;
+  }
+
+  .register-form {
+    gap: 12px;
+  }
+}

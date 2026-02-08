@@ -1,6 +1,6 @@
 import './Header.css';
 
-function Header({ onMenuClick }) {
+function Header({ onMenuClick, onLoginClick, onLogoClick }) {
   return (
     <header className="header">
       <button className="menu-btn" onClick={onMenuClick} aria-label="Abrir menú">
@@ -11,16 +11,16 @@ function Header({ onMenuClick }) {
         />
       </button>
 
-      <div className="logo">
+      <button className="logo" onClick={onLogoClick} aria-label="Ir al inicio">
         <img 
           src="https://res.cloudinary.com/dlmnchkjg/image/upload/v1770289985/Captura_de_pantalla_2026-02-05_a_las_12.12.57_fhymgg.png" 
           alt="logo"
           className="logo-image"
         />
-      </div>
+      </button>
 
       <div className="right-section">
-        <button className="log-btn" aria-label="registro">
+        <button className="log-btn" onClick={onLoginClick} aria-label="registro">
           <img 
             src="https://res.cloudinary.com/dlmnchkjg/image/upload/v1770290764/Captura_de_pantalla_2026-02-05_a_las_12.25.59_k694e7.png" 
             alt="registro"

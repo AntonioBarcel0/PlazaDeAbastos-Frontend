@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+
+.login-options-page {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #8b2332;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  padding-top: 140px; /* Espacio para el header */
+}
+
+.login-options-container {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 60px;
+}
+
+.login-options-title {
+  font-family: 'Alfa Slab One', cursive;
+  font-size: 48px;
+  font-weight: 400;
+  color: white;
+  text-align: center;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.options-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.option-button {
+  width: 100%;
+  max-width: 400px;
+  padding: 18px 40px;
+  font-size: 24px;
+  font-family: 'Alfa Slab One', cursive;
+  font-weight: 400;
+  color: #8b2332;
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.option-button:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.05);
+}
+
+.option-button:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+  .login-options-page {
+    padding-top: 90px;
+  }
+
+  .login-options-title {
+    font-size: 36px;
+  }
+
+  .option-button {
+    font-size: 20px;
+    padding: 15px 35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-options-title {
+    font-size: 28px;
+  }
+
+  .login-options-container {
+    gap: 40px;
+  }
+
+  .option-button {
+    font-size: 18px;
+    padding: 12px 30px;
+  }
+}
