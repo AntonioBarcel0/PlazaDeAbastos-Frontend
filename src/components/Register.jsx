@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Header from './Header';
 import './Register.css';
+import { api, auth } from '../services/api';
 
 function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick }) {
   const [formData, setFormData] = useState({
@@ -13,24 +14,57 @@ function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick }) {
     confirmPassword: ''
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    setError(''); // Limpiar error al escribir
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
 
-    // Validación simple de contraseñas
+    // Validación de contraseñas
     if (formData.password !== formData.confirmPassword) {
-      alert('Las contraseñas no coinciden');
+      setError('Las contraseñas no coinciden');
       return;
     }
 
-    // Aquí irá la lógica de registro
-    console.log('Registro:', formData);
+    if (formData.password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Enviar datos al backend (sin confirmPassword)
+      const { confirmPassword, ...dataToSend } = formData;
+
+      const response = await api.register(dataToSend);
+
+      // Guardar token y usuario
+      auth.setToken(response.token);
+      auth.setUser(response.user);
+
+      setSuccess(true);
+
+      // Redirigir al inicio después de 2 segundos
+      setTimeout(() => {
+        onLogoClick(); // Volver a home
+      }, 2000);
+
+    } catch (error) {
+      setError(error.message || 'Error al registrarse. Intenta de nuevo.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -44,6 +78,32 @@ function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick }) {
         <div className="register-container">
           <h1 className="register-title">Plaza de Abastos</h1>
 
+          {error && (
+            <div style={{
+              backgroundColor: '#ff4444',
+              color: 'white',
+              padding: '10px 20px',
+              borderRadius: '8px',
+              marginBottom: '20px',
+              textAlign: 'center'
+            }}>
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div style={{
+              backgroundColor: '#00C851',
+              color: 'white',
+              padding: '10px 20px',
+              borderRadius: '8px',
+              marginBottom: '20px',
+              textAlign: 'center'
+            }}>
+              ✅ ¡Registro exitoso! Redirigiendo...
+            </div>
+          )}
+
           <form className="register-form" onSubmit={handleSubmit}>
             <input
               type="text"
@@ -53,6 +113,7 @@ function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick }) {
               value={formData.nombre}
               onChange={handleChange}
               required
+              disabled={loading}
             />
 
             <input
@@ -63,6 +124,7 @@ function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick }) {
               value={formData.apellidos}
               onChange={handleChange}
               required
+              disabled={loading}
             />
 
             <input
@@ -73,6 +135,7 @@ function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick }) {
               value={formData.email}
               onChange={handleChange}
               required
+              disabled={loading}
             />
 
             <input
@@ -83,6 +146,7 @@ function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick }) {
               value={formData.telefono}
               onChange={handleChange}
               required
+              disabled={loading}
             />
 
             <input
@@ -93,6 +157,7 @@ function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick }) {
               value={formData.direccion}
               onChange={handleChange}
               required
+              disabled={loading}
             />
 
             <input
@@ -103,6 +168,7 @@ function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick }) {
               value={formData.password}
               onChange={handleChange}
               required
+              disabled={loading}
             />
 
             <input
@@ -113,16 +179,22 @@ function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick }) {
               value={formData.confirmPassword}
               onChange={handleChange}
               required
+              disabled={loading}
             />
 
-            <button type="submit" className="register-button">
-              Registrarse
+            <button 
+              type="submit" 
+              className="register-button"
+              disabled={loading}
+            >
+              {loading ? 'Registrando...' : 'Registrarse'}
             </button>
 
             <button 
               type="button" 
               className="register-link-button"
               onClick={onSwitchToLogin}
+              disabled={loading}
             >
               ¿Ya tienes cuenta? Inicia sesión
             </button>
