@@ -1,0 +1,25 @@
+html {
+  scroll-behavior: smooth;
+}
+
+.home-container {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.home-main {
+  width: 100%;
+  padding-top: 0;
+}
+
+/* Asegurar que las secciones ocupen la pantalla completa */
+section {
+  scroll-snap-align: start;
+}
+
+/* Opcional: Scroll snap para navegación más elegante */
+@media (min-width: 768px) {
+  .home-main {
+    scroll-snap-type: y proximity;
+  }
+}

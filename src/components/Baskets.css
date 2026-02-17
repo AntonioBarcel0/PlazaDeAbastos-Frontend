@@ -1,0 +1,151 @@
+.baskets-section {
+  width: 100%;
+  background-color: #ffffff;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 0;
+}
+
+.baskets-container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+}
+
+.basket-card {
+  background: #ffffff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.basket-card:first-child {
+  border-right: 1px solid rgba(139, 21, 56, 0.1);
+}
+
+.basket-title {
+  font-size: 5.5rem;
+  font-weight: normal;
+  color: #8B1538;
+  text-align: center;
+  margin: 0;
+  font-family: 'Alfa Slab One', serif;
+  text-transform: none;
+  line-height: 1.2;
+  position: absolute;
+  top: 250px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: 100%;
+}
+
+.basket-button {
+  background-color: #8B1538;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  padding: 18px 50px;
+  font-size: 1.7rem;
+  font-weight:lighter;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Alfa Slab One', serif;
+  letter-spacing: 1px;
+  position: absolute;
+  top: 400px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.basket-button:hover {
+  background-color: #6B0F2B;
+}
+
+.basket-image-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.basket-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .baskets-container {
+    grid-template-columns: 1fr;
+  }
+
+  .basket-card {
+    min-height: auto;
+    padding: 40px 30px;
+  }
+
+  .basket-card:first-child {
+    border-right: none;
+    border-bottom: 1px solid rgba(139, 21, 56, 0.1);
+  }
+
+  .basket-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .baskets-section {
+    padding: 60px 0 0 0;
+  }
+
+  .basket-card {
+    padding: 30px 20px;
+  }
+
+  .basket-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  .basket-button {
+    padding: 15px 40px;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+  }
+
+  .basket-image {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .basket-title {
+    font-size: 1.6rem;
+  }
+
+  .basket-button {
+    padding: 12px 30px;
+    font-size: 1rem;
+  }
+
+  .basket-image {
+    max-width: 300px;
+  }
+}

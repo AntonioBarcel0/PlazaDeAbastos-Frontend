@@ -1,82 +1,56 @@
 import { useState } from 'react';
-import './App.css';
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
-import Hero from './components/Hero';
+import Home from './components/Home';
 import Login from './components/Login';
-import LoginOptions from './components/LoginOptions';
 import Register from './components/Register';
+import LoginOptions from './components/LoginOptions';
+import './App.css';
 
 function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'login', 'loginOptions', 'register'
+  const [currentView, setCurrentView] = useState('home');
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const renderView = () => {
+    switch(currentView) {
+      case 'home':
+        return <Home onLoginClick={() => setCurrentView('loginOptions')} />;
 
-  const handleLoginClick = () => {
-    setCurrentView('loginOptions');
-  };
+      case 'loginOptions':
+        return (
+          <LoginOptions 
+            onLoginClick={() => setCurrentView('login')}
+            onRegisterClick={() => setCurrentView('register')}
+            onBack={() => setCurrentView('home')}
+            onLogoClick={() => setCurrentView('home')}
+          />
+        );
 
-  const handleBackToHome = () => {
-    setCurrentView('home');
-  };
+      case 'login':
+        return (
+          <Login 
+            onSwitchToRegister={() => setCurrentView('register')}
+            onBack={() => setCurrentView('loginOptions')}
+            onMenuClick={() => {}}
+            onLogoClick={() => setCurrentView('home')}
+          />
+        );
 
-  const handleSwitchToRegister = () => {
-    setCurrentView('register');
-  };
+      case 'register':
+        return (
+          <Register 
+            onSwitchToLogin={() => setCurrentView('login')}
+            onBack={() => setCurrentView('loginOptions')}
+            onMenuClick={() => {}}
+            onLogoClick={() => setCurrentView('home')}
+          />
+        );
 
-  const handleShowLogin = () => {
-    setCurrentView('login');
-  };
-
-  const handleShowLoginOptions = () => {
-    setCurrentView('loginOptions');
+      default:
+        return <Home onLoginClick={() => setCurrentView('loginOptions')} />;
+    }
   };
 
   return (
-    <div className="App">
-      <Sidebar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-
-      {currentView === 'home' && (
-        <>
-          <Header 
-            onMenuClick={toggleMenu} 
-            onLoginClick={handleLoginClick}
-            onLogoClick={handleBackToHome}
-          />
-          <Hero />
-        </>
-      )}
-
-      {currentView === 'login' && (
-        <Login 
-          onSwitchToRegister={handleShowLoginOptions} 
-          onBack={handleBackToHome}
-          onMenuClick={toggleMenu}
-          onLogoClick={handleBackToHome}
-        />
-      )}
-
-      {currentView === 'loginOptions' && (
-        <LoginOptions 
-          onRegisterClick={handleSwitchToRegister} 
-          onLoginClick={handleShowLogin}
-          onMenuClick={toggleMenu}
-          onBack={handleBackToHome}
-          onLogoClick={handleBackToHome}
-        />
-      )}
-
-      {currentView === 'register' && (
-        <Register 
-          onBack={handleShowLoginOptions} 
-          onSwitchToLogin={handleShowLogin}
-          onMenuClick={toggleMenu}
-          onLogoClick={handleBackToHome}
-        />
-      )}
+    <div className="app">
+      {renderView()}
     </div>
   );
 }
