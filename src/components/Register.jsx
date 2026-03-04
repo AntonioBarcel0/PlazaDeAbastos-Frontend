@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import Header from './Header';
 import './Register.css';
-import { api, auth } from '../services/api';
+import { api } from '../services/api';
 
-function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick }) {
+function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick, onLoginSuccess }) {
   const [formData, setFormData] = useState({
     nombre: '',
     apellidos: '',
     email: '',
     telefono: '',
     direccion: '',
+    role: 'cliente',
     password: '',
     confirmPassword: ''
   });
@@ -49,15 +50,15 @@ function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick }) {
 
       const response = await api.register(dataToSend);
 
-      // Guardar token y usuario
-      auth.setToken(response.token);
-      auth.setUser(response.user);
-
       setSuccess(true);
 
       // Redirigir al inicio después de 2 segundos
       setTimeout(() => {
-        onLogoClick(); // Volver a home
+        if (onLoginSuccess) {
+          onLoginSuccess(response.user);
+        } else {
+          onLogoClick(); // Volver a home
+        }
       }, 2000);
 
     } catch (error) {
@@ -159,6 +160,17 @@ function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick }) {
               required
               disabled={loading}
             />
+
+            <select
+              name="role"
+              className="register-input"
+              value={formData.role}
+              onChange={handleChange}
+              disabled={loading}
+            >
+              <option value="cliente">Cliente</option>
+              <option value="comerciante">Comerciante/Vendedor</option>
+            </select>
 
             <input
               type="password"

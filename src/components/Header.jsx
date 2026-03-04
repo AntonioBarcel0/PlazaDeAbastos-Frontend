@@ -1,6 +1,6 @@
 import './Header.css';
 
-function Header({ onMenuClick, onLoginClick, onLogoClick }) {
+function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDashboardClick }) {
   return (
     <header className="header">
       <button className="menu-btn" onClick={onMenuClick} aria-label="Abrir menú">
@@ -20,13 +20,27 @@ function Header({ onMenuClick, onLoginClick, onLogoClick }) {
       </button>
 
       <div className="right-section">
-        <button className="log-btn" onClick={onLoginClick} aria-label="registro">
-          <img 
-            src="https://res.cloudinary.com/dlmnchkjg/image/upload/v1770290764/Captura_de_pantalla_2026-02-05_a_las_12.25.59_k694e7.png" 
-            alt="registro"
-            className="log-icon"
-          />
-        </button>
+        {user ? (
+          <>
+            <span className="user-name">{user.nombre}</span>
+            {(user.role === 'comerciante' || user.role === 'admin') && onDashboardClick && (
+              <button className="dashboard-btn" onClick={onDashboardClick} aria-label="Panel de control">
+                📊
+              </button>
+            )}
+            <button className="log-btn" onClick={onLogout} aria-label="Cerrar sesión">
+              🚪
+            </button>
+          </>
+        ) : (
+          <button className="log-btn" onClick={onLoginClick} aria-label="registro">
+            <img 
+              src="https://res.cloudinary.com/dlmnchkjg/image/upload/v1770290764/Captura_de_pantalla_2026-02-05_a_las_12.25.59_k694e7.png" 
+              alt="registro"
+              className="log-icon"
+            />
+          </button>
+        )}
 
         <button className="cart-btn" aria-label="Carrito de compra">
           <img 
