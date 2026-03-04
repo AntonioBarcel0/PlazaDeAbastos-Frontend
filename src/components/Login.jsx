@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import Header from './Header';
 import './Login.css';
-import { api, auth } from '../services/api';
+import { api } from '../services/api';
 
-function Login({ onSwitchToRegister, onBack, onMenuClick, onLogoClick }) {
+function Login({ onSwitchToRegister, onBack, onMenuClick, onLogoClick, onLoginSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -18,15 +18,15 @@ function Login({ onSwitchToRegister, onBack, onMenuClick, onLogoClick }) {
     try {
       const response = await api.login({ email, password });
 
-      // Guardar token y usuario
-      auth.setToken(response.token);
-      auth.setUser(response.user);
-
       setSuccess(true);
 
-      // Redirigir al inicio después de 1 segundo
+      // Redirigir según el rol después de 1 segundo
       setTimeout(() => {
-        onLogoClick(); // Volver a home
+        if (onLoginSuccess) {
+          onLoginSuccess(response.user);
+        } else {
+          onLogoClick(); // Volver a home
+        }
       }, 1000);
 
     } catch (error) {
