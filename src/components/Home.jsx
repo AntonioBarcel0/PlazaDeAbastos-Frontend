@@ -3,9 +3,12 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import Hero from './Hero';
 import Baskets from './Baskets';
+import LaPlaza from './LaPlaza';
+import HowToOrder from './HowToOrder';
+import Footer from './Footer';
 import './Home.css';
 
-function Home({ onLoginClick, user, onLogout, onDashboardClick, onMarketplaceClick }) {
+function Home({ onLoginClick, user, onLogout, onDashboardClick, onMarketplaceClick, onSelectPuestoClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleMenuClick = () => {
@@ -32,20 +35,23 @@ function Home({ onLoginClick, user, onLogout, onDashboardClick, onMarketplaceCli
         onDashboardClick={onDashboardClick}
       />
 
-      <Sidebar 
-        isOpen={sidebarOpen} 
+      <Sidebar
+        isOpen={sidebarOpen}
         onClose={handleSidebarClose}
         onLoginClick={onLoginClick}
         user={user}
         onLogout={onLogout}
         onDashboardClick={onDashboardClick}
+        onSelectPuestoClick={onSelectPuestoClick}
       />
 
       <main className="home-main">
         <Hero onMarketplaceClick={onMarketplaceClick} />
-        <Baskets onMarketplaceClick={onMarketplaceClick} />
-        {/* Aquí irán más secciones futuras */}
+        <Baskets onMarketplaceClick={onMarketplaceClick} onSelectPuestoClick={onSelectPuestoClick} />
+        <LaPlaza onMarketplaceClick={onMarketplaceClick} />
+        <HowToOrder />
       </main>
+      <Footer />
     </div>
   );
 }

@@ -4,11 +4,7 @@ function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDash
   return (
     <header className="header">
       <button className="menu-btn" onClick={onMenuClick} aria-label="Abrir menú">
-        <img 
-          src="https://res.cloudinary.com/dlmnchkjg/image/upload/v1770290242/Captura_de_pantalla_2026-02-05_a_las_12.17.18_kenzes.png" 
-          alt="Menú"
-          className="menu-icon"
-        />
+        Menú
       </button>
 
       <button className="logo" onClick={onLogoClick} aria-label="Ir al inicio">

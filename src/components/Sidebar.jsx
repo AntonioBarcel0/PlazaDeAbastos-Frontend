@@ -1,49 +1,42 @@
 import './Sidebar.css';
 
-function Sidebar({ isOpen, onClose }) {
+function Sidebar({ isOpen, onClose, onSelectPuestoClick }) {
   return (
-    <>
-      <div 
-        className={`sidebar-overlay ${isOpen ? 'active' : ''}`} 
-        onClick={onClose}
-      />
+    <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`}>
+      <div className="sidebar-nav">
 
-      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-        
+        {/* Columna izquierda — enlaces grandes */}
+        <div className="sidebar-col sidebar-col--main">
+          <ul className="sidebar-list">
+            <li><a href="#" className="sidebar-link sidebar-link--main" onClick={onClose}>Puestos</a></li>
+            <li><a href="#" className="sidebar-link sidebar-link--main" onClick={onClose}>A domicilio</a></li>
+            <li><a href="#" className="sidebar-link sidebar-link--main" onClick={() => { onClose(); onSelectPuestoClick && onSelectPuestoClick(); }}>Elige tu cesta</a></li>
+            <li><a href="#" className="sidebar-link sidebar-link--main" onClick={onClose}>Mi perfil</a></li>
+            <li><a href="#" className="sidebar-link sidebar-link--main" onClick={onClose}>Instrucciones</a></li>
+          </ul>
+        </div>
 
-        <div className="sidebar-content">
-          <div className="sidebar-column">
-            <nav className="menu-section">
-              <ul className="menu-list">
-                <li><a href="#" className="menu-link">Puestos</a></li>
-                <li><a href="#" className="menu-link">A domicilio</a></li>
-                <li><a href="#" className="menu-link">Elige tu cesta</a></li>
-                <li><a href="#" className="menu-link">Mi perfil</a></li>
-                <li><a href="#" className="menu-link">Instrucciones</a></li>
-              </ul>
-            </nav>
+        {/* Grupo de columnas secundarias */}
+        <div className="sidebar-secondary-group">
+          <div className="sidebar-col sidebar-col--secondary">
+            <ul className="sidebar-list">
+              <li><a href="#" className="sidebar-link sidebar-link--secondary" onClick={onClose}>Cliente</a></li>
+              <li><a href="#" className="sidebar-link sidebar-link--secondary" onClick={onClose}>Contacto</a></li>
+              <li><a href="#" className="sidebar-link sidebar-link--secondary" onClick={onClose}>Preguntas frecuentes</a></li>
+            </ul>
           </div>
 
-          <div className="sidebar-column">
-            <nav className="menu-section">
-              <ul className="menu-list">
-                <li><a href="#" className="menu-link">Cliente</a></li>
-                <li><a href="#" className="menu-link">Contacto</a></li>
-                <li><a href="#" className="menu-link">Preguntas frequentes</a></li>
-              </ul>
-            </nav>
-
-            <nav className="menu-section">
-              <ul className="menu-list">
-                <li><a href="#" className="menu-link">Política de privacidad</a></li>
-                <li><a href="#" className="menu-link">Términos y condiciones</a></li>
-                <li><a href="#" className="menu-link">Cookies</a></li>
-              </ul>
-            </nav>
+          <div className="sidebar-col sidebar-col--secondary">
+            <ul className="sidebar-list">
+              <li><a href="#" className="sidebar-link sidebar-link--secondary" onClick={onClose}>Política de privacidad</a></li>
+              <li><a href="#" className="sidebar-link sidebar-link--secondary" onClick={onClose}>Términos y condiciones</a></li>
+              <li><a href="#" className="sidebar-link sidebar-link--secondary" onClick={onClose}>Cookies</a></li>
+            </ul>
           </div>
         </div>
-      </aside>
-    </>
+      </div>
+
+    </div>
   );
 }
 

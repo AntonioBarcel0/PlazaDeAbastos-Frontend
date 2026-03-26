@@ -6,6 +6,7 @@ import LoginOptions from './components/LoginOptions';
 import AdminDashboard from './components/AdminDashboard';
 import Marketplace from './components/Marketplace';
 import StoreView from './components/StoreView';
+import SelectPuesto from './components/SelectPuesto';
 import { api } from './services/api';
 import './App.css';
 
@@ -43,15 +44,30 @@ function App() {
     setCurrentView('store-view');
   };
 
+  const handlePuestoSelect = (vendedorId) => {
+    setSelectedVendedorId(vendedorId);
+    setCurrentView('store-view');
+  };
+
   const renderView = () => {
     switch(currentView) {
       case 'home':
-        return <Home 
+        return <Home
           onLoginClick={() => setCurrentView('loginOptions')}
           user={user}
           onLogout={handleLogout}
           onDashboardClick={() => setCurrentView('admin-dashboard')}
           onMarketplaceClick={() => setCurrentView('marketplace')}
+          onSelectPuestoClick={() => setCurrentView('select-puesto')}
+        />;
+
+      case 'select-puesto':
+        return <SelectPuesto
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => setCurrentView('admin-dashboard')}
+          onPuestoSelect={handlePuestoSelect}
+          onBack={() => setCurrentView('home')}
         />;
 
       case 'marketplace':

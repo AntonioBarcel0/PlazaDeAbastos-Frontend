@@ -1,0 +1,241 @@
+/* =============================
+   LA PLAZA — vendors + recomendaciones
+   ============================= */
+
+.laplaza-section {
+  width: 100%;
+  background: #fff;
+  padding: 70px 0 50px;
+}
+
+.laplaza-title {
+  text-align: center;
+  font-family: 'Alfa Slab One', serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: #8b2332;
+  margin-bottom: 35px;
+  letter-spacing: 1px;
+}
+
+/* --- Marquee de vendedores --- */
+.vendors-marquee {
+  overflow: hidden;
+  width: 100%;
+  padding: 18px 0;
+  border-top: 1px solid rgba(139, 35, 50, 0.12);
+  border-bottom: 1px solid rgba(139, 35, 50, 0.12);
+  margin-bottom: 70px;
+}
+
+.vendors-track {
+  display: flex;
+  gap: 80px;
+  width: max-content;
+  animation: marquee-scroll 35s linear infinite;
+}
+
+.vendors-marquee:hover .vendors-track {
+  animation-play-state: paused;
+}
+
+.vendor-item {
+  font-family: 'Alfa Slab One', serif;
+  font-size: 2.4rem;
+  font-weight: 400;
+  color: #8b2332;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+
+}
+
+.vendor-item:hover {
+  opacity: 0.6;
+}
+
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* --- Recomendaciones --- */
+.recommendations-wrap {
+  padding: 0 50px;
+}
+
+.recommendations-title {
+  text-align: center;
+  font-family: 'Alfa Slab One', serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #8b2332;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.rec-card {
+  aspect-ratio: 4 / 3;
+  background: #ddd8d0;
+  border-radius: 2px;
+  overflow: hidden;
+  /* TODO: Quitar background cuando se añada imagen real */
+}
+
+.rec-card .rec-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+/* =============================
+   PRODUCTOS DE TEMPORADA
+   ============================= */
+
+.seasonal-section {
+  width: 100%;
+  background: #fff;
+  padding: 50px 50px 80px;
+}
+
+.seasonal-badge-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 45px;
+}
+
+.seasonal-badge {
+  font-family: 'Alfa Slab One', serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #8b2332;
+  border: 1.5px solid #8b2332;
+  border-radius: 50px;
+  padding: 12px 40px;
+  background: transparent;
+  letter-spacing: 0.5px;
+  cursor: default;
+}
+
+.seasonal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+.seasonal-card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.seasonal-img {
+  width: 100%;
+  height: 380px;
+  background: #d5cfc9;
+  object-fit: cover;
+  /* TODO: Reemplazar por:
+     background-image: url('tu-cloudinary-url');
+     background-size: cover;
+     background-position: center;
+  */
+}
+
+.seasonal-name-band {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 12px 20px;
+  margin-top: -48px;
+  position: relative;
+  z-index: 2;
+}
+
+.seasonal-name {
+  font-family: 'Alfa Slab One', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  color: #8b2332;
+  margin: 0;
+  text-align: center;
+}
+
+.seasonal-footer {
+  padding: 10px 20px 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.seasonal-price {
+  font-family: 'Alfa Slab One', serif;
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0;
+}
+
+.seasonal-btn {
+  border: 1.5px solid #8b2332;
+  background: transparent;
+  color: #333;
+  font-size: 0.9rem;
+  padding: 11px 35px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.seasonal-btn:hover {
+  background: #8b2332;
+  color: #fff;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+  .vendor-item {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .laplaza-section {
+    padding: 50px 0 30px;
+  }
+
+  .recommendations-wrap {
+    padding: 0 20px;
+  }
+
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .seasonal-section {
+    padding: 40px 20px 60px;
+  }
+
+  .seasonal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vendor-item {
+    font-size: 1.4rem;
+  }
+
+  .vendors-track {
+    gap: 50px;
+  }
+
+  .seasonal-img {
+    height: 280px;
+  }
+}

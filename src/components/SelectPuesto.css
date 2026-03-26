@@ -1,0 +1,287 @@
+.sp-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.sp-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+/* ── Main layout ─────────────────────────────────── */
+.sp-main {
+  padding: 140px 2rem 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── Top row: title + search ─────────────────────── */
+.sp-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.sp-title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.sp-search {
+  padding: 0.85rem 1.5rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 50px;
+  font-size: 1rem;
+  width: 280px;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+
+.sp-search:focus {
+  outline: none;
+  border-color: #8b2332;
+}
+
+/* ── Controls row: categories + actions ──────────── */
+.sp-controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.sp-categories {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  flex: 1;
+}
+
+.sp-categories::-webkit-scrollbar {
+  height: 4px;
+}
+
+.sp-categories::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 2px;
+}
+
+.sp-cat-btn {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  background-color: transparent;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.sp-cat-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.sp-cat-btn.active {
+  background-color: #8b2332;
+  color: white;
+}
+
+/* ── Action buttons (Filtrar / Ordenar) ──────────── */
+.sp-actions {
+  display: flex;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.sp-action-btn {
+  padding: 0.65rem 1.75rem;
+  border: none;
+  background-color: white;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s;
+}
+
+.sp-action-btn:hover,
+.sp-action-btn.active {
+  background-color: #f0f0f0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Sort dropdown ───────────────────────────────── */
+.sp-sort-wrapper {
+  position: relative;
+}
+
+.sp-sort-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem 0;
+  min-width: 180px;
+  z-index: 100;
+}
+
+.sp-sort-option {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.sp-sort-option:hover {
+  background-color: #f5f5f5;
+}
+
+.sp-sort-option.selected {
+  color: #8b2332;
+  font-weight: 600;
+}
+
+/* ── Puestos grid ────────────────────────────────── */
+.sp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.sp-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.1rem;
+  color: #888;
+}
+
+/* ── Card ────────────────────────────────────────── */
+.sp-card {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.25s, box-shadow 0.25s;
+  cursor: pointer;
+}
+
+.sp-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.sp-card-image-wrap {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.sp-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sp-card-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+}
+
+.sp-select-btn {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.75rem 2rem;
+  background-color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.sp-select-btn:hover {
+  background-color: #8b2332;
+  color: white;
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 35, 50, 0.35);
+}
+
+.sp-card-info {
+  padding: 1.25rem 1.5rem;
+}
+
+.sp-card-name {
+  margin: 0 0 0.4rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #8b2332;
+}
+
+.sp-card-cat {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+/* ── Responsive ──────────────────────────────────── */
+@media (max-width: 768px) {
+  .sp-main {
+    padding: 100px 1rem 2rem;
+  }
+
+  .sp-top-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sp-title {
+    font-size: 2rem;
+  }
+
+  .sp-search {
+    width: 100%;
+  }
+
+  .sp-controls-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sp-actions {
+    align-self: flex-end;
+  }
+
+  .sp-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}

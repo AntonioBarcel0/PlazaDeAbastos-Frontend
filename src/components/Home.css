@@ -11,15 +11,3 @@ html {
   width: 100%;
   padding-top: 0;
 }
-
-/* Asegurar que las secciones ocupen la pantalla completa */
-section {
-  scroll-snap-align: start;
-}
-
-/* Opcional: Scroll snap para navegación más elegante */
-@media (min-width: 768px) {
-  .home-main {
-    scroll-snap-type: y proximity;
-  }
-}

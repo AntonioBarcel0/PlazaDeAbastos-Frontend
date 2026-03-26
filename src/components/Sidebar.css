@@ -1,134 +1,139 @@
 @import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
 
+/* =============================================
+   SIDEBAR — menú pantalla completa con fade
+   ============================================= */
+
 .sidebar-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100vh;
+  background-image: url('https://res.cloudinary.com/dlmnchkjg/image/upload/v1770289449/main_page_w78s3e.png');
+  background-size: cover;
+  background-position: center;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+
+  /* Oculto por defecto */
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  z-index: 998;
-  font-family: 'Alfa Slab One';
-  font-size: 300px;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
 }
 
-.sidebar-overlay.active {
+.sidebar-overlay.open {
   opacity: 1;
   visibility: visible;
+  transform: translateY(0);
 }
 
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  height: 100vh;
-  width: 90%;
-  max-width: 800px;
-  background-color: #f5f5f0;
-  transition: left 0.3s ease;
-  z-index: 999;
-  overflow-y: auto;
-  padding: 30px;
-
-}
-
-.sidebar.open {
-  left: 0;
-}
-
-.close-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
+/* --- Zona de navegación --- */
+.sidebar-nav {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
+  align-items: flex-start;
+  padding: 90px 60px 50px;
+  background-color: #fff;
 }
 
-.close-btn:hover {
-  opacity: 0.7;
+/* --- Columna principal --- */
+.sidebar-col--main {
+  flex: 2;
 }
 
-.close-icon {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+/* --- Grupo secundario (dos columnas juntas) --- */
+.sidebar-secondary-group {
+  flex: 2;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  align-self: center;
 }
 
-.sidebar-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  margin-top: 80px;
-}
-
-.sidebar-column {
+/* --- Columna genérica --- */
+.sidebar-col {
   display: flex;
   flex-direction: column;
-  gap: 40px;
-    font-family: 'Alfa Slab One';
-  font-size: 300px;
 }
 
-.menu-section {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.menu-title {
-  font-size: 48px;
-  font-weight: 400;
-  color: #8b2332;
-  margin-bottom: 10px;
-  line-height: 1;
-
-}
-
-.menu-list {
+.sidebar-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 6px;
 }
 
-.menu-link {
-  font-size: 48px;
+/* Columna principal — enlaces grandes */
+.sidebar-link--main {
+  font-family: 'Alfa Slab One', serif;
+  font-size: 3.5rem;
   font-weight: 400;
   color: #8b2332;
   text-decoration: none;
-  line-height: 1.2;
+  line-height: 1.6;
   display: block;
   transition: opacity 0.2s ease;
-  font-family: 'Alfa Slab One', cursive;
 }
 
-.menu-link:hover {
-  opacity: 0.7;
+.sidebar-link--main:hover {
+  opacity: 0.6;
+}
+
+/* Columnas secundarias — enlaces pequeños */
+.sidebar-col--secondary {
+  padding-top: 0;
+}
+
+.sidebar-link--secondary {
+  font-family: 'Alfa Slab One', serif;
+  font-size: 2.7rem;
+  font-weight: 400;
+  color: #8b2332;
+  text-decoration: none;
+  line-height: 1.7;
+  display: block;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar-link--secondary:hover {
+  opacity: 0.6;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+  .sidebar-nav {
+    padding: 80px 40px 40px;
+  }
+
+  .sidebar-link--main {
+    font-size: 3.5rem;
+  }
+
+  .sidebar-link--secondary {
+    font-size: 1.6rem;
+  }
 }
 
 @media (max-width: 768px) {
-  .sidebar {
+  .sidebar-nav {
+    flex-direction: column;
+    gap: 30px;
+    padding: 70px 25px 30px;
+  }
+
+  .sidebar-secondary-group {
+    flex-direction: column;
+    gap: 20px;
     width: 100%;
-    max-width: 100%;
   }
 
-  .sidebar-content {
-    grid-template-columns: 1fr;
-    gap: 40px;
+  .sidebar-link--main {
+    font-size: 2.8rem;
   }
 
-  .menu-title,
-  .menu-link {
-    font-size: 32px;
+  .sidebar-link--secondary {
+    font-size: 1.4rem;
   }
 }
