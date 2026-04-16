@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import { useCart } from '../context/CartContext';
 import { api } from '../services/api';
 import './StoreView.css';
 
-function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack }) {
+const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
+
+function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onCartClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedor, setVendedor] = useState(null);
   const [productos, setProductos] = useState([]);
@@ -12,7 +15,8 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack }) {
   const [selectedCategoria, setSelectedCategoria] = useState('Todos');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
-  const [cart, setCart] = useState([]);
+  const [conflictPending, setConflictPending] = useState(null);
+  const { addToCart, forceAddToCart } = useCart();
 
   useEffect(() => {
     loadVendedor();
@@ -67,8 +71,18 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack }) {
   };
 
   const handleAddToCart = (producto) => {
-    // Aquí puedes implementar la lógica del carrito
-    alert(`${producto.nombre} añadido al carrito`);
+    if (!vendedor) return;
+    const result = addToCart(producto, vendedor);
+    if (result.conflict) {
+      setConflictPending({ producto, conflictVendorName: result.conflictVendorName });
+    }
+  };
+
+  const handleConflictConfirm = () => {
+    if (conflictPending) {
+      forceAddToCart(conflictPending.producto, vendedor);
+      setConflictPending(null);
+    }
   };
 
   // Obtener categorías únicas de los productos
@@ -84,6 +98,7 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack }) {
           user={user}
           onLogout={onLogout}
           onDashboardClick={onDashboardClick}
+          onCartClick={onCartClick}
         />
         <div className="loading-container">Cargando productos...</div>
       </div>
@@ -100,6 +115,7 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack }) {
           user={user}
           onLogout={onLogout}
           onDashboardClick={onDashboardClick}
+          onCartClick={onCartClick}
         />
         <div className="error-container">Puesto no encontrado</div>
       </div>
@@ -175,6 +191,24 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack }) {
           </div>
         )}
 
+        {/* Banner de conflicto de vendedor */}
+        {conflictPending && (
+          <div className="cart-conflict-banner">
+            <p>
+              Tu carrito tiene productos de <strong>{conflictPending.conflictVendorName}</strong>.
+              Si continúas, se vaciará el carrito actual.
+            </p>
+            <div className="cart-conflict-actions">
+              <button className="conflict-btn-cancel" onClick={() => setConflictPending(null)}>
+                Cancelar
+              </button>
+              <button className="conflict-btn-confirm" onClick={handleConflictConfirm}>
+                Vaciar y añadir
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Grid de productos */}
         <div className="products-grid">
           {filteredProductos.length === 0 ? (
@@ -186,8 +220,8 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack }) {
               <div key={producto.id} className="product-card">
                 <div className="product-image-container">
                   {producto.imagen ? (
-                    <img 
-                      src={`http://localhost:3001${producto.imagen}`}
+                    <img
+                      src={`${BASE_URL}${producto.imagen}`}
                       alt={producto.nombre}
                       className="product-image"
                     />

@@ -1,6 +1,8 @@
+import { useCart } from '../context/CartContext';
 import './Header.css';
 
-function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDashboardClick }) {
+function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDashboardClick, onCartClick }) {
+  const { cartCount } = useCart();
   return (
     <header className="header">
       <button className="menu-btn" onClick={onMenuClick} aria-label="Abrir menú">
@@ -38,12 +40,15 @@ function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDash
           </button>
         )}
 
-        <button className="cart-btn" aria-label="Carrito de compra">
-          <img 
-            src="https://res.cloudinary.com/dlmnchkjg/image/upload/v1770290214/Captura_de_pantalla_2026-02-05_a_las_12.16.48_syfomx.png" 
+        <button className="cart-btn" onClick={onCartClick} aria-label="Carrito de compra">
+          <img
+            src="https://res.cloudinary.com/dlmnchkjg/image/upload/v1770290214/Captura_de_pantalla_2026-02-05_a_las_12.16.48_syfomx.png"
             alt="Carrito compra"
             className="cart-icon"
           />
+          {cartCount > 0 && (
+            <span className="cart-badge">{cartCount}</span>
+          )}
         </button>
       </div>
     </header>

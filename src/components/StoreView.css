@@ -219,6 +219,63 @@
   color: #999;
 }
 
+/* --- Banner conflicto de vendedor --- */
+.cart-conflict-banner {
+  background-color: #fff8e1;
+  border: 1px solid #f9a825;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.cart-conflict-banner p {
+  margin: 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.cart-conflict-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.conflict-btn-cancel {
+  background-color: white;
+  border: 2px solid #ccc;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.conflict-btn-cancel:hover {
+  border-color: #999;
+}
+
+.conflict-btn-confirm {
+  background-color: #8b2332;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.conflict-btn-confirm:hover {
+  background-color: #6d1b27;
+}
+
 .loading-container,
 .error-container,
 .empty-message {

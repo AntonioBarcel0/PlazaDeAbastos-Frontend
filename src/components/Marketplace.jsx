@@ -4,7 +4,9 @@ import Sidebar from './Sidebar';
 import { api } from '../services/api';
 import './Marketplace.css';
 
-function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onBackHome }) {
+const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
+
+function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onBackHome, onCartClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedores, setVendedores] = useState([]);
   const [filteredVendedores, setFilteredVendedores] = useState([]);
@@ -94,6 +96,7 @@ function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onBackHom
           user={user}
           onLogout={onLogout}
           onDashboardClick={onDashboardClick}
+          onCartClick={onCartClick}
         />
         <div className="loading-container">Cargando puestos...</div>
       </div>
@@ -162,8 +165,8 @@ function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onBackHom
               <div key={vendedor.id} className="store-card">
                 <div className="store-image-container">
                   {vendedor.imagenPrincipal ? (
-                    <img 
-                      src={`http://localhost:3001${vendedor.imagenPrincipal}`}
+                    <img
+                      src={`${BASE_URL}${vendedor.imagenPrincipal}`}
                       alt={vendedor.nombreCompleto}
                       className="store-image"
                     />

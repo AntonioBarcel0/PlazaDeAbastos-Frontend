@@ -21,7 +21,7 @@ const SORT_OPTIONS = [
   { value: 'cat', label: 'Categoría' },
 ];
 
-function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onBack }) {
+function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onBack, onCartClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedores, setVendedores] = useState([]);
   const [filteredVendedores, setFilteredVendedores] = useState([]);
@@ -110,6 +110,7 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onBack
           user={user}
           onLogout={onLogout}
           onDashboardClick={onDashboardClick}
+          onCartClick={onCartClick}
         />
         <div className="sp-loading">Cargando puestos...</div>
       </div>

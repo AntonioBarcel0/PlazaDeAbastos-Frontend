@@ -7,11 +7,15 @@ import AdminDashboard from './components/AdminDashboard';
 import Marketplace from './components/Marketplace';
 import StoreView from './components/StoreView';
 import SelectPuesto from './components/SelectPuesto';
+import Cart from './components/Cart';
+import Checkout from './components/Checkout';
+import { CartProvider } from './context/CartContext';
 import { api } from './services/api';
 import './App.css';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
+  const [prevView, setPrevView] = useState('marketplace');
   const [user, setUser] = useState(null);
   const [selectedVendedorId, setSelectedVendedorId] = useState(null);
 
@@ -49,6 +53,13 @@ function App() {
     setCurrentView('store-view');
   };
 
+  const handleCartClick = () => {
+    setPrevView(currentView);
+    setCurrentView('cart');
+  };
+
+  const handleCheckoutClick = () => setCurrentView('checkout');
+
   const renderView = () => {
     switch(currentView) {
       case 'home':
@@ -59,6 +70,7 @@ function App() {
           onDashboardClick={() => setCurrentView('admin-dashboard')}
           onMarketplaceClick={() => setCurrentView('marketplace')}
           onSelectPuestoClick={() => setCurrentView('select-puesto')}
+          onCartClick={handleCartClick}
         />;
 
       case 'select-puesto':
@@ -68,6 +80,7 @@ function App() {
           onDashboardClick={() => setCurrentView('admin-dashboard')}
           onPuestoSelect={handlePuestoSelect}
           onBack={() => setCurrentView('home')}
+          onCartClick={handleCartClick}
         />;
 
       case 'marketplace':
@@ -77,6 +90,7 @@ function App() {
           onDashboardClick={() => setCurrentView('admin-dashboard')}
           onStoreClick={handleStoreClick}
           onBackHome={() => setCurrentView('home')}
+          onCartClick={handleCartClick}
         />;
 
       case 'store-view':
@@ -86,6 +100,29 @@ function App() {
           onLogout={handleLogout}
           onDashboardClick={() => setCurrentView('admin-dashboard')}
           onBack={() => setCurrentView('marketplace')}
+          onCartClick={handleCartClick}
+        />;
+
+      case 'cart':
+        return <Cart
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => setCurrentView('admin-dashboard')}
+          onLoginClick={() => setCurrentView('loginOptions')}
+          onCartClick={handleCartClick}
+          onBack={() => setCurrentView(prevView)}
+          onCheckout={handleCheckoutClick}
+        />;
+
+      case 'checkout':
+        return <Checkout
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => setCurrentView('admin-dashboard')}
+          onLoginClick={() => setCurrentView('loginOptions')}
+          onCartClick={handleCartClick}
+          onBack={() => setCurrentView('cart')}
+          onSuccess={() => setCurrentView('home')}
         />;
 
       case 'loginOptions':
@@ -143,9 +180,11 @@ function App() {
   };
 
   return (
-    <div className="app">
-      {renderView()}
-    </div>
+    <CartProvider>
+      <div className="app">
+        {renderView()}
+      </div>
+    </CartProvider>
   );
 }
 
