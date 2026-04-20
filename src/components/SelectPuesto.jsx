@@ -4,6 +4,8 @@ import Sidebar from './Sidebar';
 import { api } from '../services/api';
 import './SelectPuesto.css';
 
+const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '');
+
 const CATEGORIAS = ['Todos', 'Frutería', 'Pescadería', 'Carnicería', 'Comestibles', 'Otros'];
 
 // Palabras clave para emparejar cada categoría de filtro con la especialidad del vendedor
@@ -21,7 +23,7 @@ const SORT_OPTIONS = [
   { value: 'cat', label: 'Categoría' },
 ];
 
-function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onBack, onCartClick }) {
+function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHomeClick, onMarketplaceClick, onCartClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedores, setVendedores] = useState([]);
   const [filteredVendedores, setFilteredVendedores] = useState([]);
@@ -106,7 +108,7 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onBack
         <Header
           onMenuClick={() => setSidebarOpen(true)}
           onLoginClick={() => {}}
-          onLogoClick={onBack}
+          onLogoClick={onHomeClick}
           user={user}
           onLogout={onLogout}
           onDashboardClick={onDashboardClick}
@@ -122,7 +124,7 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onBack
       <Header
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         onLoginClick={() => {}}
-        onLogoClick={onBack}
+        onLogoClick={onHomeClick}
         user={user}
         onLogout={onLogout}
         onDashboardClick={onDashboardClick}
@@ -131,9 +133,8 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onBack
       <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-        user={user}
-        onLogout={onLogout}
-        onDashboardClick={onDashboardClick}
+        onMarketplaceClick={onMarketplaceClick}
+        onSelectPuestoClick={() => {}}
       />
 
       <main className="sp-main">
@@ -210,7 +211,7 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onBack
                 <div className="sp-card-image-wrap">
                   {vendedor.imagenPrincipal ? (
                     <img
-                      src={`http://localhost:3001${vendedor.imagenPrincipal}`}
+                      src={`${BASE_URL}${vendedor.imagenPrincipal}`}
                       alt={vendedor.nombreCompleto}
                       className="sp-card-image"
                     />

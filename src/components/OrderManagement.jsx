@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
+import toast from 'react-hot-toast';
 import './OrderManagement.css';
 
 const OrderManagement = () => {
@@ -33,7 +34,7 @@ const OrderManagement = () => {
       setSelectedOrder(response.order);
       setShowDetailsModal(true);
     } catch (err) {
-      alert('Error al cargar detalles del pedido');
+      toast.error('Error al cargar detalles del pedido');
     }
   };
 
@@ -41,18 +42,18 @@ const OrderManagement = () => {
     try {
       await api.updateOrderStatus(orderId, newEstado);
       loadOrders(); // Recargar lista
-      alert('Estado actualizado correctamente');
+      toast.success('Estado actualizado correctamente');
     } catch (err) {
-      alert('Error al actualizar el estado');
+      toast.error('Error al actualizar el estado');
     }
   };
 
   const handleUpdateNotes = async (orderId, notas) => {
     try {
       await api.updateVendorNotes(orderId, notas);
-      alert('Notas actualizadas correctamente');
+      toast.success('Notas actualizadas correctamente');
     } catch (err) {
-      alert('Error al actualizar las notas');
+      toast.error('Error al actualizar las notas');
     }
   };
 

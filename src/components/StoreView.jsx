@@ -3,11 +3,12 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import { useCart } from '../context/CartContext';
 import { api } from '../services/api';
+import toast from 'react-hot-toast';
 import './StoreView.css';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
-function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onCartClick }) {
+function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedor, setVendedor] = useState(null);
   const [productos, setProductos] = useState([]);
@@ -16,7 +17,7 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onCar
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [conflictPending, setConflictPending] = useState(null);
-  const { addToCart, forceAddToCart } = useCart();
+  const { cart, addToCart, forceAddToCart, updateQuantity } = useCart();
 
   useEffect(() => {
     loadVendedor();
@@ -34,7 +35,7 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onCar
       setProductos(data.vendedor.productos || []);
     } catch (error) {
       console.error('Error al cargar vendedor:', error);
-      alert('Error al cargar el puesto: ' + error.message);
+      toast.error('Error al cargar el puesto: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -65,9 +66,7 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onCar
   };
 
   const handleLogoClick = () => {
-    if (onBack) {
-      onBack();
-    }
+    if (onHomeClick) onHomeClick();
   };
 
   const handleAddToCart = (producto) => {
@@ -124,22 +123,21 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onCar
 
   return (
     <div className="store-view-container">
-      <Header 
+      <Header
         onMenuClick={handleMenuClick}
         onLoginClick={() => {}}
         onLogoClick={handleLogoClick}
         user={user}
         onLogout={onLogout}
         onDashboardClick={onDashboardClick}
+        onCartClick={onCartClick}
       />
 
-      <Sidebar 
+      <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-        onLoginClick={() => {}}
-        user={user}
-        onLogout={onLogout}
-        onDashboardClick={onDashboardClick}
+        onMarketplaceClick={onMarketplaceClick}
+        onSelectPuestoClick={onSelectPuestoClick}
       />
 
       <main className="store-view-main">
@@ -230,12 +228,20 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onCar
                       📦
                     </div>
                   )}
-                  <button 
-                    className="product-add-btn"
-                    onClick={() => handleAddToCart(producto)}
-                  >
-                    añadir
-                  </button>
+                  {(() => {
+                    const cartItem = cart.find(i => i.productId === producto.id);
+                    return cartItem ? (
+                      <div className="product-qty-control">
+                        <button onClick={() => updateQuantity(producto.id, cartItem.cantidad - 1)}>−</button>
+                        <span>{cartItem.cantidad}</span>
+                        <button onClick={() => updateQuantity(producto.id, cartItem.cantidad + 1)}>+</button>
+                      </div>
+                    ) : (
+                      <button className="product-add-btn" onClick={() => handleAddToCart(producto)}>
+                        añadir
+                      </button>
+                    );
+                  })()}
                 </div>
                 <div className="product-info">
                   <h3 className="product-name">{producto.nombre}</h3>

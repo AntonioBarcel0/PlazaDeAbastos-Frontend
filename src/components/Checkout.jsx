@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import { api } from '../services/api';
 import './Checkout.css';
 
-function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuccess, onLoginClick }) {
+function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuccess, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onLoginClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { cart, vendedorCart, cartTotal, clearCart } = useCart();
   const [form, setForm] = useState({
@@ -52,13 +52,39 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
     }
   };
 
+  if (!user) {
+    return (
+      <div className="checkout-container">
+        <Header
+          onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+          onLoginClick={onLoginClick || (() => {})}
+          onLogoClick={onHomeClick}
+          user={user}
+          onLogout={onLogout}
+          onDashboardClick={onDashboardClick}
+          onCartClick={onCartClick}
+        />
+        <main className="checkout-main">
+          <div className="checkout-success">
+            <span className="checkout-success-icon">⚠️</span>
+            <h2>Inicia sesión para continuar</h2>
+            <p>Necesitas una cuenta para realizar un pedido.</p>
+            <button className="btn-submit" onClick={onLoginClick}>
+              Iniciar sesión
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   if (orderSuccess) {
     return (
       <div className="checkout-container">
         <Header
           onMenuClick={() => setSidebarOpen(!sidebarOpen)}
           onLoginClick={onLoginClick || (() => {})}
-          onLogoClick={onSuccess}
+          onLogoClick={onHomeClick}
           user={user}
           onLogout={onLogout}
           onDashboardClick={onDashboardClick}
@@ -89,7 +115,7 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
       <Header
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         onLoginClick={onLoginClick || (() => {})}
-        onLogoClick={onSuccess}
+        onLogoClick={onHomeClick}
         user={user}
         onLogout={onLogout}
         onDashboardClick={onDashboardClick}
@@ -98,10 +124,8 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
       <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-        onLoginClick={onLoginClick || (() => {})}
-        user={user}
-        onLogout={onLogout}
-        onDashboardClick={onDashboardClick}
+        onMarketplaceClick={onMarketplaceClick}
+        onSelectPuestoClick={onSelectPuestoClick}
       />
 
       <main className="checkout-main">

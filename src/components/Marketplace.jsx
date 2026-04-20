@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import { api } from '../services/api';
+import toast from 'react-hot-toast';
 import './Marketplace.css';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
-function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onBackHome, onCartClick }) {
+function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedores, setVendedores] = useState([]);
   const [filteredVendedores, setFilteredVendedores] = useState([]);
@@ -44,7 +45,7 @@ function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onBackHom
       setVendedores(data.vendedores || []);
     } catch (error) {
       console.error('Error al cargar vendedores:', error);
-      alert('Error al cargar puestos: ' + error.message);
+      toast.error('Error al cargar puestos: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -76,9 +77,7 @@ function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onBackHom
   };
 
   const handleLogoClick = () => {
-    if (onBackHome) {
-      onBackHome();
-    }
+    if (onHomeClick) onHomeClick();
   };
 
   const getCategoriaPrincipal = (categorias) => {
@@ -105,22 +104,21 @@ function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onBackHom
 
   return (
     <div className="marketplace-container">
-      <Header 
+      <Header
         onMenuClick={handleMenuClick}
         onLoginClick={() => {}}
         onLogoClick={handleLogoClick}
         user={user}
         onLogout={onLogout}
         onDashboardClick={onDashboardClick}
+        onCartClick={onCartClick}
       />
 
-      <Sidebar 
+      <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-        onLoginClick={() => {}}
-        user={user}
-        onLogout={onLogout}
-        onDashboardClick={onDashboardClick}
+        onMarketplaceClick={onMarketplaceClick}
+        onSelectPuestoClick={onSelectPuestoClick}
       />
 
       <main className="marketplace-main">

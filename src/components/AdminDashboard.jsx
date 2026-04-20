@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
+import toast from 'react-hot-toast';
 import ProductForm from './ProductForm';
 import OrderManagement from './OrderManagement';
 import './AdminDashboard.css';
+
+const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '');
 
 function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
   const [products, setProducts] = useState([]);
@@ -26,7 +29,7 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
       const data = await api.getMyProducts();
       setProducts(data.products);
     } catch (error) {
-      alert('Error al cargar productos: ' + error.message);
+      toast.error('Error al cargar productos: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -42,10 +45,10 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
 
     try {
       await api.deleteProduct(id);
-      alert('Producto eliminado correctamente');
+      toast.success('Producto eliminado correctamente');
       loadProducts();
     } catch (error) {
-      alert('Error al eliminar: ' + error.message);
+      toast.error('Error al eliminar: ' + error.message);
     }
   };
 
@@ -64,7 +67,7 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
       });
       loadProducts();
     } catch (error) {
-      alert('Error al actualizar disponibilidad: ' + error.message);
+      toast.error('Error al actualizar disponibilidad: ' + error.message);
     }
   };
 
@@ -165,7 +168,7 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
                       <td>
                         {product.imagen ? (
                           <img 
-                            src={`http://localhost:3001${product.imagen}`} 
+                            src={`${BASE_URL}${product.imagen}`} 
                             alt={product.nombre}
                             className="product-thumb"
                           />

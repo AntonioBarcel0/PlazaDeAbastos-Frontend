@@ -11,65 +11,82 @@ import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import { CartProvider } from './context/CartContext';
 import { api } from './services/api';
+import { Toaster } from 'react-hot-toast';
 import './App.css';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
-  const [prevView, setPrevView] = useState('marketplace');
   const [user, setUser] = useState(null);
   const [selectedVendedorId, setSelectedVendedorId] = useState(null);
 
+  const navigate = (view) => {
+    window.history.pushState({ view }, '');
+    setCurrentView(view);
+  };
+
+  const goBack = () => {
+    window.history.back();
+  };
+
+  const goHome = () => {
+    window.history.pushState({ view: 'home' }, '');
+    setCurrentView('home');
+  };
+
   useEffect(() => {
+    // Sincronizar botón atrás del navegador con la app
+    window.history.replaceState({ view: 'home' }, '');
+    const handlePopState = (e) => {
+      setCurrentView(e.state?.view || 'home');
+    };
+    window.addEventListener('popstate', handlePopState);
+
     // Verificar si hay usuario logueado
     const userData = api.getCurrentUser();
-    if (userData) {
-      setUser(userData);
-    }
+    if (userData) setUser(userData);
+
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   const handleLoginSuccess = (userData) => {
     setUser(userData);
-    // Redirigir según el rol
     if (userData.role === 'comerciante' || userData.role === 'admin') {
-      setCurrentView('admin-dashboard');
+      navigate('admin-dashboard');
     } else {
-      setCurrentView('home');
+      goHome();
     }
   };
 
   const handleLogout = () => {
     api.logout();
     setUser(null);
-    setCurrentView('home');
+    goHome();
   };
 
   const handleStoreClick = (vendedorId) => {
     setSelectedVendedorId(vendedorId);
-    setCurrentView('store-view');
+    navigate('store-view');
   };
 
   const handlePuestoSelect = (vendedorId) => {
     setSelectedVendedorId(vendedorId);
-    setCurrentView('store-view');
+    navigate('store-view');
   };
 
-  const handleCartClick = () => {
-    setPrevView(currentView);
-    setCurrentView('cart');
-  };
+  const handleCartClick = () => navigate('cart');
 
-  const handleCheckoutClick = () => setCurrentView('checkout');
+  const handleCheckoutClick = () => navigate('checkout');
 
   const renderView = () => {
     switch(currentView) {
       case 'home':
         return <Home
-          onLoginClick={() => setCurrentView('loginOptions')}
+          onLoginClick={() => navigate('loginOptions')}
           user={user}
           onLogout={handleLogout}
-          onDashboardClick={() => setCurrentView('admin-dashboard')}
-          onMarketplaceClick={() => setCurrentView('marketplace')}
-          onSelectPuestoClick={() => setCurrentView('select-puesto')}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
           onCartClick={handleCartClick}
         />;
 
@@ -77,9 +94,11 @@ function App() {
         return <SelectPuesto
           user={user}
           onLogout={handleLogout}
-          onDashboardClick={() => setCurrentView('admin-dashboard')}
+          onDashboardClick={() => navigate('admin-dashboard')}
           onPuestoSelect={handlePuestoSelect}
-          onBack={() => setCurrentView('home')}
+          onBack={goBack}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
           onCartClick={handleCartClick}
         />;
 
@@ -87,9 +106,12 @@ function App() {
         return <Marketplace
           user={user}
           onLogout={handleLogout}
-          onDashboardClick={() => setCurrentView('admin-dashboard')}
+          onDashboardClick={() => navigate('admin-dashboard')}
           onStoreClick={handleStoreClick}
-          onBackHome={() => setCurrentView('home')}
+          onBackHome={goHome}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
           onCartClick={handleCartClick}
         />;
 
@@ -98,8 +120,11 @@ function App() {
           vendedorId={selectedVendedorId}
           user={user}
           onLogout={handleLogout}
-          onDashboardClick={() => setCurrentView('admin-dashboard')}
-          onBack={() => setCurrentView('marketplace')}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onBack={goBack}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
           onCartClick={handleCartClick}
         />;
 
@@ -107,10 +132,13 @@ function App() {
         return <Cart
           user={user}
           onLogout={handleLogout}
-          onDashboardClick={() => setCurrentView('admin-dashboard')}
-          onLoginClick={() => setCurrentView('loginOptions')}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onLoginClick={() => navigate('loginOptions')}
           onCartClick={handleCartClick}
-          onBack={() => setCurrentView(prevView)}
+          onBack={goBack}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
           onCheckout={handleCheckoutClick}
         />;
 
@@ -118,63 +146,66 @@ function App() {
         return <Checkout
           user={user}
           onLogout={handleLogout}
-          onDashboardClick={() => setCurrentView('admin-dashboard')}
-          onLoginClick={() => setCurrentView('loginOptions')}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onLoginClick={() => navigate('loginOptions')}
           onCartClick={handleCartClick}
-          onBack={() => setCurrentView('cart')}
-          onSuccess={() => setCurrentView('home')}
+          onBack={goBack}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
+          onSuccess={goHome}
         />;
 
       case 'loginOptions':
         return (
-          <LoginOptions 
-            onLoginClick={() => setCurrentView('login')}
-            onRegisterClick={() => setCurrentView('register')}
-            onBack={() => setCurrentView('home')}
-            onLogoClick={() => setCurrentView('home')}
+          <LoginOptions
+            onLoginClick={() => navigate('login')}
+            onRegisterClick={() => navigate('register')}
+            onBack={goBack}
+            onLogoClick={goHome}
           />
         );
 
       case 'login':
         return (
-          <Login 
-            onSwitchToRegister={() => setCurrentView('register')}
-            onBack={() => setCurrentView('loginOptions')}
+          <Login
+            onSwitchToRegister={() => navigate('register')}
+            onBack={goBack}
             onMenuClick={() => {}}
-            onLogoClick={() => setCurrentView('home')}
+            onLogoClick={goHome}
             onLoginSuccess={handleLoginSuccess}
           />
         );
 
       case 'register':
         return (
-          <Register 
-            onSwitchToLogin={() => setCurrentView('login')}
-            onBack={() => setCurrentView('loginOptions')}
+          <Register
+            onSwitchToLogin={() => navigate('login')}
+            onBack={goBack}
             onMenuClick={() => {}}
-            onLogoClick={() => setCurrentView('home')}
+            onLogoClick={goHome}
             onLoginSuccess={handleLoginSuccess}
           />
         );
 
       case 'admin-dashboard':
         if (!user || (user.role !== 'comerciante' && user.role !== 'admin')) {
-          setCurrentView('home');
+          goHome();
           return null;
         }
-        return <AdminDashboard 
+        return <AdminDashboard
           user={user}
           onLogout={handleLogout}
-          onBackHome={() => setCurrentView('home')}
+          onBackHome={goHome}
         />;
 
       default:
-        return <Home 
-          onLoginClick={() => setCurrentView('loginOptions')}
+        return <Home
+          onLoginClick={() => navigate('loginOptions')}
           user={user}
           onLogout={handleLogout}
-          onDashboardClick={() => setCurrentView('admin-dashboard')}
-          onMarketplaceClick={() => setCurrentView('marketplace')}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onMarketplaceClick={() => navigate('marketplace')}
         />;
     }
   };
@@ -184,6 +215,7 @@ function App() {
       <div className="app">
         {renderView()}
       </div>
+      <Toaster position="top-right" />
     </CartProvider>
   );
 }

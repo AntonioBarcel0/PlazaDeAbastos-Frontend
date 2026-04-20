@@ -6,7 +6,7 @@ import './Cart.css';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
-function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onCheckout, onLoginClick }) {
+function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCheckout, onLoginClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { cart, vendedorCart, cartCount, cartTotal, removeFromCart, updateQuantity, clearCart } = useCart();
 
@@ -16,7 +16,7 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onCheckou
         <Header
           onMenuClick={() => setSidebarOpen(!sidebarOpen)}
           onLoginClick={onLoginClick || (() => {})}
-          onLogoClick={onBack}
+          onLogoClick={onHomeClick}
           user={user}
           onLogout={onLogout}
           onDashboardClick={onDashboardClick}
@@ -25,10 +25,8 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onCheckou
         <Sidebar
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
-          onLoginClick={onLoginClick || (() => {})}
-          user={user}
-          onLogout={onLogout}
-          onDashboardClick={onDashboardClick}
+          onMarketplaceClick={onMarketplaceClick}
+          onSelectPuestoClick={onSelectPuestoClick}
         />
         <main className="cart-main">
           <div className="cart-empty">
@@ -49,7 +47,7 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onCheckou
       <Header
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         onLoginClick={onLoginClick || (() => {})}
-        onLogoClick={onBack}
+        onLogoClick={onHomeClick}
         user={user}
         onLogout={onLogout}
         onDashboardClick={onDashboardClick}
@@ -58,10 +56,8 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onCheckou
       <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-        onLoginClick={onLoginClick || (() => {})}
-        user={user}
-        onLogout={onLogout}
-        onDashboardClick={onDashboardClick}
+        onMarketplaceClick={onMarketplaceClick}
+        onSelectPuestoClick={onSelectPuestoClick}
       />
 
       <main className="cart-main">
