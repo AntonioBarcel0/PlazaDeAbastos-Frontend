@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import Spinner from './Spinner';
 import { api } from '../services/api';
-import toast from 'react-hot-toast';
 import './Marketplace.css';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
-function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick }) {
+function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedores, setVendedores] = useState([]);
   const [filteredVendedores, setFilteredVendedores] = useState([]);
@@ -15,6 +15,7 @@ function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeCli
   const [selectedCategoria, setSelectedCategoria] = useState('Todos');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const categoriasBase = [
     'Todos',
@@ -41,11 +42,12 @@ function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeCli
   const loadVendedores = async () => {
     try {
       setLoading(true);
+      setError(null);
       const data = await api.getVendedores();
       setVendedores(data.vendedores || []);
-    } catch (error) {
-      console.error('Error al cargar vendedores:', error);
-      toast.error('Error al cargar puestos: ' + error.message);
+    } catch (err) {
+      console.error('Error al cargar vendedores:', err);
+      setError('No se pudieron cargar los puestos.');
     } finally {
       setLoading(false);
     }
@@ -85,34 +87,41 @@ function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeCli
     return categorias[0];
   };
 
+  const headerProps = {
+    onMenuClick: handleMenuClick,
+    onLoginClick: () => {},
+    onLogoClick: handleLogoClick,
+    user,
+    onLogout,
+    onDashboardClick,
+    onCartClick,
+    onOrdersClick,
+  };
+
   if (loading) {
     return (
       <div className="marketplace-container">
-        <Header 
-          onMenuClick={handleMenuClick}
-          onLoginClick={() => {}}
-          onLogoClick={handleLogoClick}
-          user={user}
-          onLogout={onLogout}
-          onDashboardClick={onDashboardClick}
-          onCartClick={onCartClick}
-        />
-        <div className="loading-container">Cargando puestos...</div>
+        <Header {...headerProps} />
+        <Spinner message="Cargando puestos..." />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="marketplace-container">
+        <Header {...headerProps} />
+        <div className="error-container">
+          <p>{error}</p>
+          <button className="retry-btn" onClick={loadVendedores}>Reintentar</button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="marketplace-container">
-      <Header
-        onMenuClick={handleMenuClick}
-        onLoginClick={() => {}}
-        onLogoClick={handleLogoClick}
-        user={user}
-        onLogout={onLogout}
-        onDashboardClick={onDashboardClick}
-        onCartClick={onCartClick}
-      />
+      <Header {...headerProps} />
 
       <Sidebar
         isOpen={sidebarOpen}

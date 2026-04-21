@@ -1,7 +1,7 @@
 import { useCart } from '../context/CartContext';
 import './Header.css';
 
-function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDashboardClick, onCartClick }) {
+function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDashboardClick, onCartClick, onOrdersClick }) {
   const { cartCount } = useCart();
   return (
     <header className="header">
@@ -21,6 +21,11 @@ function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDash
         {user ? (
           <>
             <span className="user-name">{user.nombre}</span>
+            {user.role === 'cliente' && onOrdersClick && (
+              <button className="orders-btn" onClick={onOrdersClick} aria-label="Mis pedidos">
+                📋
+              </button>
+            )}
             {(user.role === 'comerciante' || user.role === 'admin') && onDashboardClick && (
               <button className="dashboard-btn" onClick={onDashboardClick} aria-label="Panel de control">
                 📊

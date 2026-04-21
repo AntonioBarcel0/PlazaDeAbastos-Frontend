@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import Spinner from './Spinner';
 import { api } from '../services/api';
 import './SelectPuesto.css';
 
@@ -23,7 +24,7 @@ const SORT_OPTIONS = [
   { value: 'cat', label: 'Categoría' },
 ];
 
-function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHomeClick, onMarketplaceClick, onCartClick }) {
+function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHomeClick, onMarketplaceClick, onCartClick, onOrdersClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedores, setVendedores] = useState([]);
   const [filteredVendedores, setFilteredVendedores] = useState([]);
@@ -32,6 +33,7 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
   const [sortBy, setSortBy] = useState('az');
   const [sortOpen, setSortOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const sortRef = useRef(null);
 
   useEffect(() => {
@@ -55,10 +57,12 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
   const loadVendedores = async () => {
     try {
       setLoading(true);
+      setError(null);
       const data = await api.getVendedores();
       setVendedores(data.vendedores || []);
-    } catch (error) {
-      console.error('Error al cargar vendedores:', error);
+    } catch (err) {
+      console.error('Error al cargar vendedores:', err);
+      setError('No se pudieron cargar los puestos.');
     } finally {
       setLoading(false);
     }
@@ -102,33 +106,41 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
 
   const currentSortLabel = SORT_OPTIONS.find(o => o.value === sortBy)?.label;
 
+  const headerProps = {
+    onMenuClick: () => setSidebarOpen(!sidebarOpen),
+    onLoginClick: () => {},
+    onLogoClick: onHomeClick,
+    user,
+    onLogout,
+    onDashboardClick,
+    onCartClick,
+    onOrdersClick,
+  };
+
   if (loading) {
     return (
       <div className="sp-container">
-        <Header
-          onMenuClick={() => setSidebarOpen(true)}
-          onLoginClick={() => {}}
-          onLogoClick={onHomeClick}
-          user={user}
-          onLogout={onLogout}
-          onDashboardClick={onDashboardClick}
-          onCartClick={onCartClick}
-        />
-        <div className="sp-loading">Cargando puestos...</div>
+        <Header {...headerProps} />
+        <Spinner message="Cargando puestos..." />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="sp-container">
+        <Header {...headerProps} />
+        <div className="error-container">
+          <p>{error}</p>
+          <button className="retry-btn" onClick={loadVendedores}>Reintentar</button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="sp-container">
-      <Header
-        onMenuClick={() => setSidebarOpen(!sidebarOpen)}
-        onLoginClick={() => {}}
-        onLogoClick={onHomeClick}
-        user={user}
-        onLogout={onLogout}
-        onDashboardClick={onDashboardClick}
-      />
+      <Header {...headerProps} />
 
       <Sidebar
         isOpen={sidebarOpen}

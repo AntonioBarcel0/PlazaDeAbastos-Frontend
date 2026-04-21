@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import Spinner from './Spinner';
 import { useCart } from '../context/CartContext';
 import { api } from '../services/api';
-import toast from 'react-hot-toast';
 import './StoreView.css';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
-function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick }) {
+function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onProductClick, onCartClick, onOrdersClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedor, setVendedor] = useState(null);
   const [productos, setProductos] = useState([]);
@@ -16,6 +16,7 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
   const [selectedCategoria, setSelectedCategoria] = useState('Todos');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [conflictPending, setConflictPending] = useState(null);
   const { cart, addToCart, forceAddToCart, updateQuantity } = useCart();
 
@@ -30,12 +31,13 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
   const loadVendedor = async () => {
     try {
       setLoading(true);
+      setError(null);
       const data = await api.getVendedor(vendedorId);
       setVendedor(data.vendedor);
       setProductos(data.vendedor.productos || []);
-    } catch (error) {
-      console.error('Error al cargar vendedor:', error);
-      toast.error('Error al cargar el puesto: ' + error.message);
+    } catch (err) {
+      console.error('Error al cargar vendedor:', err);
+      setError('No se pudo cargar el puesto.');
     } finally {
       setLoading(false);
     }
@@ -87,51 +89,41 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
   // Obtener categorías únicas de los productos
   const categorias = ['Todos', ...new Set(productos.map(p => p.categoria).filter(Boolean))];
 
+  const headerProps = {
+    onMenuClick: handleMenuClick,
+    onLoginClick: () => {},
+    onLogoClick: handleLogoClick,
+    user,
+    onLogout,
+    onDashboardClick,
+    onCartClick,
+    onOrdersClick,
+  };
+
   if (loading) {
     return (
       <div className="store-view-container">
-        <Header 
-          onMenuClick={handleMenuClick}
-          onLoginClick={() => {}}
-          onLogoClick={handleLogoClick}
-          user={user}
-          onLogout={onLogout}
-          onDashboardClick={onDashboardClick}
-          onCartClick={onCartClick}
-        />
-        <div className="loading-container">Cargando productos...</div>
+        <Header {...headerProps} />
+        <Spinner message="Cargando productos..." />
       </div>
     );
   }
 
-  if (!vendedor) {
+  if (error || !vendedor) {
     return (
       <div className="store-view-container">
-        <Header 
-          onMenuClick={handleMenuClick}
-          onLoginClick={() => {}}
-          onLogoClick={handleLogoClick}
-          user={user}
-          onLogout={onLogout}
-          onDashboardClick={onDashboardClick}
-          onCartClick={onCartClick}
-        />
-        <div className="error-container">Puesto no encontrado</div>
+        <Header {...headerProps} />
+        <div className="error-container">
+          <p>{error || 'Puesto no encontrado.'}</p>
+          {error && <button className="retry-btn" onClick={loadVendedor}>Reintentar</button>}
+        </div>
       </div>
     );
   }
 
   return (
     <div className="store-view-container">
-      <Header
-        onMenuClick={handleMenuClick}
-        onLoginClick={() => {}}
-        onLogoClick={handleLogoClick}
-        user={user}
-        onLogout={onLogout}
-        onDashboardClick={onDashboardClick}
-        onCartClick={onCartClick}
-      />
+      <Header {...headerProps} />
 
       <Sidebar
         isOpen={sidebarOpen}
@@ -215,7 +207,7 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
             </div>
           ) : (
             filteredProductos.map(producto => (
-              <div key={producto.id} className="product-card">
+              <div key={producto.id} className="product-card" onClick={() => onProductClick && onProductClick(producto, vendedor)} style={{ cursor: 'pointer' }}>
                 <div className="product-image-container">
                   {producto.imagen ? (
                     <img
@@ -231,13 +223,13 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
                   {(() => {
                     const cartItem = cart.find(i => i.productId === producto.id);
                     return cartItem ? (
-                      <div className="product-qty-control">
+                      <div className="product-qty-control" onClick={e => e.stopPropagation()}>
                         <button onClick={() => updateQuantity(producto.id, cartItem.cantidad - 1)}>−</button>
                         <span>{cartItem.cantidad}</span>
                         <button onClick={() => updateQuantity(producto.id, cartItem.cantidad + 1)}>+</button>
                       </div>
                     ) : (
-                      <button className="product-add-btn" onClick={() => handleAddToCart(producto)}>
+                      <button className="product-add-btn" onClick={e => { e.stopPropagation(); handleAddToCart(producto); }}>
                         añadir
                       </button>
                     );

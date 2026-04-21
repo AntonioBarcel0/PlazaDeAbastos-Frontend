@@ -13,3 +13,29 @@ body {
   min-height: 100vh;
   position: relative;
 }
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.retry-btn {
+  background-color: #8b2332;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.8rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.retry-btn:hover {
+  background-color: #6d1a27;
+}

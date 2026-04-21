@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import { api } from '../services/api';
 import './Checkout.css';
 
-function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuccess, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onLoginClick }) {
+function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuccess, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onLoginClick, onOrdersClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { cart, vendedorCart, cartTotal, clearCart } = useCart();
   const [form, setForm] = useState({
@@ -63,6 +63,7 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
           onLogout={onLogout}
           onDashboardClick={onDashboardClick}
           onCartClick={onCartClick}
+          onOrdersClick={onOrdersClick}
         />
         <main className="checkout-main">
           <div className="checkout-success">
@@ -89,6 +90,7 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
           onLogout={onLogout}
           onDashboardClick={onDashboardClick}
           onCartClick={onCartClick}
+          onOrdersClick={onOrdersClick}
         />
         <main className="checkout-main">
           <div className="checkout-success">

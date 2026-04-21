@@ -9,6 +9,8 @@ import StoreView from './components/StoreView';
 import SelectPuesto from './components/SelectPuesto';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
+import ProductDetail from './pages/ProductDetail';
+import MisPedidos from './components/MisPedidos';
 import { CartProvider } from './context/CartContext';
 import { api } from './services/api';
 import { Toaster } from 'react-hot-toast';
@@ -18,6 +20,8 @@ function App() {
   const [currentView, setCurrentView] = useState('home');
   const [user, setUser] = useState(null);
   const [selectedVendedorId, setSelectedVendedorId] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedProductVendedor, setSelectedProductVendedor] = useState(null);
 
   const navigate = (view) => {
     window.history.pushState({ view }, '');
@@ -75,7 +79,14 @@ function App() {
 
   const handleCartClick = () => navigate('cart');
 
+  const handleProductClick = (product, vendedor) => {
+    setSelectedProduct(product);
+    setSelectedProductVendedor(vendedor);
+    navigate('product-detail');
+  };
+
   const handleCheckoutClick = () => navigate('checkout');
+  const handleOrdersClick = () => navigate('mis-pedidos');
 
   const renderView = () => {
     switch(currentView) {
@@ -88,6 +99,7 @@ function App() {
           onMarketplaceClick={() => navigate('marketplace')}
           onSelectPuestoClick={() => navigate('select-puesto')}
           onCartClick={handleCartClick}
+          onOrdersClick={handleOrdersClick}
         />;
 
       case 'select-puesto':
@@ -100,6 +112,7 @@ function App() {
           onHomeClick={goHome}
           onMarketplaceClick={() => navigate('marketplace')}
           onCartClick={handleCartClick}
+          onOrdersClick={handleOrdersClick}
         />;
 
       case 'marketplace':
@@ -113,6 +126,7 @@ function App() {
           onMarketplaceClick={() => navigate('marketplace')}
           onSelectPuestoClick={() => navigate('select-puesto')}
           onCartClick={handleCartClick}
+          onOrdersClick={handleOrdersClick}
         />;
 
       case 'store-view':
@@ -125,7 +139,24 @@ function App() {
           onHomeClick={goHome}
           onMarketplaceClick={() => navigate('marketplace')}
           onSelectPuestoClick={() => navigate('select-puesto')}
+          onProductClick={handleProductClick}
           onCartClick={handleCartClick}
+          onOrdersClick={handleOrdersClick}
+        />;
+
+      case 'product-detail':
+        return <ProductDetail
+          product={selectedProduct}
+          vendedor={selectedProductVendedor}
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onBack={goBack}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
+          onCartClick={handleCartClick}
+          onOrdersClick={handleOrdersClick}
         />;
 
       case 'cart':
@@ -140,6 +171,7 @@ function App() {
           onMarketplaceClick={() => navigate('marketplace')}
           onSelectPuestoClick={() => navigate('select-puesto')}
           onCheckout={handleCheckoutClick}
+          onOrdersClick={handleOrdersClick}
         />;
 
       case 'checkout':
@@ -154,6 +186,7 @@ function App() {
           onMarketplaceClick={() => navigate('marketplace')}
           onSelectPuestoClick={() => navigate('select-puesto')}
           onSuccess={goHome}
+          onOrdersClick={handleOrdersClick}
         />;
 
       case 'loginOptions':
@@ -187,6 +220,19 @@ function App() {
             onLoginSuccess={handleLoginSuccess}
           />
         );
+
+      case 'mis-pedidos':
+        if (!user) { goHome(); return null; }
+        return <MisPedidos
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
+          onCartClick={handleCartClick}
+          onOrdersClick={handleOrdersClick}
+        />;
 
       case 'admin-dashboard':
         if (!user || (user.role !== 'comerciante' && user.role !== 'admin')) {

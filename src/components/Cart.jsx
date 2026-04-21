@@ -6,7 +6,7 @@ import './Cart.css';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
-function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCheckout, onLoginClick }) {
+function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCheckout, onLoginClick, onOrdersClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { cart, vendedorCart, cartCount, cartTotal, removeFromCart, updateQuantity, clearCart } = useCart();
 
@@ -21,6 +21,7 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeCli
           onLogout={onLogout}
           onDashboardClick={onDashboardClick}
           onCartClick={onCartClick}
+          onOrdersClick={onOrdersClick}
         />
         <Sidebar
           isOpen={sidebarOpen}

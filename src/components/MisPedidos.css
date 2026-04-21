@@ -1,0 +1,188 @@
+.mp-container {
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+.mp-main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 7rem 1.5rem 3rem;
+}
+
+.mp-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 2rem;
+}
+
+/* Empty state */
+.mp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 4rem 0;
+  color: #666;
+}
+
+.mp-empty-btn {
+  background-color: #8b2332;
+  color: white;
+  border: none;
+  padding: 0.7rem 2rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.mp-empty-btn:hover {
+  background-color: #6d1a27;
+}
+
+/* List */
+.mp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Card */
+.mp-card {
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.mp-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1rem 1.25rem;
+  background-color: #fafafa;
+  border-bottom: 1px solid #e8e8e8;
+  gap: 1rem;
+}
+
+.mp-card-vendor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.mp-vendor-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #1a1a1a;
+}
+
+.mp-vendor-esp {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.mp-card-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.mp-date {
+  font-size: 0.82rem;
+  color: #888;
+}
+
+/* Status badges */
+.mp-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.mp-badge--pendiente  { background: #f0f0f0; color: #555; }
+.mp-badge--confirmado { background: #dbeafe; color: #1d4ed8; }
+.mp-badge--preparando { background: #fef3c7; color: #92400e; }
+.mp-badge--listo      { background: #d1fae5; color: #065f46; }
+.mp-badge--entregado  { background: #bbf7d0; color: #14532d; }
+.mp-badge--cancelado  { background: #fee2e2; color: #991b1b; }
+
+/* Items list */
+.mp-items {
+  list-style: none;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mp-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.mp-item-name {
+  flex: 1;
+}
+
+.mp-item-qty {
+  color: #888;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.mp-item-price {
+  font-weight: 600;
+  color: #1a1a1a;
+  white-space: nowrap;
+}
+
+/* Footer */
+.mp-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid #e8e8e8;
+  gap: 1rem;
+}
+
+.mp-vendor-note {
+  font-size: 0.82rem;
+  color: #555;
+  flex: 1;
+}
+
+.mp-total {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #8b2332;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .mp-main {
+    padding-top: 5.5rem;
+  }
+
+  .mp-card-header {
+    flex-direction: column;
+  }
+
+  .mp-card-meta {
+    align-items: flex-start;
+  }
+
+  .mp-card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

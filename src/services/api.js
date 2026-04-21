@@ -374,6 +374,17 @@ export const api = {
     }
   },
 
+  // Obtener los pedidos realizados por el cliente autenticado
+  getMyPurchases: async () => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/orders/my-purchases`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al obtener tus pedidos');
+    return data;
+  },
+
   // Crear un pedido (clientes)
   createOrder: async (orderData) => {
     try {
