@@ -191,9 +191,11 @@
 
   .cart-btn,
   .log-btn,
-  .dashboard-btn {
+  .dashboard-btn,
+  .orders-btn {
     width: 40px;
     height: 40px;
+    font-size: 1.3rem;
   }
 
   .user-name {

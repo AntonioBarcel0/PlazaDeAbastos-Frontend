@@ -96,8 +96,13 @@
   color: #8b2332;
 }
 
-.product-detail-qty button:hover {
+.product-detail-qty button:hover:not(:disabled) {
   background-color: #e8e8e8;
+}
+
+.product-detail-qty button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 .product-detail-qty span {
@@ -120,8 +125,14 @@
   transition: background-color 0.2s;
 }
 
-.product-detail-add-btn:hover {
+.product-detail-add-btn:hover:not(:disabled) {
   background-color: #6d1a27;
+}
+
+.product-detail-add-btn--agotado,
+.product-detail-add-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 /* Right column: image */

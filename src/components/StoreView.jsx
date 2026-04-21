@@ -222,15 +222,21 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
                   )}
                   {(() => {
                     const cartItem = cart.find(i => i.productId === producto.id);
+                    const agotado = producto.stock !== null && producto.stock !== undefined && producto.stock === 0;
+                    const enLimite = cartItem && producto.stock !== null && producto.stock !== undefined && cartItem.cantidad >= producto.stock;
                     return cartItem ? (
                       <div className="product-qty-control" onClick={e => e.stopPropagation()}>
                         <button onClick={() => updateQuantity(producto.id, cartItem.cantidad - 1)}>−</button>
                         <span>{cartItem.cantidad}</span>
-                        <button onClick={() => updateQuantity(producto.id, cartItem.cantidad + 1)}>+</button>
+                        <button onClick={() => updateQuantity(producto.id, cartItem.cantidad + 1)} disabled={enLimite}>+</button>
                       </div>
                     ) : (
-                      <button className="product-add-btn" onClick={e => { e.stopPropagation(); handleAddToCart(producto); }}>
-                        añadir
+                      <button
+                        className={`product-add-btn${agotado ? ' product-add-btn--agotado' : ''}`}
+                        onClick={e => { e.stopPropagation(); if (!agotado) handleAddToCart(producto); }}
+                        disabled={agotado}
+                      >
+                        {agotado ? 'Agotado' : 'añadir'}
                       </button>
                     );
                   })()}

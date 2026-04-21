@@ -71,6 +71,12 @@
   margin-bottom: 2rem;
   overflow-x: auto;
   padding-bottom: 0.5rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.marketplace-categories::-webkit-scrollbar {
+  display: none;
 }
 
 .marketplace-categories::-webkit-scrollbar {
@@ -199,7 +205,7 @@
 
 @media (max-width: 768px) {
   .marketplace-main {
-    padding: 90px 1rem 1rem 1rem;
+    padding: 75px 1rem 1rem 1rem;
   }
 
   .marketplace-title {
@@ -214,11 +220,6 @@
     max-width: 100%;
   }
 
-  .marketplace-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
   .marketplace-categories {
     gap: 0.5rem;
   }
@@ -226,5 +227,16 @@
   .category-btn {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
+  }
+
+  .store-image-container {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .marketplace-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }

@@ -22,6 +22,10 @@ export function CartProvider({ children }) {
     setCart(prev => {
       const existing = prev.find(item => item.productId === producto.id);
       if (existing) {
+        const maxStock = existing.stock;
+        if (maxStock !== null && maxStock !== undefined && existing.cantidad >= maxStock) {
+          return prev; // ya en el límite de stock
+        }
         return prev.map(item =>
           item.productId === producto.id
             ? { ...item, cantidad: item.cantidad + 1 }
@@ -35,6 +39,7 @@ export function CartProvider({ children }) {
         unidad: producto.unidad,
         imagen: producto.imagen,
         cantidad: 1,
+        stock: producto.stock ?? null,
       }];
     });
 
@@ -51,6 +56,7 @@ export function CartProvider({ children }) {
       unidad: producto.unidad,
       imagen: producto.imagen,
       cantidad: 1,
+      stock: producto.stock ?? null,
     }]);
   };
 
@@ -68,9 +74,14 @@ export function CartProvider({ children }) {
       return;
     }
     setCart(prev =>
-      prev.map(item =>
-        item.productId === productId ? { ...item, cantidad } : item
-      )
+      prev.map(item => {
+        if (item.productId !== productId) return item;
+        const maxStock = item.stock;
+        const newCantidad = (maxStock !== null && maxStock !== undefined)
+          ? Math.min(cantidad, maxStock)
+          : cantidad;
+        return { ...item, cantidad: newCantidad };
+      })
     );
   };
 

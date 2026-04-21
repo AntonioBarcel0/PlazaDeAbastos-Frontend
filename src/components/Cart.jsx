@@ -99,6 +99,7 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeCli
                   <button
                     className="qty-btn"
                     onClick={() => updateQuantity(item.productId, item.cantidad + 1)}
+                    disabled={item.stock !== null && item.stock !== undefined && item.cantidad >= item.stock}
                   >
                     +
                   </button>

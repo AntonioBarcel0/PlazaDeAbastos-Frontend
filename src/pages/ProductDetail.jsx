@@ -12,6 +12,8 @@ function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, on
   const { cart, addToCart, updateQuantity } = useCart();
 
   const cartItem = cart.find(i => i.productId === product.id);
+  const agotado = product.stock !== null && product.stock !== undefined && product.stock === 0;
+  const enLimite = cartItem && product.stock !== null && product.stock !== undefined && cartItem.cantidad >= product.stock;
 
   const handleAddToCart = () => {
     if (!vendedor) return;
@@ -66,11 +68,15 @@ function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, on
               <div className="product-detail-qty">
                 <button onClick={() => updateQuantity(product.id, cartItem.cantidad - 1)}>−</button>
                 <span>{cartItem.cantidad}</span>
-                <button onClick={() => updateQuantity(product.id, cartItem.cantidad + 1)}>+</button>
+                <button onClick={() => updateQuantity(product.id, cartItem.cantidad + 1)} disabled={enLimite}>+</button>
               </div>
             ) : (
-              <button className="product-detail-add-btn" onClick={handleAddToCart}>
-                Añadir
+              <button
+                className={`product-detail-add-btn${agotado ? ' product-detail-add-btn--agotado' : ''}`}
+                onClick={handleAddToCart}
+                disabled={agotado}
+              >
+                {agotado ? 'Agotado' : 'Añadir'}
               </button>
             )}
           </div>

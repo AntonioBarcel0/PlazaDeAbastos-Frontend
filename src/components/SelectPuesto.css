@@ -255,7 +255,7 @@
 /* ── Responsive ──────────────────────────────────── */
 @media (max-width: 768px) {
   .sp-main {
-    padding: 100px 1rem 2rem;
+    padding: 75px 1rem 2rem;
   }
 
   .sp-top-row {
@@ -280,8 +280,14 @@
     align-self: flex-end;
   }
 
+  .sp-card-image-wrap {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
   .sp-grid {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    gap: 1rem;
   }
 }

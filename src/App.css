@@ -7,6 +7,13 @@
 body {
   font-family: 'Arial', sans-serif;
   overflow-x: hidden;
+  zoom: 0.75;
+}
+
+@media (max-width: 768px) {
+  body {
+    zoom: 1;
+  }
 }
 
 .App {
