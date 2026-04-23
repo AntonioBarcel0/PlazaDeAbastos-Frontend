@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
-
 .register-page {
   width: 100%;
   min-height: 100vh;
@@ -41,9 +39,10 @@
 .register-input {
   width: 100%;
   max-width: 400px;
-  padding: 15px 25px;
-  font-size: 16px;
-  font-family: 'Alfa Slab One', cursive;
+  padding: 18px 25px;
+  min-height: 52px;
+  font-size: 18px;
+  font-family: inherit;
   color: #8b2332;
   background-color: white;
   border: none;
@@ -91,7 +90,8 @@
 }
 
 .register-button {
-  padding: 12px 50px;
+  padding: 16px 50px;
+  min-height: 52px;
   font-size: 18px;
   font-family: 'Alfa Slab One', cursive;
   font-weight: 400;
@@ -117,11 +117,12 @@
   background: none;
   border: none;
   color: white;
-  font-family: 'Arial', sans-serif;
-  font-size: 14px;
+  font-family: inherit;
+  font-size: 16px;
   text-decoration: underline;
   cursor: pointer;
-  padding: 10px;
+  padding: 12px;
+  min-height: 44px;
   transition: opacity 0.2s ease;
   margin-top: 10px;
 }
@@ -140,17 +141,19 @@
   }
 
   .register-input {
-    font-size: 14px;
-    padding: 12px 20px;
+    font-size: 16px;
+    padding: 16px 20px;
+    min-height: 48px;
   }
 
   .register-button {
     font-size: 16px;
-    padding: 10px 40px;
+    padding: 14px 40px;
+    min-height: 48px;
   }
 
   .register-link-button {
-    font-size: 13px;
+    font-size: 15px;
   }
 }
 

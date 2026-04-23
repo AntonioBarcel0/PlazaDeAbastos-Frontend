@@ -23,7 +23,7 @@
   background: none;
   border: none;
   font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.85);
   cursor: pointer;
   padding: 0;
   align-self: flex-start;
@@ -54,7 +54,7 @@
 
 .sv-vendor-esp {
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.85);
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -73,7 +73,7 @@
 
 .sv-products-count {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .sv-hero-image {
@@ -202,7 +202,8 @@
   bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  padding: 0.6rem 1.5rem;
+  padding: 0.75rem 1.75rem;
+  min-height: 44px;
   background-color: white;
   border: none;
   border-radius: 20px;
@@ -244,8 +245,8 @@
 .product-qty-control button {
   background: none;
   border: none;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   font-size: 1.2rem;
   font-weight: 700;
   cursor: pointer;
@@ -263,7 +264,7 @@
 }
 
 .product-qty-control span {
-  min-width: 32px;
+  min-width: 36px;
   text-align: center;
   font-size: 1rem;
   font-weight: 700;
@@ -380,7 +381,8 @@
 
 /* ── Categorías ────────────────────────────────── */
 .category-btn {
-  padding: 0.75rem 1.5rem;
+  padding: 0.85rem 1.5rem;
+  min-height: 44px;
   border: none;
   background-color: white;
   border-radius: 8px;

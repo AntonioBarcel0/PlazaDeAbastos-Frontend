@@ -48,6 +48,7 @@
 .btn-filter,
 .btn-order {
   padding: 0.75rem 2rem;
+  min-height: 44px;
   border: none;
   background-color: white;
   border-radius: 8px;
@@ -89,7 +90,8 @@
 }
 
 .category-btn {
-  padding: 0.75rem 1.5rem;
+  padding: 0.85rem 1.5rem;
+  min-height: 44px;
   border: none;
   background-color: white;
   border-radius: 8px;

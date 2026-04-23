@@ -258,64 +258,112 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
                 </button>
               </div>
             ) : (
-              <table>
-                <thead>
-                  <tr>
-                    <th>Imagen</th>
-                    <th>Nombre</th>
-                    <th>Precio</th>
-                    <th>Unidad</th>
-                    <th>Stock</th>
-                    <th>Categoría</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
+              <>
+                {/* Tabla para desktop */}
+                <table className="products-desktop-table">
+                  <thead>
+                    <tr>
+                      <th>Imagen</th>
+                      <th>Nombre</th>
+                      <th>Precio</th>
+                      <th>Unidad</th>
+                      <th>Stock</th>
+                      <th>Categoría</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {products.map(product => (
+                      <tr key={product.id}>
+                        <td>
+                          {product.imagen ? (
+                            <img
+                              src={`${BASE_URL}${product.imagen}`}
+                              alt={product.nombre}
+                              className="product-thumb"
+                            />
+                          ) : (
+                            <div className="product-thumb no-image">Sin imagen</div>
+                          )}
+                        </td>
+                        <td>{product.nombre}</td>
+                        <td>{parseFloat(product.precio).toFixed(2)}€</td>
+                        <td>{product.unidad}</td>
+                        <td>{product.stock}</td>
+                        <td>{product.categoria || '-'}</td>
+                        <td>
+                          <button
+                            className={`status-badge ${product.disponible ? 'available' : 'unavailable'}`}
+                            onClick={() => handleToggleDisponible(product)}
+                          >
+                            {product.disponible ? 'Disponible' : 'No disponible'}
+                          </button>
+                        </td>
+                        <td className="actions">
+                          <button
+                            className="btn-edit"
+                            onClick={() => handleEdit(product)}
+                          >
+                            Editar
+                          </button>
+                          <button
+                            className="btn-delete"
+                            onClick={() => handleDelete(product.id)}
+                          >
+                            Eliminar
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                {/* Tarjetas para móvil */}
+                <div className="products-mobile-cards">
                   {products.map(product => (
-                    <tr key={product.id}>
-                      <td>
+                    <div className="product-card" key={product.id}>
+                      <div className="product-card-header">
                         {product.imagen ? (
-                          <img 
-                            src={`${BASE_URL}${product.imagen}`} 
+                          <img
+                            src={`${BASE_URL}${product.imagen}`}
                             alt={product.nombre}
-                            className="product-thumb"
+                            className="product-card-img"
                           />
                         ) : (
-                          <div className="product-thumb no-image">Sin imagen</div>
+                          <div className="product-card-img no-image">Sin imagen</div>
                         )}
-                      </td>
-                      <td>{product.nombre}</td>
-                      <td>{parseFloat(product.precio).toFixed(2)}€</td>
-                      <td>{product.unidad}</td>
-                      <td>{product.stock}</td>
-                      <td>{product.categoria || '-'}</td>
-                      <td>
-                        <button 
+                        <div className="product-card-title">
+                          <h3>{product.nombre}</h3>
+                          <p className="product-card-category">{product.categoria || 'Sin categoría'}</p>
+                        </div>
+                      </div>
+                      <div className="product-card-details">
+                        <div className="product-card-detail">
+                          <span className="detail-label">Precio</span>
+                          <span className="detail-value">{parseFloat(product.precio).toFixed(2)}€/{product.unidad}</span>
+                        </div>
+                        <div className="product-card-detail">
+                          <span className="detail-label">Stock</span>
+                          <span className="detail-value">{product.stock}</span>
+                        </div>
+                      </div>
+                      <div className="product-card-footer">
+                        <button
                           className={`status-badge ${product.disponible ? 'available' : 'unavailable'}`}
                           onClick={() => handleToggleDisponible(product)}
                         >
                           {product.disponible ? 'Disponible' : 'No disponible'}
                         </button>
-                      </td>
-                      <td className="actions">
-                        <button 
-                          className="btn-edit" 
-                          onClick={() => handleEdit(product)}
-                        >
-                          Editar
-                        </button>
-                        <button 
-                          className="btn-delete" 
-                          onClick={() => handleDelete(product.id)}
-                        >
-                          Eliminar
-                        </button>
-                      </td>
-                    </tr>
+                        <div className="product-card-actions">
+                          <button className="btn-edit" onClick={() => handleEdit(product)}>Editar</button>
+                          <button className="btn-delete" onClick={() => handleDelete(product.id)}>Eliminar</button>
+                        </div>
+                      </div>
+                    </div>
                   ))}
-                </tbody>
-              </table>
+                </div>
+              </>
             )}
           </div>
         </>

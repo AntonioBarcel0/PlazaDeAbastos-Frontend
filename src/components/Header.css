@@ -179,7 +179,7 @@
   }
 
   .menu-btn {
-    height: 40px;
+    height: 44px;
     font-size: 0.85rem;
     padding: 0 14px;
   }
@@ -193,8 +193,8 @@
   .log-btn,
   .dashboard-btn,
   .orders-btn {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     font-size: 1.3rem;
   }
 
