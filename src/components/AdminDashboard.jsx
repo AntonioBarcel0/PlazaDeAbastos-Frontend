@@ -13,7 +13,11 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [user, setUser] = useState(propUser);
-  const [activeTab, setActiveTab] = useState('productos'); // 'productos' o 'pedidos'
+  const [activeTab, setActiveTab] = useState('productos'); // 'productos' | 'pedidos' | 'perfil'
+  const [profileData, setProfileData] = useState({ especialidad: '', imagenPerfil: null });
+  const [profilePreview, setProfilePreview] = useState(null);
+  const [profileFile, setProfileFile] = useState(null);
+  const [profileSaving, setProfileSaving] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -22,6 +26,52 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
     }
     loadProducts();
   }, [user]);
+
+  useEffect(() => {
+    if (activeTab === 'perfil' && user) {
+      api.getVendedor(user.id)
+        .then(data => {
+          setProfileData({
+            especialidad: data.vendedor.especialidad || '',
+            imagenPerfil: data.vendedor.imagenPerfil || null,
+          });
+        })
+        .catch(() => {});
+    }
+  }, [activeTab, user]);
+
+  const handleProfileImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setProfileFile(file);
+    setProfilePreview(URL.createObjectURL(file));
+  };
+
+  const handleProfileSave = async () => {
+    setProfileSaving(true);
+    try {
+      const formData = new FormData();
+      formData.append('especialidad', profileData.especialidad);
+      if (profileFile) formData.append('imagenPerfil', profileFile);
+      const result = await api.updateVendorProfile(formData);
+      // Actualizar localStorage con la nueva especialidad e imagen
+      const stored = api.getCurrentUser();
+      if (stored) {
+        stored.especialidad = result.vendedor.especialidad;
+        stored.imagenPerfil = result.vendedor.imagenPerfil;
+        localStorage.setItem('user', JSON.stringify(stored));
+        setUser({ ...user, ...result.vendedor });
+      }
+      setProfileData(prev => ({ ...prev, imagenPerfil: result.vendedor.imagenPerfil }));
+      setProfileFile(null);
+      setProfilePreview(null);
+      toast.success('Perfil actualizado correctamente');
+    } catch (err) {
+      toast.error('Error al guardar: ' + err.message);
+    } finally {
+      setProfileSaving(false);
+    }
+  };
 
   const loadProducts = async () => {
     try {
@@ -106,15 +156,74 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
         >
           📦 Productos
         </button>
-        <button 
+        <button
           className={`tab-button ${activeTab === 'pedidos' ? 'active' : ''}`}
           onClick={() => setActiveTab('pedidos')}
         >
           📋 Pedidos
         </button>
+        <button
+          className={`tab-button ${activeTab === 'perfil' ? 'active' : ''}`}
+          onClick={() => setActiveTab('perfil')}
+        >
+          🏪 Mi Puesto
+        </button>
       </div>
 
       {/* Contenido según la pestaña activa */}
+      {activeTab === 'perfil' && (
+        <div className="profile-tab">
+          <div className="profile-image-section">
+            <div
+              className="profile-image-wrapper"
+              onClick={() => document.getElementById('profile-img-input').click()}
+            >
+              {profilePreview || profileData.imagenPerfil ? (
+                <img
+                  src={profilePreview || `${BASE_URL}${profileData.imagenPerfil}`}
+                  alt="Imagen del puesto"
+                  className="profile-img"
+                />
+              ) : (
+                <div className="profile-img-placeholder">🏪</div>
+              )}
+              <div className="profile-img-overlay">Cambiar imagen</div>
+            </div>
+            <input
+              id="profile-img-input"
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleProfileImageChange}
+            />
+            <p className="profile-img-hint">Haz clic en la imagen para cambiarla</p>
+          </div>
+
+          <div className="profile-fields">
+            <div className="profile-field-group">
+              <label>Especialidad del puesto</label>
+              <input
+                type="text"
+                placeholder="Ej: Frutas y verduras, Pescadería, Carnicería..."
+                value={profileData.especialidad}
+                onChange={e => setProfileData(prev => ({ ...prev, especialidad: e.target.value }))}
+              />
+              <span className="profile-field-hint">
+                Aparece en tu tarjeta del marketplace y en la cabecera de tu puesto
+              </span>
+            </div>
+
+            <button
+              className="btn-save-profile"
+              onClick={handleProfileSave}
+              disabled={profileSaving}
+            >
+              {profileSaving ? 'Guardando...' : 'Guardar cambios'}
+            </button>
+          </div>
+        </div>
+      )}
+
       {activeTab === 'productos' ? (
         <>
           <div className="dashboard-stats">
@@ -210,9 +319,9 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
             )}
           </div>
         </>
-      ) : (
+      ) : activeTab === 'pedidos' ? (
         <OrderManagement />
-      )}
+      ) : null}
     </div>
   );
 }

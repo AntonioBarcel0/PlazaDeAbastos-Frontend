@@ -262,6 +262,19 @@ export const api = {
     }
   },
 
+  // Actualizar perfil del vendedor (imagen + especialidad)
+  updateVendorProfile: async (formData) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/vendedores/profile`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al actualizar perfil');
+    return data;
+  },
+
   // Obtener categorías disponibles
   getCategorias: async () => {
     try {

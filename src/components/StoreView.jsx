@@ -20,13 +20,8 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
   const [conflictPending, setConflictPending] = useState(null);
   const { cart, addToCart, forceAddToCart, updateQuantity } = useCart();
 
-  useEffect(() => {
-    loadVendedor();
-  }, [vendedorId]);
-
-  useEffect(() => {
-    filterProductos();
-  }, [productos, selectedCategoria, searchTerm]);
+  useEffect(() => { loadVendedor(); }, [vendedorId]);
+  useEffect(() => { filterProductos(); }, [productos, selectedCategoria, searchTerm]);
 
   const loadVendedor = async () => {
     try {
@@ -45,13 +40,9 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
 
   const filterProductos = () => {
     let filtered = productos;
-
-    // Filtrar por categoría
     if (selectedCategoria !== 'Todos') {
       filtered = filtered.filter(p => p.categoria === selectedCategoria);
     }
-
-    // Filtrar por búsqueda
     if (searchTerm.trim()) {
       const search = searchTerm.toLowerCase();
       filtered = filtered.filter(p =>
@@ -59,16 +50,7 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
         (p.descripcion && p.descripcion.toLowerCase().includes(search))
       );
     }
-
     setFilteredProductos(filtered);
-  };
-
-  const handleMenuClick = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
-  const handleLogoClick = () => {
-    if (onHomeClick) onHomeClick();
   };
 
   const handleAddToCart = (producto) => {
@@ -86,13 +68,12 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
     }
   };
 
-  // Obtener categorías únicas de los productos
   const categorias = ['Todos', ...new Set(productos.map(p => p.categoria).filter(Boolean))];
 
   const headerProps = {
-    onMenuClick: handleMenuClick,
+    onMenuClick: () => setSidebarOpen(!sidebarOpen),
     onLoginClick: () => {},
-    onLogoClick: handleLogoClick,
+    onLogoClick: onHomeClick,
     user,
     onLogout,
     onDashboardClick,
@@ -104,7 +85,7 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
     return (
       <div className="store-view-container">
         <Header {...headerProps} />
-        <Spinner message="Cargando productos..." />
+        <Spinner message="Cargando puesto..." />
       </div>
     );
   }
@@ -124,7 +105,6 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
   return (
     <div className="store-view-container">
       <Header {...headerProps} />
-
       <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -132,137 +112,157 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
         onSelectPuestoClick={onSelectPuestoClick}
       />
 
-      <main className="store-view-main">
-        {/* Botón volver */}
-        <button className="back-button" onClick={onBack}>
-          ← Volver a Puestos
-        </button>
+      {/* ── Hero del puesto ── */}
+      <div className="sv-hero">
+        <div className="sv-hero-info">
+          <button className="sv-back" onClick={onBack}>← Volver</button>
 
-        {/* Información del vendedor */}
-        <div className="vendor-header">
-          <h1 className="vendor-name">{vendedor.nombreCompleto}</h1>
-          {vendedor.telefono && (
-            <p className="vendor-contact">📞 {vendedor.telefono}</p>
-          )}
-          {vendedor.direccion && (
-            <p className="vendor-location">📍 {vendedor.direccion}</p>
-          )}
-        </div>
+          <div className="sv-hero-center">
+            <h1 className="sv-vendor-name">{vendedor.nombreCompleto}</h1>
+            {vendedor.especialidad && (
+              <p className="sv-vendor-esp">{vendedor.especialidad}</p>
+            )}
+            {vendedor.telefono && (
+              <p className="sv-vendor-meta">📞 {vendedor.telefono}</p>
+            )}
+            {vendedor.direccion && (
+              <p className="sv-vendor-meta">📍 {vendedor.direccion}</p>
+            )}
+          </div>
 
-        <h2 className="products-section-title">Productos</h2>
-
-        {/* Barra de búsqueda y filtros */}
-        <div className="store-controls">
-          <input
-            type="text"
-            className="store-search"
-            placeholder="Buscar"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <div className="store-actions">
-            <button className="btn-filter">Filtrar</button>
-            <button className="btn-order">Ordenar</button>
+          <div className="sv-hero-bottom">
+            <span className="sv-products-count">
+              {productos.length} {productos.length === 1 ? 'producto' : 'productos'}
+            </span>
           </div>
         </div>
 
-        {/* Categorías */}
-        {categorias.length > 1 && (
-          <div className="store-categories">
-            {categorias.map(cat => (
-              <button
-                key={cat}
-                className={`category-btn ${selectedCategoria === cat ? 'active' : ''}`}
-                onClick={() => setSelectedCategoria(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Banner de conflicto de vendedor */}
-        {conflictPending && (
-          <div className="cart-conflict-banner">
-            <p>
-              Tu carrito tiene productos de <strong>{conflictPending.conflictVendorName}</strong>.
-              Si continúas, se vaciará el carrito actual.
-            </p>
-            <div className="cart-conflict-actions">
-              <button className="conflict-btn-cancel" onClick={() => setConflictPending(null)}>
-                Cancelar
-              </button>
-              <button className="conflict-btn-confirm" onClick={handleConflictConfirm}>
-                Vaciar y añadir
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Grid de productos */}
-        <div className="products-grid">
-          {filteredProductos.length === 0 ? (
-            <div className="empty-message">
-              No hay productos disponibles {selectedCategoria !== 'Todos' ? `en ${selectedCategoria}` : ''}
-            </div>
+        <div className="sv-hero-image">
+          {vendedor.imagenPrincipal ? (
+            <img
+              src={`${BASE_URL}${vendedor.imagenPrincipal}`}
+              alt={vendedor.nombreCompleto}
+              className="sv-hero-img"
+            />
           ) : (
-            filteredProductos.map(producto => (
-              <div key={producto.id} className="product-card" onClick={() => onProductClick && onProductClick(producto, vendedor)} style={{ cursor: 'pointer' }}>
-                <div className="product-image-container">
-                  {producto.imagen ? (
-                    <img
-                      src={`${BASE_URL}${producto.imagen}`}
-                      alt={producto.nombre}
-                      className="product-image"
-                    />
-                  ) : (
-                    <div className="product-image-placeholder">
-                      📦
-                    </div>
-                  )}
-                  {(() => {
-                    const cartItem = cart.find(i => i.productId === producto.id);
-                    const agotado = producto.stock !== null && producto.stock !== undefined && producto.stock === 0;
-                    const enLimite = cartItem && producto.stock !== null && producto.stock !== undefined && cartItem.cantidad >= producto.stock;
-                    return cartItem ? (
-                      <div className="product-qty-control" onClick={e => e.stopPropagation()}>
-                        <button onClick={() => updateQuantity(producto.id, cartItem.cantidad - 1)}>−</button>
-                        <span>{cartItem.cantidad}</span>
-                        <button onClick={() => updateQuantity(producto.id, cartItem.cantidad + 1)} disabled={enLimite}>+</button>
-                      </div>
-                    ) : (
-                      <button
-                        className={`product-add-btn${agotado ? ' product-add-btn--agotado' : ''}`}
-                        onClick={e => { e.stopPropagation(); if (!agotado) handleAddToCart(producto); }}
-                        disabled={agotado}
-                      >
-                        {agotado ? 'Agotado' : 'añadir'}
-                      </button>
-                    );
-                  })()}
-                </div>
-                <div className="product-info">
-                  <h3 className="product-name">{producto.nombre}</h3>
-                  {producto.descripcion && (
-                    <p className="product-description">{producto.descripcion}</p>
-                  )}
-                  <div className="product-price-container">
-                    <span className="product-price">
-                      {parseFloat(producto.precio).toFixed(2)}€
-                    </span>
-                    <span className="product-unit">/{producto.unidad}</span>
-                  </div>
-                  {producto.stock !== undefined && producto.stock !== null && (
-                    <p className="product-stock">
-                      Stock: {producto.stock}
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))
+            <div className="sv-hero-img-placeholder">🏪</div>
           )}
         </div>
-      </main>
+      </div>
+
+      {/* ── Sección de productos ── */}
+      <div className="sv-products-wrap">
+        <main className="sv-products-main">
+          <h2 className="sv-products-title">Productos</h2>
+
+          {/* Búsqueda */}
+          <div className="store-controls">
+            <input
+              type="text"
+              className="store-search"
+              placeholder="Buscar producto..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          {/* Categorías */}
+          {categorias.length > 1 && (
+            <div className="store-categories">
+              {categorias.map(cat => (
+                <button
+                  key={cat}
+                  className={`category-btn${selectedCategoria === cat ? ' active' : ''}`}
+                  onClick={() => setSelectedCategoria(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Banner conflicto */}
+          {conflictPending && (
+            <div className="cart-conflict-banner">
+              <p>
+                Tu carrito tiene productos de <strong>{conflictPending.conflictVendorName}</strong>.
+                Si continúas, se vaciará el carrito actual.
+              </p>
+              <div className="cart-conflict-actions">
+                <button className="conflict-btn-cancel" onClick={() => setConflictPending(null)}>
+                  Cancelar
+                </button>
+                <button className="conflict-btn-confirm" onClick={handleConflictConfirm}>
+                  Vaciar y añadir
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Grid de productos */}
+          <div className="products-grid">
+            {filteredProductos.length === 0 ? (
+              <div className="empty-message">
+                No hay productos disponibles{selectedCategoria !== 'Todos' ? ` en ${selectedCategoria}` : ''}
+              </div>
+            ) : (
+              filteredProductos.map(producto => (
+                <div
+                  key={producto.id}
+                  className="product-card"
+                  onClick={() => onProductClick && onProductClick(producto, vendedor)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className="product-image-container">
+                    {producto.imagen ? (
+                      <img
+                        src={`${BASE_URL}${producto.imagen}`}
+                        alt={producto.nombre}
+                        className="product-image"
+                      />
+                    ) : (
+                      <div className="product-image-placeholder">📦</div>
+                    )}
+                    {(() => {
+                      const cartItem = cart.find(i => i.productId === producto.id);
+                      const agotado = producto.stock !== null && producto.stock !== undefined && producto.stock === 0;
+                      const enLimite = cartItem && producto.stock !== null && producto.stock !== undefined && cartItem.cantidad >= producto.stock;
+                      return cartItem ? (
+                        <div className="product-qty-control" onClick={e => e.stopPropagation()}>
+                          <button onClick={() => updateQuantity(producto.id, cartItem.cantidad - 1)}>−</button>
+                          <span>{cartItem.cantidad}</span>
+                          <button onClick={() => updateQuantity(producto.id, cartItem.cantidad + 1)} disabled={enLimite}>+</button>
+                        </div>
+                      ) : (
+                        <button
+                          className={`product-add-btn${agotado ? ' product-add-btn--agotado' : ''}`}
+                          onClick={e => { e.stopPropagation(); if (!agotado) handleAddToCart(producto); }}
+                          disabled={agotado}
+                        >
+                          {agotado ? 'Agotado' : 'añadir'}
+                        </button>
+                      );
+                    })()}
+                  </div>
+                  <div className="product-info">
+                    <h3 className="product-name">{producto.nombre}</h3>
+                    {producto.descripcion && (
+                      <p className="product-description">{producto.descripcion}</p>
+                    )}
+                    <div className="product-price-container">
+                      <span className="product-price">{parseFloat(producto.precio).toFixed(2)}€</span>
+                      <span className="product-unit">/{producto.unidad}</span>
+                    </div>
+                    {producto.stock !== undefined && producto.stock !== null && (
+                      <p className="product-stock">Stock: {producto.stock}</p>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
