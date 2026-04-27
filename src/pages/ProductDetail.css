@@ -1,0 +1,197 @@
+.product-detail-container {
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+.product-detail-layout {
+  display: flex;
+  height: calc(100vh - 120px);
+  margin-top: 120px;
+}
+
+/* Left column: info */
+.product-detail-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem 3rem 2.5rem 3rem;
+  background-color: #8b2332;
+}
+
+.product-detail-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.75rem;
+}
+
+.product-detail-name {
+  font-size: 2rem;
+  font-weight: 400;
+  color: white;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.product-detail-price {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+/* Bottom row: descripcion left, button right */
+.product-detail-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.product-detail-origen {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+.product-detail-back {
+  background: none;
+  border: none;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  padding: 0;
+  align-self: flex-start;
+}
+
+.product-detail-back:hover {
+  color: white;
+}
+
+.product-detail-stock {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+}
+
+.product-detail-qty {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.product-detail-qty button {
+  background: none;
+  border: none;
+  min-width: 48px;
+  min-height: 48px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: white;
+}
+
+.product-detail-qty button:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.product-detail-qty button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.product-detail-qty span {
+  min-width: 40px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: white;
+}
+
+.product-detail-add-btn {
+  flex-shrink: 0;
+  background-color: white;
+  color: #8b2332;
+  border: none;
+  padding: 0.9rem 3rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.product-detail-add-btn:hover:not(:disabled) {
+  background-color: #f0e0e2;
+}
+
+.product-detail-add-btn--agotado,
+.product-detail-add-btn:disabled {
+  background-color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.6);
+  cursor: not-allowed;
+}
+
+/* Right column: image */
+.product-detail-image {
+  flex: 1;
+  overflow: hidden;
+}
+
+.product-detail-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-detail-img-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #f0f0f0;
+}
+
+/* ── Selector de gramos (ProductDetail) ─────────── */
+.product-detail-gram-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.product-detail-gram-price {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .product-detail-layout {
+    flex-direction: column;
+    height: auto;
+    margin-top: 80px;
+  }
+
+  .product-detail-image {
+    height: 50vw;
+    min-height: 250px;
+  }
+
+  .product-detail-info {
+    padding: 2rem 1.5rem;
+    min-height: 300px;
+  }
+
+  .product-detail-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -8,7 +8,7 @@ import HowToOrder from './HowToOrder';
 import Footer from './Footer';
 import './Home.css';
 
-function Home({ onLoginClick, user, onLogout, onDashboardClick, onMarketplaceClick, onSelectPuestoClick }) {
+function Home({ onLoginClick, user, onLogout, onDashboardClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleMenuClick = () => {
@@ -26,13 +26,15 @@ function Home({ onLoginClick, user, onLogout, onDashboardClick, onMarketplaceCli
 
   return (
     <div className="home-container">
-      <Header 
-        onMenuClick={handleMenuClick} 
+      <Header
+        onMenuClick={handleMenuClick}
         onLoginClick={onLoginClick}
         onLogoClick={handleLogoClick}
         user={user}
         onLogout={onLogout}
         onDashboardClick={onDashboardClick}
+        onCartClick={onCartClick}
+        onOrdersClick={onOrdersClick}
       />
 
       <Sidebar

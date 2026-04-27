@@ -1,16 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import Spinner from './Spinner';
 import { api } from '../services/api';
 import './SelectPuesto.css';
 
-const CATEGORIAS = ['Todos', 'Frutería', 'Pescadería', 'Carnicería', 'Comestibles', 'Otros'];
+const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '');
+
+const CATEGORIAS = ['Todos', 'Frutería', 'Comestibles', 'Otros'];
 
 // Palabras clave para emparejar cada categoría de filtro con la especialidad del vendedor
 const FILTER_KEYWORDS = {
   'Frutería':    ['fruta', 'frutas'],
-  'Pescadería':  ['pescad', 'marisco'],
-  'Carnicería':  ['carne', 'carnes', 'carniced', 'carnicer'],
   'Comestibles': ['comestible', 'charcuter', 'queso'],
   'Otros':       ['jardiner', 'especia', 'panadera', 'panader'],
 };
@@ -21,7 +22,7 @@ const SORT_OPTIONS = [
   { value: 'cat', label: 'Categoría' },
 ];
 
-function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onBack }) {
+function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHomeClick, onMarketplaceClick, onCartClick, onOrdersClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedores, setVendedores] = useState([]);
   const [filteredVendedores, setFilteredVendedores] = useState([]);
@@ -30,6 +31,7 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onBack
   const [sortBy, setSortBy] = useState('az');
   const [sortOpen, setSortOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const sortRef = useRef(null);
 
   useEffect(() => {
@@ -53,10 +55,12 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onBack
   const loadVendedores = async () => {
     try {
       setLoading(true);
+      setError(null);
       const data = await api.getVendedores();
       setVendedores(data.vendedores || []);
-    } catch (error) {
-      console.error('Error al cargar vendedores:', error);
+    } catch (err) {
+      console.error('Error al cargar vendedores:', err);
+      setError('No se pudieron cargar los puestos.');
     } finally {
       setLoading(false);
     }
@@ -100,39 +104,47 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onBack
 
   const currentSortLabel = SORT_OPTIONS.find(o => o.value === sortBy)?.label;
 
+  const headerProps = {
+    onMenuClick: () => setSidebarOpen(!sidebarOpen),
+    onLoginClick: () => {},
+    onLogoClick: onHomeClick,
+    user,
+    onLogout,
+    onDashboardClick,
+    onCartClick,
+    onOrdersClick,
+  };
+
   if (loading) {
     return (
       <div className="sp-container">
-        <Header
-          onMenuClick={() => setSidebarOpen(true)}
-          onLoginClick={() => {}}
-          onLogoClick={onBack}
-          user={user}
-          onLogout={onLogout}
-          onDashboardClick={onDashboardClick}
-        />
-        <div className="sp-loading">Cargando puestos...</div>
+        <Header {...headerProps} />
+        <Spinner message="Cargando puestos..." />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="sp-container">
+        <Header {...headerProps} />
+        <div className="error-container">
+          <p>{error}</p>
+          <button className="retry-btn" onClick={loadVendedores}>Reintentar</button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="sp-container">
-      <Header
-        onMenuClick={() => setSidebarOpen(!sidebarOpen)}
-        onLoginClick={() => {}}
-        onLogoClick={onBack}
-        user={user}
-        onLogout={onLogout}
-        onDashboardClick={onDashboardClick}
-      />
+      <Header {...headerProps} />
 
       <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-        user={user}
-        onLogout={onLogout}
-        onDashboardClick={onDashboardClick}
+        onMarketplaceClick={onMarketplaceClick}
+        onSelectPuestoClick={() => {}}
       />
 
       <main className="sp-main">
@@ -197,35 +209,47 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onBack
           </div>
         </div>
 
-        {/* Grid de puestos */}
-        <div className="sp-grid">
+        {/* Lista de puestos */}
+        <div className="sp-list">
           {filteredVendedores.length === 0 ? (
             <p className="sp-empty">
               No se encontraron puestos{selectedCategoria !== 'Todos' ? ` en ${selectedCategoria}` : ''}.
             </p>
           ) : (
             filteredVendedores.map(vendedor => (
-              <div key={vendedor.id} className="sp-card">
+              <div key={vendedor.id} className="sp-card" onClick={() => onPuestoSelect(vendedor.id)}>
+                {/* Panel izquierdo — info */}
+                <div className="sp-card-info">
+                  <div className="sp-card-center">
+                    <h3 className="sp-card-name">{vendedor.nombreCompleto}</h3>
+                    {vendedor.especialidad && (
+                      <p className="sp-card-esp">{vendedor.especialidad}</p>
+                    )}
+                  </div>
+                  <div className="sp-card-bottom">
+                    <span className="sp-card-cat-badge">
+                      {getCategoriaPrincipal(vendedor.categorias)}
+                    </span>
+                    <button
+                      className="sp-card-btn"
+                      onClick={e => { e.stopPropagation(); onPuestoSelect(vendedor.id); }}
+                    >
+                      Ir al puesto →
+                    </button>
+                  </div>
+                </div>
+
+                {/* Panel derecho — imagen */}
                 <div className="sp-card-image-wrap">
                   {vendedor.imagenPrincipal ? (
                     <img
-                      src={`http://localhost:3001${vendedor.imagenPrincipal}`}
+                      src={`${BASE_URL}${vendedor.imagenPrincipal}`}
                       alt={vendedor.nombreCompleto}
                       className="sp-card-image"
                     />
                   ) : (
-                    <div className="sp-card-placeholder" />
+                    <div className="sp-card-placeholder">🏪</div>
                   )}
-                  <button
-                    className="sp-select-btn"
-                    onClick={() => onPuestoSelect(vendedor.id)}
-                  >
-                    Seleccionar
-                  </button>
-                </div>
-                <div className="sp-card-info">
-                  <h3 className="sp-card-name">{vendedor.nombreCompleto}</h3>
-                  <p className="sp-card-cat">{getCategoriaPrincipal(vendedor.categorias)}</p>
                 </div>
               </div>
             ))

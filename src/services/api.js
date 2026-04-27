@@ -1,5 +1,5 @@
 // services/api.js
-const API_URL = 'http://localhost:3001/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 // Helper para obtener el token
 const getAuthHeaders = () => {
@@ -262,6 +262,19 @@ export const api = {
     }
   },
 
+  // Actualizar perfil del vendedor (imagen + especialidad)
+  updateVendorProfile: async (formData) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/vendedores/profile`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al actualizar perfil');
+    return data;
+  },
+
   // Obtener categorías disponibles
   getCategorias: async () => {
     try {
@@ -374,6 +387,17 @@ export const api = {
     }
   },
 
+  // Obtener los pedidos realizados por el cliente autenticado
+  getMyPurchases: async () => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/orders/my-purchases`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al obtener tus pedidos');
+    return data;
+  },
+
   // Crear un pedido (clientes)
   createOrder: async (orderData) => {
     try {
@@ -419,6 +443,43 @@ export const api = {
     } catch (error) {
       throw error;
     }
+  },
+
+  // ============== GESTOR ==============
+
+  // Obtener todos los pedidos (con filtros opcionales)
+  getAllOrders: async (filters = {}) => {
+    const token = localStorage.getItem('token');
+    const params = new URLSearchParams(filters);
+    const response = await fetch(`${API_URL}/orders/all?${params}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al obtener pedidos');
+    return data;
+  },
+
+  // Marcar un pedido completo como entregado
+  deliverOrder: async (id) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/orders/${id}/deliver`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al marcar como entregado');
+    return data;
+  },
+
+  // Estadísticas globales del mercado
+  getGestorStats: async () => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/orders/gestor-stats`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al obtener estadísticas');
+    return data;
   }
 };
 

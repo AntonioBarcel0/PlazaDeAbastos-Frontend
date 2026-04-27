@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
+import toast from 'react-hot-toast';
 import './ProductForm.css';
+
+const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '');
 
 function ProductForm({ product, onClose }) {
   const [formData, setFormData] = useState({
@@ -43,7 +46,7 @@ function ProductForm({ product, onClose }) {
         disponible: product.disponible
       });
       if (product.imagen) {
-        setPreviewUrl(`http://localhost:3001${product.imagen}`);
+        setPreviewUrl(`${BASE_URL}${product.imagen}`);
       }
     }
   }, [product]);
@@ -72,7 +75,7 @@ function ProductForm({ product, onClose }) {
     e.preventDefault();
     
     if (!formData.nombre || !formData.precio) {
-      alert('Nombre y precio son obligatorios');
+      toast.error('Nombre y precio son obligatorios');
       return;
     }
 
@@ -86,15 +89,15 @@ function ProductForm({ product, onClose }) {
 
       if (product) {
         await api.updateProduct(product.id, dataToSend);
-        alert('Producto actualizado correctamente');
+        toast.success('Producto actualizado correctamente');
       } else {
         await api.createProduct(dataToSend);
-        alert('Producto creado correctamente');
+        toast.success('Producto creado correctamente');
       }
 
       onClose(true);
     } catch (error) {
-      alert('Error: ' + error.message);
+      toast.error('Error: ' + error.message);
     } finally {
       setLoading(false);
     }
