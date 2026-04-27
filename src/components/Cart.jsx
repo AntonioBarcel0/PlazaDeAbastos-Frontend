@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { useCart } from '../context/CartContext';
+import { useCart, isKg, itemSubtotal } from '../context/CartContext';
 import './Cart.css';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
 function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCheckout, onLoginClick, onOrdersClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { cart, vendedorCart, cartCount, cartTotal, removeFromCart, updateQuantity, clearCart } = useCart();
+  const { cart, cartByVendor, cartTotal, removeFromCart, updateQuantity, clearCart } = useCart();
 
   if (cart.length === 0) {
     return (
@@ -43,6 +43,8 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeCli
     );
   }
 
+  const vendorIds = Object.keys(cartByVendor);
+
   return (
     <div className="cart-container">
       <Header
@@ -53,6 +55,7 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeCli
         onLogout={onLogout}
         onDashboardClick={onDashboardClick}
         onCartClick={onCartClick}
+        onOrdersClick={onOrdersClick}
       />
       <Sidebar
         isOpen={sidebarOpen}
@@ -67,65 +70,89 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeCli
         </button>
 
         <h1 className="cart-title">Tu carrito</h1>
-        {vendedorCart && (
-          <p className="cart-vendor-name">Productos de: <strong>{vendedorCart.nombre}</strong></p>
-        )}
 
         <div className="cart-layout">
           <div className="cart-items">
-            {cart.map(item => (
-              <div key={item.productId} className="cart-item">
-                <div className="cart-item-image">
-                  {item.imagen ? (
-                    <img src={`${BASE_URL}${item.imagen}`} alt={item.nombre} />
-                  ) : (
-                    <div className="cart-item-image-placeholder">📦</div>
-                  )}
-                </div>
+            {vendorIds.map(vid => {
+              const group = cartByVendor[vid];
+              return (
+                <div key={vid} className="cart-vendor-group">
+                  <h3 className="cart-vendor-heading">{group.nombre}</h3>
+                  {group.items.map(item => (
+                    <div key={item.productId} className="cart-item">
+                      <div className="cart-item-image">
+                        {item.imagen ? (
+                          <img src={`${BASE_URL}${item.imagen}`} alt={item.nombre} />
+                        ) : (
+                          <div className="cart-item-image-placeholder">📦</div>
+                        )}
+                      </div>
 
-                <div className="cart-item-info">
-                  <h3 className="cart-item-name">{item.nombre}</h3>
-                  <p className="cart-item-price">{item.precio.toFixed(2)}€/{item.unidad}</p>
-                </div>
+                      <div className="cart-item-info">
+                        <h3 className="cart-item-name">{item.nombre}</h3>
+                        <p className="cart-item-price">{item.precio.toFixed(2)}€/{item.unidad}</p>
+                      </div>
 
-                <div className="cart-item-controls">
-                  <button
-                    className="qty-btn"
-                    onClick={() => updateQuantity(item.productId, item.cantidad - 1)}
-                  >
-                    −
-                  </button>
-                  <span className="qty-value">{item.cantidad}</span>
-                  <button
-                    className="qty-btn"
-                    onClick={() => updateQuantity(item.productId, item.cantidad + 1)}
-                    disabled={item.stock !== null && item.stock !== undefined && item.cantidad >= item.stock}
-                  >
-                    +
-                  </button>
-                </div>
+                      <div className="cart-item-controls">
+                        <button
+                          className="qty-btn"
+                          onClick={() => updateQuantity(item.productId, item.cantidad - (isKg(item.unidad) ? 50 : 1))}
+                          disabled={isKg(item.unidad) && item.cantidad <= 50}
+                        >
+                          −
+                        </button>
+                        <span className="qty-value">
+                          {isKg(item.unidad)
+                            ? (item.cantidad >= 1000
+                                ? `${(item.cantidad / 1000).toFixed(item.cantidad % 1000 === 0 ? 0 : 1)} kg`
+                                : `${item.cantidad} g`)
+                            : item.cantidad}
+                        </span>
+                        <button
+                          className="qty-btn"
+                          onClick={() => updateQuantity(item.productId, item.cantidad + (isKg(item.unidad) ? 50 : 1))}
+                          disabled={
+                            isKg(item.unidad)
+                              ? (item.stock != null && item.cantidad >= item.stock * 1000)
+                              : (item.stock !== null && item.stock !== undefined && item.cantidad >= item.stock)
+                          }
+                        >
+                          +
+                        </button>
+                      </div>
 
-                <div className="cart-item-subtotal">
-                  {(item.precio * item.cantidad).toFixed(2)}€
-                </div>
+                      <div className="cart-item-subtotal">
+                        {itemSubtotal(item).toFixed(2)}€
+                      </div>
 
-                <button
-                  className="cart-item-remove"
-                  onClick={() => removeFromCart(item.productId)}
-                  aria-label="Eliminar producto"
-                >
-                  ×
-                </button>
-              </div>
-            ))}
+                      <button
+                        className="cart-item-remove"
+                        onClick={() => removeFromCart(item.productId)}
+                        aria-label="Eliminar producto"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
           </div>
 
           <div className="cart-summary">
             <h2 className="cart-summary-title">Resumen</h2>
-            <div className="cart-summary-row">
-              <span>{cartCount} {cartCount === 1 ? 'artículo' : 'artículos'}</span>
-              <span>{cartTotal.toFixed(2)}€</span>
-            </div>
+
+            {vendorIds.map(vid => {
+              const group = cartByVendor[vid];
+              const vendorTotal = group.items.reduce((s, i) => s + itemSubtotal(i), 0);
+              return (
+                <div key={vid} className="cart-summary-row">
+                  <span>{group.nombre} ({group.items.length})</span>
+                  <span>{vendorTotal.toFixed(2)}€</span>
+                </div>
+              );
+            })}
+
             <div className="cart-summary-total">
               <strong>Total</strong>
               <strong>{cartTotal.toFixed(2)}€</strong>

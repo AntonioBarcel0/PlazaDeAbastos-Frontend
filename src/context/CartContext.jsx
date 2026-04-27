@@ -2,29 +2,55 @@ import { createContext, useContext, useState } from 'react';
 
 const CartContext = createContext(null);
 
+// Unidades que se venden por peso y cuya cantidad se almacena en gramos
+export const isKg = (unidad) => unidad === 'kg';
+
+// Precio real de un ítem del carrito
+export const itemSubtotal = (item) =>
+  isKg(item.unidad)
+    ? (item.cantidad / 1000) * item.precio   // item.cantidad = gramos
+    : item.precio * item.cantidad;
+
 export function CartProvider({ children }) {
+  // Cada item almacena: productId, nombre, precio, unidad, imagen, cantidad, stock,
+  //                      vendedorId, vendedorNombre
   const [cart, setCart] = useState([]);
-  const [vendedorCart, setVendedorCart] = useState(null); // { id, nombre }
 
-  const cartCount = cart.reduce((sum, item) => sum + item.cantidad, 0);
-  const cartTotal = cart.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+  // Los productos por peso cuentan como 1 en el badge, no como sus gramos
+  const cartCount = cart.reduce(
+    (sum, item) => sum + (isKg(item.unidad) ? 1 : item.cantidad),
+    0
+  );
+  const cartTotal = cart.reduce((sum, item) => sum + itemSubtotal(item), 0);
 
-  // Devuelve { success: true } o { success: false, conflict: true, conflictVendorName }
-  const addToCart = (producto, vendedor) => {
-    if (vendedorCart && vendedorCart.id !== vendedor.id) {
-      return { success: false, conflict: true, conflictVendorName: vendedorCart.nombre };
+  // Agrupar ítems del carrito por vendedor: { vendedorId: { nombre, items: [...] } }
+  const cartByVendor = cart.reduce((acc, item) => {
+    if (!acc[item.vendedorId]) {
+      acc[item.vendedorId] = { nombre: item.vendedorNombre, items: [] };
     }
+    acc[item.vendedorId].items.push(item);
+    return acc;
+  }, {});
 
-    if (!vendedorCart) {
-      setVendedorCart({ id: vendedor.id, nombre: vendedor.nombreCompleto });
-    }
+  // Añadir producto al carrito (multi-vendedor, sin restricción)
+  // Para productos por kg: `gramos` es la cantidad inicial (e.g. 250)
+  const addToCart = (producto, vendedor, gramos = null) => {
+    const porPeso = isKg(producto.unidad);
+    const cantidadInicial = porPeso ? (gramos ?? 250) : 1;
 
     setCart(prev => {
       const existing = prev.find(item => item.productId === producto.id);
       if (existing) {
+        if (porPeso) {
+          return prev.map(item =>
+            item.productId === producto.id
+              ? { ...item, cantidad: gramos ?? item.cantidad }
+              : item
+          );
+        }
         const maxStock = existing.stock;
         if (maxStock !== null && maxStock !== undefined && existing.cantidad >= maxStock) {
-          return prev; // ya en el límite de stock
+          return prev;
         }
         return prev.map(item =>
           item.productId === producto.id
@@ -38,36 +64,21 @@ export function CartProvider({ children }) {
         precio: parseFloat(producto.precio),
         unidad: producto.unidad,
         imagen: producto.imagen,
-        cantidad: 1,
+        cantidad: cantidadInicial,
         stock: producto.stock ?? null,
+        vendedorId: vendedor.id,
+        vendedorNombre: vendedor.nombreCompleto || `${vendedor.nombre} ${vendedor.apellidos}`,
       }];
     });
 
     return { success: true };
   };
 
-  // Vacía el carrito y añade el producto (cuando el usuario confirma cambio de vendedor)
-  const forceAddToCart = (producto, vendedor) => {
-    setVendedorCart({ id: vendedor.id, nombre: vendedor.nombreCompleto });
-    setCart([{
-      productId: producto.id,
-      nombre: producto.nombre,
-      precio: parseFloat(producto.precio),
-      unidad: producto.unidad,
-      imagen: producto.imagen,
-      cantidad: 1,
-      stock: producto.stock ?? null,
-    }]);
-  };
-
   const removeFromCart = (productId) => {
-    setCart(prev => {
-      const updated = prev.filter(item => item.productId !== productId);
-      if (updated.length === 0) setVendedorCart(null);
-      return updated;
-    });
+    setCart(prev => prev.filter(item => item.productId !== productId));
   };
 
+  // Para kg: `cantidad` son gramos (mínimo 50g, máximo stock*1000 g)
   const updateQuantity = (productId, cantidad) => {
     if (cantidad <= 0) {
       removeFromCart(productId);
@@ -76,6 +87,13 @@ export function CartProvider({ children }) {
     setCart(prev =>
       prev.map(item => {
         if (item.productId !== productId) return item;
+        if (isKg(item.unidad)) {
+          const maxGramos = item.stock !== null && item.stock !== undefined
+            ? item.stock * 1000
+            : Infinity;
+          const newCantidad = Math.min(Math.max(50, cantidad), maxGramos);
+          return { ...item, cantidad: newCantidad };
+        }
         const maxStock = item.stock;
         const newCantidad = (maxStock !== null && maxStock !== undefined)
           ? Math.min(cantidad, maxStock)
@@ -87,17 +105,15 @@ export function CartProvider({ children }) {
 
   const clearCart = () => {
     setCart([]);
-    setVendedorCart(null);
   };
 
   return (
     <CartContext.Provider value={{
       cart,
-      vendedorCart,
       cartCount,
       cartTotal,
+      cartByVendor,
       addToCart,
-      forceAddToCart,
       removeFromCart,
       updateQuantity,
       clearCart,

@@ -443,6 +443,43 @@ export const api = {
     } catch (error) {
       throw error;
     }
+  },
+
+  // ============== GESTOR ==============
+
+  // Obtener todos los pedidos (con filtros opcionales)
+  getAllOrders: async (filters = {}) => {
+    const token = localStorage.getItem('token');
+    const params = new URLSearchParams(filters);
+    const response = await fetch(`${API_URL}/orders/all?${params}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al obtener pedidos');
+    return data;
+  },
+
+  // Marcar un pedido completo como entregado
+  deliverOrder: async (id) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/orders/${id}/deliver`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al marcar como entregado');
+    return data;
+  },
+
+  // Estadísticas globales del mercado
+  getGestorStats: async () => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/orders/gestor-stats`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al obtener estadísticas');
+    return data;
   }
 };
 

@@ -41,10 +41,29 @@
   margin: 0 0 1rem 0;
 }
 
+.checkout-vendor-block {
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.checkout-vendor-block:last-of-type {
+  border-bottom: none;
+}
+
 .checkout-vendor {
-  color: #666;
+  color: #8b2332;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+
+.checkout-vendor-subtotal {
+  display: flex;
+  justify-content: space-between;
   font-size: 0.9rem;
-  margin: 0 0 1.25rem 0;
+  color: #888;
+  margin-top: 0.25rem;
 }
 
 .checkout-items {
@@ -151,6 +170,37 @@
 
 .form-group textarea {
   resize: vertical;
+}
+
+/* --- Selector de modo de entrega --- */
+.delivery-mode-selector {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.delivery-mode-btn {
+  flex: 1;
+  padding: 0.85rem 1rem;
+  min-height: 48px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.delivery-mode-btn:hover {
+  border-color: #8b2332;
+  color: #8b2332;
+}
+
+.delivery-mode-btn.active {
+  border-color: #8b2332;
+  background-color: #8b2332;
+  color: white;
 }
 
 .btn-submit {

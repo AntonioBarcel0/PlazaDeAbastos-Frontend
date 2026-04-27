@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { useCart } from '../context/CartContext';
+import { useCart, isKg, itemSubtotal } from '../context/CartContext';
 import { api } from '../services/api';
 import './Checkout.css';
 
 function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuccess, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onLoginClick, onOrdersClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { cart, vendedorCart, cartTotal, clearCart } = useCart();
+  const { cart, cartByVendor, cartTotal, clearCart } = useCart();
   const [form, setForm] = useState({
+    modoEntrega: 'recogida',
     direccionEntrega: '',
     telefonoContacto: '',
     notasCliente: '',
@@ -30,11 +31,11 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
 
     try {
       const orderData = {
-        vendedorId: vendedorCart.id,
         items: cart.map(item => ({
           productId: item.productId,
           cantidad: item.cantidad,
         })),
+        modoEntrega: form.modoEntrega,
       };
 
       if (form.direccionEntrega.trim()) orderData.direccionEntrega = form.direccionEntrega.trim();
@@ -52,19 +53,21 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
     }
   };
 
+  const headerProps = {
+    onMenuClick: () => setSidebarOpen(!sidebarOpen),
+    onLoginClick: onLoginClick || (() => {}),
+    onLogoClick: onHomeClick,
+    user,
+    onLogout,
+    onDashboardClick,
+    onCartClick,
+    onOrdersClick,
+  };
+
   if (!user) {
     return (
       <div className="checkout-container">
-        <Header
-          onMenuClick={() => setSidebarOpen(!sidebarOpen)}
-          onLoginClick={onLoginClick || (() => {})}
-          onLogoClick={onHomeClick}
-          user={user}
-          onLogout={onLogout}
-          onDashboardClick={onDashboardClick}
-          onCartClick={onCartClick}
-          onOrdersClick={onOrdersClick}
-        />
+        <Header {...headerProps} />
         <main className="checkout-main">
           <div className="checkout-success">
             <span className="checkout-success-icon">⚠️</span>
@@ -80,28 +83,24 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
   }
 
   if (orderSuccess) {
+    const subOrderCount = orderSuccess.subOrders?.length || 1;
     return (
       <div className="checkout-container">
-        <Header
-          onMenuClick={() => setSidebarOpen(!sidebarOpen)}
-          onLoginClick={onLoginClick || (() => {})}
-          onLogoClick={onHomeClick}
-          user={user}
-          onLogout={onLogout}
-          onDashboardClick={onDashboardClick}
-          onCartClick={onCartClick}
-          onOrdersClick={onOrdersClick}
-        />
+        <Header {...headerProps} />
         <main className="checkout-main">
           <div className="checkout-success">
             <span className="checkout-success-icon">✓</span>
             <h2>¡Pedido realizado!</h2>
-            <p>Tu pedido ha sido enviado al vendedor.</p>
+            <p>
+              {subOrderCount > 1
+                ? `Tu pedido se ha dividido en ${subOrderCount} sub-pedidos, uno por cada puesto.`
+                : 'Tu pedido ha sido enviado al vendedor.'}
+            </p>
             {orderSuccess.id && (
-              <p className="checkout-order-id">Referencia: <strong>{orderSuccess.id}</strong></p>
+              <p className="checkout-order-id">Referencia: <strong>{orderSuccess.id.substring(0, 8)}</strong></p>
             )}
             <p className="checkout-success-note">
-              El vendedor confirmará tu pedido en breve.
+              Cada vendedor confirmará su parte del pedido en breve.
             </p>
             <button className="btn-success-home" onClick={onSuccess}>
               Volver al inicio
@@ -112,17 +111,11 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
     );
   }
 
+  const vendorIds = Object.keys(cartByVendor);
+
   return (
     <div className="checkout-container">
-      <Header
-        onMenuClick={() => setSidebarOpen(!sidebarOpen)}
-        onLoginClick={onLoginClick || (() => {})}
-        onLogoClick={onHomeClick}
-        user={user}
-        onLogout={onLogout}
-        onDashboardClick={onDashboardClick}
-        onCartClick={onCartClick}
-      />
+      <Header {...headerProps} />
       <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -141,21 +134,41 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
           {/* Resumen del pedido */}
           <div className="checkout-summary">
             <h2 className="checkout-summary-title">Resumen</h2>
-            {vendedorCart && (
-              <p className="checkout-vendor">Vendedor: <strong>{vendedorCart.nombre}</strong></p>
-            )}
-            <div className="checkout-items">
-              {cart.map(item => (
-                <div key={item.productId} className="checkout-item">
-                  <span className="checkout-item-name">
-                    {item.nombre} <span className="checkout-item-qty">× {item.cantidad}</span>
-                  </span>
-                  <span className="checkout-item-price">
-                    {(item.precio * item.cantidad).toFixed(2)}€
-                  </span>
+
+            {vendorIds.map(vid => {
+              const group = cartByVendor[vid];
+              const vendorTotal = group.items.reduce((s, i) => s + itemSubtotal(i), 0);
+              return (
+                <div key={vid} className="checkout-vendor-block">
+                  <p className="checkout-vendor">{group.nombre}</p>
+                  <div className="checkout-items">
+                    {group.items.map(item => (
+                      <div key={item.productId} className="checkout-item">
+                        <span className="checkout-item-name">
+                          {item.nombre}{' '}
+                          <span className="checkout-item-qty">
+                            ×{' '}
+                            {isKg(item.unidad)
+                              ? (item.cantidad >= 1000
+                                  ? `${(item.cantidad / 1000).toFixed(item.cantidad % 1000 === 0 ? 0 : 1)} kg`
+                                  : `${item.cantidad} g`)
+                              : item.cantidad}
+                          </span>
+                        </span>
+                        <span className="checkout-item-price">
+                          {itemSubtotal(item).toFixed(2)}€
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="checkout-vendor-subtotal">
+                    <span>Subtotal</span>
+                    <span>{vendorTotal.toFixed(2)}€</span>
+                  </div>
                 </div>
-              ))}
-            </div>
+              );
+            })}
+
             <div className="checkout-total">
               <strong>Total</strong>
               <strong>{cartTotal.toFixed(2)}€</strong>
@@ -164,22 +177,46 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
 
           {/* Formulario */}
           <form className="checkout-form" onSubmit={handleSubmit}>
-            <h2 className="checkout-form-title">Datos de entrega</h2>
-            <p className="checkout-form-subtitle">Todos los campos son opcionales</p>
+            <h2 className="checkout-form-title">Datos del pedido</h2>
+            <p className="checkout-form-subtitle">Selecciona el modo de entrega y completa los datos</p>
 
             {error && <p className="checkout-error">{error}</p>}
 
+            {/* Modo de entrega */}
             <div className="form-group">
-              <label htmlFor="direccionEntrega">Dirección de entrega</label>
-              <input
-                type="text"
-                id="direccionEntrega"
-                name="direccionEntrega"
-                value={form.direccionEntrega}
-                onChange={handleChange}
-                placeholder="Ej: Calle Mayor 1, 2º A"
-              />
+              <label>Modo de entrega</label>
+              <div className="delivery-mode-selector">
+                <button
+                  type="button"
+                  className={`delivery-mode-btn${form.modoEntrega === 'recogida' ? ' active' : ''}`}
+                  onClick={() => setForm(prev => ({ ...prev, modoEntrega: 'recogida' }))}
+                >
+                  Recogida en el mercado
+                </button>
+                <button
+                  type="button"
+                  className={`delivery-mode-btn${form.modoEntrega === 'domicilio' ? ' active' : ''}`}
+                  onClick={() => setForm(prev => ({ ...prev, modoEntrega: 'domicilio' }))}
+                >
+                  Entrega a domicilio
+                </button>
+              </div>
             </div>
+
+            {form.modoEntrega === 'domicilio' && (
+              <div className="form-group">
+                <label htmlFor="direccionEntrega">Dirección de entrega *</label>
+                <input
+                  type="text"
+                  id="direccionEntrega"
+                  name="direccionEntrega"
+                  value={form.direccionEntrega}
+                  onChange={handleChange}
+                  placeholder="Ej: Calle Mayor 1, 2º A"
+                  required
+                />
+              </div>
+            )}
 
             <div className="form-group">
               <label htmlFor="telefonoContacto">Teléfono de contacto</label>
@@ -194,7 +231,9 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
             </div>
 
             <div className="form-group">
-              <label htmlFor="fechaEntrega">Fecha de recogida</label>
+              <label htmlFor="fechaEntrega">
+                {form.modoEntrega === 'recogida' ? 'Fecha de recogida' : 'Fecha de entrega'}
+              </label>
               <input
                 type="date"
                 id="fechaEntrega"
@@ -206,7 +245,7 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
             </div>
 
             <div className="form-group">
-              <label htmlFor="notasCliente">Notas para el vendedor</label>
+              <label htmlFor="notasCliente">Notas para los vendedores</label>
               <textarea
                 id="notasCliente"
                 name="notasCliente"

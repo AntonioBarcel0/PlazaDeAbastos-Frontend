@@ -156,6 +156,23 @@
   background-color: #f0f0f0;
 }
 
+/* ── Selector de gramos (ProductDetail) ─────────── */
+.product-detail-gram-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.product-detail-gram-price {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  text-align: right;
+}
+
 @media (max-width: 768px) {
   .product-detail-layout {
     flex-direction: column;

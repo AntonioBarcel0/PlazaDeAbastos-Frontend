@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import toast from 'react-hot-toast';
 import './OrderManagement.css';
@@ -41,7 +41,7 @@ const OrderManagement = () => {
   const handleChangeStatus = async (orderId, newEstado) => {
     try {
       await api.updateOrderStatus(orderId, newEstado);
-      loadOrders(); // Recargar lista
+      loadOrders();
       toast.success('Estado actualizado correctamente');
     } catch (err) {
       toast.error('Error al actualizar el estado');
@@ -78,8 +78,8 @@ const OrderManagement = () => {
     'cancelado': 'Cancelado'
   };
 
-  const filteredOrders = filterEstado === 'todos' 
-    ? orders 
+  const filteredOrders = filterEstado === 'todos'
+    ? orders
     : orders.filter(order => order.estado === filterEstado);
 
   if (loading) {
@@ -99,8 +99,8 @@ const OrderManagement = () => {
 
       <div className="order-filters">
         <label>Filtrar por estado:</label>
-        <select 
-          value={filterEstado} 
+        <select
+          value={filterEstado}
           onChange={(e) => setFilterEstado(e.target.value)}
           className="filter-select"
         >
@@ -145,8 +145,9 @@ const OrderManagement = () => {
                 <th>Nº Pedido</th>
                 <th>Cliente</th>
                 <th>Fecha</th>
+                <th>Entrega</th>
                 <th>Items</th>
-                <th>Total</th>
+                <th>Subtotal</th>
                 <th>Estado</th>
                 <th>Acciones</th>
               </tr>
@@ -157,10 +158,11 @@ const OrderManagement = () => {
                   <td>#{order.id.substring(0, 8)}</td>
                   <td>{order.clienteNombre}</td>
                   <td>{new Date(order.createdAt).toLocaleDateString('es-ES')}</td>
+                  <td>{order.modoEntrega === 'domicilio' ? '🚚 Domicilio' : '🏪 Recogida'}</td>
                   <td>{order.totalItems} productos</td>
-                  <td className="total">{parseFloat(order.total).toFixed(2)}€</td>
+                  <td className="total">{parseFloat(order.subtotal).toFixed(2)}€</td>
                   <td>
-                    <select 
+                    <select
                       value={order.estado}
                       onChange={(e) => handleChangeStatus(order.id, e.target.value)}
                       className={`status-select ${getEstadoBadgeClass(order.estado)}`}
@@ -174,7 +176,7 @@ const OrderManagement = () => {
                     </select>
                   </td>
                   <td>
-                    <button 
+                    <button
                       className="btn-ver-detalles"
                       onClick={() => handleViewDetails(order.id)}
                     >
@@ -213,6 +215,7 @@ const OrderManagement = () => {
                   <h3>Información del Pedido</h3>
                   <p><strong>Fecha:</strong> {new Date(selectedOrder.createdAt).toLocaleString('es-ES')}</p>
                   <p><strong>Estado:</strong> <span className={`badge ${getEstadoBadgeClass(selectedOrder.estado)}`}>{estadosLabels[selectedOrder.estado]}</span></p>
+                  <p><strong>Modo:</strong> {selectedOrder.modoEntrega === 'domicilio' ? 'Entrega a domicilio' : 'Recogida en el mercado'}</p>
                   <p><strong>Total:</strong> <span className="total-price">{parseFloat(selectedOrder.total).toFixed(2)}€</span></p>
                   {selectedOrder.fechaEntrega && (
                     <p><strong>Fecha entrega:</strong> {new Date(selectedOrder.fechaEntrega).toLocaleDateString('es-ES')}</p>
@@ -242,8 +245,14 @@ const OrderManagement = () => {
                     {selectedOrder.items.map(item => (
                       <tr key={item.id}>
                         <td>{item.nombreProducto}</td>
-                        <td>{item.cantidad} {item.unidad}</td>
-                        <td>{parseFloat(item.precioUnitario).toFixed(2)}€</td>
+                        <td>
+                          {item.unidad === 'kg'
+                            ? (item.cantidad >= 1000
+                                ? `${(item.cantidad / 1000).toFixed(item.cantidad % 1000 === 0 ? 0 : 1)} kg`
+                                : `${item.cantidad} g`)
+                            : `${item.cantidad} ${item.unidad}`}
+                        </td>
+                        <td>{parseFloat(item.precioUnitario).toFixed(2)}€/{item.unidad}</td>
                         <td>{parseFloat(item.subtotal).toFixed(2)}€</td>
                       </tr>
                     ))}
@@ -259,7 +268,7 @@ const OrderManagement = () => {
 
               <div className="info-section">
                 <h3>Notas del Vendedor</h3>
-                <textarea 
+                <textarea
                   className="vendor-notes"
                   defaultValue={selectedOrder.notasVendedor || ''}
                   placeholder="Añadir notas internas sobre el pedido..."

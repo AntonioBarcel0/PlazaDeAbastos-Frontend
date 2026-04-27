@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
-import { useCart } from '../context/CartContext';
+import { useCart, isKg } from '../context/CartContext';
 import { api } from '../services/api';
 import './StoreView.css';
 
@@ -17,8 +17,31 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [conflictPending, setConflictPending] = useState(null);
-  const { cart, addToCart, forceAddToCart, updateQuantity } = useCart();
+  // gramPicker: { [productId]: gramos } — productos kg con picker abierto
+  const [gramPicker, setGramPicker] = useState({});
+  const { cart, addToCart, updateQuantity } = useCart();
+
+  const GRAM_STEP = 50;
+  const GRAM_MIN  = 50;
+  const gramMaxForProduct = (producto) =>
+    producto.stock != null ? producto.stock * 1000 : 10000;
+
+  const openGramPicker = (producto) => {
+    setGramPicker(prev => ({ ...prev, [producto.id]: 250 }));
+  };
+  const closeGramPicker = (productId) => {
+    setGramPicker(prev => { const n = { ...prev }; delete n[productId]; return n; });
+  };
+  const changeGrams = (productId, delta, producto) => {
+    setGramPicker(prev => {
+      const current = prev[productId] ?? 250;
+      const next = Math.min(
+        Math.max(GRAM_MIN, current + delta),
+        gramMaxForProduct(producto)
+      );
+      return { ...prev, [productId]: next };
+    });
+  };
 
   useEffect(() => { loadVendedor(); }, [vendedorId]);
   useEffect(() => { filterProductos(); }, [productos, selectedCategoria, searchTerm]);
@@ -53,19 +76,10 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
     setFilteredProductos(filtered);
   };
 
-  const handleAddToCart = (producto) => {
+  const handleAddToCart = (producto, gramos = null) => {
     if (!vendedor) return;
-    const result = addToCart(producto, vendedor);
-    if (result.conflict) {
-      setConflictPending({ producto, conflictVendorName: result.conflictVendorName });
-    }
-  };
-
-  const handleConflictConfirm = () => {
-    if (conflictPending) {
-      forceAddToCart(conflictPending.producto, vendedor);
-      setConflictPending(null);
-    }
+    addToCart(producto, vendedor, gramos);
+    closeGramPicker(producto.id);
   };
 
   const categorias = ['Todos', ...new Set(productos.map(p => p.categoria).filter(Boolean))];
@@ -153,51 +167,35 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
       {/* ── Sección de productos ── */}
       <div className="sv-products-wrap">
         <main className="sv-products-main">
-          <h2 className="sv-products-title">Productos</h2>
+          <div className="sv-products-controls">
+            <h2 className="sv-products-title">Productos</h2>
 
-          {/* Búsqueda */}
-          <div className="store-controls">
-            <input
-              type="text"
-              className="store-search"
-              placeholder="Buscar producto..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          {/* Categorías */}
-          {categorias.length > 1 && (
-            <div className="store-categories">
-              {categorias.map(cat => (
-                <button
-                  key={cat}
-                  className={`category-btn${selectedCategoria === cat ? ' active' : ''}`}
-                  onClick={() => setSelectedCategoria(cat)}
-                >
-                  {cat}
-                </button>
-              ))}
+            {/* Búsqueda */}
+            <div className="store-controls">
+              <input
+                type="text"
+                className="store-search"
+                placeholder="Buscar producto..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
-          )}
 
-          {/* Banner conflicto */}
-          {conflictPending && (
-            <div className="cart-conflict-banner">
-              <p>
-                Tu carrito tiene productos de <strong>{conflictPending.conflictVendorName}</strong>.
-                Si continúas, se vaciará el carrito actual.
-              </p>
-              <div className="cart-conflict-actions">
-                <button className="conflict-btn-cancel" onClick={() => setConflictPending(null)}>
-                  Cancelar
-                </button>
-                <button className="conflict-btn-confirm" onClick={handleConflictConfirm}>
-                  Vaciar y añadir
-                </button>
+            {/* Categorías */}
+            {categorias.length > 1 && (
+              <div className="store-categories">
+                {categorias.map(cat => (
+                  <button
+                    key={cat}
+                    className={`category-btn${selectedCategoria === cat ? ' active' : ''}`}
+                    onClick={() => setSelectedCategoria(cat)}
+                  >
+                    {cat}
+                  </button>
+                ))}
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* Grid de productos */}
           <div className="products-grid">
@@ -206,59 +204,117 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
                 No hay productos disponibles{selectedCategoria !== 'Todos' ? ` en ${selectedCategoria}` : ''}
               </div>
             ) : (
-              filteredProductos.map(producto => (
-                <div
-                  key={producto.id}
-                  className="product-card"
-                  onClick={() => onProductClick && onProductClick(producto, vendedor)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <div className="product-image-container">
-                    {producto.imagen ? (
-                      <img
-                        src={`${BASE_URL}${producto.imagen}`}
-                        alt={producto.nombre}
-                        className="product-image"
-                      />
-                    ) : (
-                      <div className="product-image-placeholder">📦</div>
-                    )}
-                    {(() => {
-                      const cartItem = cart.find(i => i.productId === producto.id);
-                      const agotado = producto.stock !== null && producto.stock !== undefined && producto.stock === 0;
-                      const enLimite = cartItem && producto.stock !== null && producto.stock !== undefined && cartItem.cantidad >= producto.stock;
-                      return cartItem ? (
-                        <div className="product-qty-control" onClick={e => e.stopPropagation()}>
+              filteredProductos.map(producto => {
+                const cartItem = cart.find(i => i.productId === producto.id);
+                const agotado = producto.stock !== null && producto.stock !== undefined && producto.stock === 0;
+                const porPeso = isKg(producto.unidad);
+                const pickerGrams = gramPicker[producto.id];
+                const pickerOpen = pickerGrams !== undefined;
+                const maxGramos = gramMaxForProduct(producto);
+
+                return (
+                  <div
+                    key={producto.id}
+                    className="product-card"
+                    onClick={() => onProductClick && onProductClick(producto, vendedor)}
+                  >
+                    {/* ── Nombre + precio (arriba) ── */}
+                    <div className="product-card-top">
+                      <h3 className="product-name">{producto.nombre}</h3>
+                      <p className="product-price-line">
+                        {parseFloat(producto.precio).toFixed(2)}€
+                        <span className="product-unit">/{producto.unidad}</span>
+                      </p>
+                    </div>
+
+                    {/* ── Imagen ── */}
+                    <div className="product-image-container">
+                      {producto.imagen ? (
+                        <img
+                          src={`${BASE_URL}${producto.imagen}`}
+                          alt={producto.nombre}
+                          className="product-image"
+                        />
+                      ) : (
+                        <div className="product-image-placeholder">📦</div>
+                      )}
+                    </div>
+
+                    {/* ── Botón / picker / qty (abajo) ── */}
+                    <div className="product-card-bottom" onClick={e => e.stopPropagation()}>
+                      {cartItem && porPeso && (
+                        <div className="product-qty-control">
+                          <button
+                            onClick={() => updateQuantity(producto.id, cartItem.cantidad - GRAM_STEP)}
+                            disabled={cartItem.cantidad <= GRAM_MIN}
+                          >−</button>
+                          <span>
+                            {cartItem.cantidad >= 1000
+                              ? `${(cartItem.cantidad / 1000).toFixed(cartItem.cantidad % 1000 === 0 ? 0 : 1)} kg`
+                              : `${cartItem.cantidad} g`}
+                          </span>
+                          <button
+                            onClick={() => updateQuantity(producto.id, cartItem.cantidad + GRAM_STEP)}
+                            disabled={cartItem.cantidad >= maxGramos}
+                          >+</button>
+                        </div>
+                      )}
+
+                      {cartItem && !porPeso && (
+                        <div className="product-qty-control">
                           <button onClick={() => updateQuantity(producto.id, cartItem.cantidad - 1)}>−</button>
                           <span>{cartItem.cantidad}</span>
-                          <button onClick={() => updateQuantity(producto.id, cartItem.cantidad + 1)} disabled={enLimite}>+</button>
+                          <button
+                            onClick={() => updateQuantity(producto.id, cartItem.cantidad + 1)}
+                            disabled={producto.stock != null && cartItem.cantidad >= producto.stock}
+                          >+</button>
                         </div>
-                      ) : (
+                      )}
+
+                      {!cartItem && porPeso && pickerOpen && (
+                        <div className="gram-picker">
+                          <div className="gram-picker-controls">
+                            <button
+                              onClick={() => changeGrams(producto.id, -GRAM_STEP, producto)}
+                              disabled={pickerGrams <= GRAM_MIN}
+                            >−</button>
+                            <span className="gram-picker-value">
+                              {pickerGrams >= 1000
+                                ? `${(pickerGrams / 1000).toFixed(pickerGrams % 1000 === 0 ? 0 : 1)} kg`
+                                : `${pickerGrams} g`}
+                            </span>
+                            <button
+                              onClick={() => changeGrams(producto.id, GRAM_STEP, producto)}
+                              disabled={pickerGrams >= maxGramos}
+                            >+</button>
+                          </div>
+                          <p className="gram-picker-price">
+                            {((pickerGrams / 1000) * parseFloat(producto.precio)).toFixed(2)}€
+                          </p>
+                          <button
+                            className="gram-picker-add"
+                            onClick={() => handleAddToCart(producto, pickerGrams)}
+                          >Añadir</button>
+                        </div>
+                      )}
+
+                      {!cartItem && !(porPeso && pickerOpen) && (
                         <button
                           className={`product-add-btn${agotado ? ' product-add-btn--agotado' : ''}`}
-                          onClick={e => { e.stopPropagation(); if (!agotado) handleAddToCart(producto); }}
+                          onClick={() => {
+                            if (agotado) return;
+                            if (porPeso) openGramPicker(producto);
+                            else handleAddToCart(producto);
+                          }}
                           disabled={agotado}
                         >
                           {agotado ? 'Agotado' : 'añadir'}
                         </button>
-                      );
-                    })()}
-                  </div>
-                  <div className="product-info">
-                    <h3 className="product-name">{producto.nombre}</h3>
-                    {producto.descripcion && (
-                      <p className="product-description">{producto.descripcion}</p>
-                    )}
-                    <div className="product-price-container">
-                      <span className="product-price">{parseFloat(producto.precio).toFixed(2)}€</span>
-                      <span className="product-unit">/{producto.unidad}</span>
+                      )}
                     </div>
-                    {producto.stock !== undefined && producto.stock !== null && (
-                      <p className="product-stock">Stock: {producto.stock}</p>
-                    )}
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </main>

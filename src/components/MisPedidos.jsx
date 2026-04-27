@@ -14,6 +14,11 @@ const ESTADO_LABEL = {
   cancelado:   'Cancelado',
 };
 
+const MODO_LABEL = {
+  recogida: 'Recogida en el mercado',
+  domicilio: 'Entrega a domicilio',
+};
+
 function MisPedidos({ user, onLogout, onDashboardClick, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [pedidos, setPedidos] = useState([]);
@@ -100,40 +105,66 @@ function MisPedidos({ user, onLogout, onDashboardClick, onHomeClick, onMarketpla
             {pedidos.map(pedido => (
               <div key={pedido.id} className="mp-card">
                 <div className="mp-card-header">
-                  <div className="mp-card-vendor">
-                    <span className="mp-vendor-name">
-                      {pedido.vendedor.nombre} {pedido.vendedor.apellidos}
-                    </span>
-                    {pedido.vendedor.especialidad && (
-                      <span className="mp-vendor-esp">{pedido.vendedor.especialidad}</span>
-                    )}
+                  <div>
+                    <span className="mp-date">{formatDate(pedido.createdAt)}</span>
+                    <span className="mp-ref">Ref: {pedido.id.substring(0, 8)}</span>
                   </div>
                   <div className="mp-card-meta">
-                    <span className="mp-date">{formatDate(pedido.createdAt)}</span>
                     <span className={`mp-badge mp-badge--${pedido.estado}`}>
                       {ESTADO_LABEL[pedido.estado] || pedido.estado}
+                    </span>
+                    <span className="mp-modo">
+                      {MODO_LABEL[pedido.modoEntrega] || pedido.modoEntrega}
                     </span>
                   </div>
                 </div>
 
-                <ul className="mp-items">
-                  {pedido.items.map(item => (
-                    <li key={item.id} className="mp-item">
-                      <span className="mp-item-name">{item.nombreProducto}</span>
-                      <span className="mp-item-qty">× {item.cantidad} {item.unidad}</span>
-                      <span className="mp-item-price">
-                        {parseFloat(item.subtotal).toFixed(2)}€
+                {/* Sub-pedidos agrupados por vendedor */}
+                {(pedido.subOrders || []).map(sub => (
+                  <div key={sub.id} className="mp-sub">
+                    <div className="mp-sub-header">
+                      <span className="mp-vendor-name">
+                        {sub.vendedor.nombre} {sub.vendedor.apellidos}
+                        {sub.vendedor.especialidad && (
+                          <span className="mp-vendor-esp"> — {sub.vendedor.especialidad}</span>
+                        )}
                       </span>
-                    </li>
-                  ))}
-                </ul>
+                      <span className={`mp-badge mp-badge--${sub.estado} mp-badge--small`}>
+                        {ESTADO_LABEL[sub.estado]}
+                      </span>
+                    </div>
+
+                    <ul className="mp-items">
+                      {(sub.items || []).map(item => (
+                        <li key={item.id} className="mp-item">
+                          <span className="mp-item-name">{item.nombreProducto}</span>
+                          <span className="mp-item-qty">
+                            × {item.unidad === 'kg'
+                              ? (item.cantidad >= 1000
+                                  ? `${(item.cantidad / 1000).toFixed(item.cantidad % 1000 === 0 ? 0 : 1)} kg`
+                                  : `${item.cantidad} g`)
+                              : `${item.cantidad} ${item.unidad}`}
+                          </span>
+                          <span className="mp-item-price">
+                            {parseFloat(item.subtotal).toFixed(2)}€
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {sub.notasVendedor && (
+                      <p className="mp-vendor-note">
+                        <strong>Nota del puesto:</strong> {sub.notasVendedor}
+                      </p>
+                    )}
+
+                    <div className="mp-sub-total">
+                      Subtotal: {parseFloat(sub.subtotal).toFixed(2)}€
+                    </div>
+                  </div>
+                ))}
 
                 <div className="mp-card-footer">
-                  {pedido.notasVendedor && (
-                    <p className="mp-vendor-note">
-                      <strong>Nota del puesto:</strong> {pedido.notasVendedor}
-                    </p>
-                  )}
                   <span className="mp-total">Total: {parseFloat(pedido.total).toFixed(2)}€</span>
                 </div>
               </div>

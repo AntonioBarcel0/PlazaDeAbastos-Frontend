@@ -4,6 +4,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import LoginOptions from './components/LoginOptions';
 import AdminDashboard from './components/AdminDashboard';
+import GestorDashboard from './components/GestorDashboard';
 import Marketplace from './components/Marketplace';
 import StoreView from './components/StoreView';
 import SelectPuesto from './components/SelectPuesto';
@@ -54,7 +55,9 @@ function App() {
 
   const handleLoginSuccess = (userData) => {
     setUser(userData);
-    if (userData.role === 'comerciante' || userData.role === 'admin') {
+    if (userData.role === 'gestor') {
+      navigate('gestor-dashboard');
+    } else if (userData.role === 'comerciante' || userData.role === 'admin') {
       navigate('admin-dashboard');
     } else {
       goHome();
@@ -240,6 +243,17 @@ function App() {
           return null;
         }
         return <AdminDashboard
+          user={user}
+          onLogout={handleLogout}
+          onBackHome={goHome}
+        />;
+
+      case 'gestor-dashboard':
+        if (!user || user.role !== 'gestor') {
+          goHome();
+          return null;
+        }
+        return <GestorDashboard
           user={user}
           onLogout={handleLogout}
           onBackHome={goHome}

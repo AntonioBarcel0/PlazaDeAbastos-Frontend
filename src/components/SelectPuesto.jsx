@@ -7,13 +7,11 @@ import './SelectPuesto.css';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '');
 
-const CATEGORIAS = ['Todos', 'Frutería', 'Pescadería', 'Carnicería', 'Comestibles', 'Otros'];
+const CATEGORIAS = ['Todos', 'Frutería', 'Comestibles', 'Otros'];
 
 // Palabras clave para emparejar cada categoría de filtro con la especialidad del vendedor
 const FILTER_KEYWORDS = {
   'Frutería':    ['fruta', 'frutas'],
-  'Pescadería':  ['pescad', 'marisco'],
-  'Carnicería':  ['carne', 'carnes', 'carniced', 'carnicer'],
   'Comestibles': ['comestible', 'charcuter', 'queso'],
   'Otros':       ['jardiner', 'especia', 'panadera', 'panader'],
 };
@@ -211,15 +209,37 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
           </div>
         </div>
 
-        {/* Grid de puestos */}
-        <div className="sp-grid">
+        {/* Lista de puestos */}
+        <div className="sp-list">
           {filteredVendedores.length === 0 ? (
             <p className="sp-empty">
               No se encontraron puestos{selectedCategoria !== 'Todos' ? ` en ${selectedCategoria}` : ''}.
             </p>
           ) : (
             filteredVendedores.map(vendedor => (
-              <div key={vendedor.id} className="sp-card">
+              <div key={vendedor.id} className="sp-card" onClick={() => onPuestoSelect(vendedor.id)}>
+                {/* Panel izquierdo — info */}
+                <div className="sp-card-info">
+                  <div className="sp-card-center">
+                    <h3 className="sp-card-name">{vendedor.nombreCompleto}</h3>
+                    {vendedor.especialidad && (
+                      <p className="sp-card-esp">{vendedor.especialidad}</p>
+                    )}
+                  </div>
+                  <div className="sp-card-bottom">
+                    <span className="sp-card-cat-badge">
+                      {getCategoriaPrincipal(vendedor.categorias)}
+                    </span>
+                    <button
+                      className="sp-card-btn"
+                      onClick={e => { e.stopPropagation(); onPuestoSelect(vendedor.id); }}
+                    >
+                      Ir al puesto →
+                    </button>
+                  </div>
+                </div>
+
+                {/* Panel derecho — imagen */}
                 <div className="sp-card-image-wrap">
                   {vendedor.imagenPrincipal ? (
                     <img
@@ -228,18 +248,8 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
                       className="sp-card-image"
                     />
                   ) : (
-                    <div className="sp-card-placeholder" />
+                    <div className="sp-card-placeholder">🏪</div>
                   )}
-                  <button
-                    className="sp-select-btn"
-                    onClick={() => onPuestoSelect(vendedor.id)}
-                  >
-                    Seleccionar
-                  </button>
-                </div>
-                <div className="sp-card-info">
-                  <h3 className="sp-card-name">{vendedor.nombreCompleto}</h3>
-                  <p className="sp-card-cat">{getCategoriaPrincipal(vendedor.categorias)}</p>
                 </div>
               </div>
             ))
