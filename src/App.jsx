@@ -10,6 +10,7 @@ import StoreView from './components/StoreView';
 import SelectPuesto from './components/SelectPuesto';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
+import PaymentGateway from './components/PaymentGateway';
 import ProductDetail from './pages/ProductDetail';
 import MisPedidos from './components/MisPedidos';
 import { CartProvider } from './context/CartContext';
@@ -23,6 +24,7 @@ function App() {
   const [selectedVendedorId, setSelectedVendedorId] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedProductVendedor, setSelectedProductVendedor] = useState(null);
+  const [pendingOrderData, setPendingOrderData] = useState(null);
 
   const navigate = (view) => {
     window.history.pushState({ view }, '');
@@ -90,6 +92,10 @@ function App() {
 
   const handleCheckoutClick = () => navigate('checkout');
   const handleOrdersClick = () => navigate('mis-pedidos');
+  const handlePaymentRequest = (orderData) => {
+    setPendingOrderData(orderData);
+    navigate('payment');
+  };
 
   const renderView = () => {
     switch(currentView) {
@@ -190,6 +196,23 @@ function App() {
           onSelectPuestoClick={() => navigate('select-puesto')}
           onSuccess={goHome}
           onOrdersClick={handleOrdersClick}
+          onPaymentRequest={handlePaymentRequest}
+        />;
+
+      case 'payment':
+        return <PaymentGateway
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onLoginClick={() => navigate('loginOptions')}
+          onCartClick={handleCartClick}
+          onBack={() => navigate('checkout')}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
+          onSuccess={goHome}
+          onOrdersClick={handleOrdersClick}
+          orderData={pendingOrderData}
         />;
 
       case 'loginOptions':

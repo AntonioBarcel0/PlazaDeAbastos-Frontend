@@ -116,12 +116,6 @@
   background-color: #6d1b27;
 }
 
-.cart-icon,
-.log-icon {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
 
 /* --- Mis pedidos (cliente) --- */
 .orders-btn {
