@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
+import SeasonBadge from './SeasonBadge';
+import OriginBadge from './OriginBadge';
 import { useCart, isKg } from '../context/CartContext';
 import { api } from '../services/api';
 import './StoreView.css';
@@ -218,6 +220,8 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
                     className="product-card"
                     onClick={() => onProductClick && onProductClick(producto, vendedor)}
                   >
+                    <SeasonBadge nombre={producto.nombre} categoria={producto.categoria} variant="card" />
+
                     {/* ── Nombre + precio (arriba) ── */}
                     <div className="product-card-top">
                       <h3 className="product-name">{producto.nombre}</h3>
@@ -225,6 +229,7 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
                         {parseFloat(producto.precio).toFixed(2)}€
                         <span className="product-unit">/{producto.unidad}</span>
                       </p>
+                      <OriginBadge nombre={producto.nombre} descripcion={producto.descripcion} variant="card" />
                     </div>
 
                     {/* ── Imagen ── */}

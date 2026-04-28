@@ -11,6 +11,7 @@ import SelectPuesto from './components/SelectPuesto';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import PaymentGateway from './components/PaymentGateway';
+import MarketMap from './components/MarketMap';
 import ProductDetail from './pages/ProductDetail';
 import MisPedidos from './components/MisPedidos';
 import { CartProvider } from './context/CartContext';
@@ -92,6 +93,7 @@ function App() {
 
   const handleCheckoutClick = () => navigate('checkout');
   const handleOrdersClick = () => navigate('mis-pedidos');
+  const handleMapClick = () => navigate('market-map');
   const handlePaymentRequest = (orderData) => {
     setPendingOrderData(orderData);
     navigate('payment');
@@ -109,6 +111,7 @@ function App() {
           onSelectPuestoClick={() => navigate('select-puesto')}
           onCartClick={handleCartClick}
           onOrdersClick={handleOrdersClick}
+          onMapClick={handleMapClick}
         />;
 
       case 'select-puesto':
@@ -280,6 +283,20 @@ function App() {
           user={user}
           onLogout={handleLogout}
           onBackHome={goHome}
+        />;
+
+      case 'market-map':
+        return <MarketMap
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onLoginClick={() => navigate('loginOptions')}
+          onCartClick={handleCartClick}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
+          onOrdersClick={handleOrdersClick}
+          onStoreClick={handleStoreClick}
         />;
 
       default:

@@ -1,0 +1,56 @@
+.origin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: 'Afacad', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 20px;
+}
+
+/* ── Km 0 — terracota cálida ── */
+.origin-badge--km0 {
+  background-color: #8b5e3c;
+  color: white;
+}
+
+/* ── Andalucía — ámbar dorado ── */
+.origin-badge--andalucia {
+  background-color: #7a6b2e;
+  color: white;
+}
+
+/* ── España — azul pizarra ── */
+.origin-badge--nacional {
+  background-color: #4e6b80;
+  color: white;
+}
+
+/* ── Variante tarjeta ── */
+.origin-badge--card {
+  font-size: 0.63rem;
+  padding: 0.22rem 0.65rem;
+  margin-top: 0.45rem;
+}
+
+/* ── Variante detalle (fondo rojo) ── */
+.origin-badge--detail {
+  font-size: 0.78rem;
+  padding: 0.28rem 0.8rem;
+}
+
+.origin-badge--detail.origin-badge--km0 {
+  background-color: rgba(255, 255, 255, 0.92);
+  color: #8b5e3c;
+}
+
+.origin-badge--detail.origin-badge--andalucia {
+  background-color: rgba(255, 255, 255, 0.92);
+  color: #7a6b2e;
+}
+
+.origin-badge--detail.origin-badge--nacional {
+  background-color: rgba(255, 255, 255, 0.92);
+  color: #4e6b80;
+}

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
+import SeasonBadge from '../components/SeasonBadge';
+import OriginBadge from '../components/OriginBadge';
 import { useCart, isKg } from '../context/CartContext';
 import toast from 'react-hot-toast';
 import './ProductDetail.css';
@@ -55,6 +57,10 @@ function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, on
 
           <div className="product-detail-center">
             <h1 className="product-detail-name">{product.nombre}</h1>
+            <div className="product-detail-badges">
+              <SeasonBadge nombre={product.nombre} categoria={product.categoria} variant="detail" />
+              <OriginBadge nombre={product.nombre} descripcion={product.descripcion} variant="detail" />
+            </div>
             <p className="product-detail-price">
               {parseFloat(product.precio).toFixed(2)}€/{product.unidad}
             </p>
