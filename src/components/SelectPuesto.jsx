@@ -5,7 +5,7 @@ import Spinner from './Spinner';
 import { api } from '../services/api';
 import './SelectPuesto.css';
 
-const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '');
+const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
 const CATEGORIAS = ['Todos', 'Frutería', 'Comestibles', 'Otros'];
 
