@@ -12,6 +12,7 @@ import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import PaymentGateway from './components/PaymentGateway';
 import MarketMap from './components/MarketMap';
+import PostalCheck from './components/PostalCheck';
 import ProductDetail from './pages/ProductDetail';
 import MisPedidos from './components/MisPedidos';
 import { CartProvider } from './context/CartContext';
@@ -26,6 +27,8 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedProductVendedor, setSelectedProductVendedor] = useState(null);
   const [pendingOrderData, setPendingOrderData] = useState(null);
+  const [postalCode, setPostalCode] = useState(() => sessionStorage.getItem('postalCode') || null);
+  const [postalPendingView, setPostalPendingView] = useState(null);
 
   const navigate = (view) => {
     window.history.pushState({ view }, '');
@@ -83,7 +86,26 @@ function App() {
     navigate('store-view');
   };
 
-  const handleCartClick = () => navigate('cart');
+  const handleCartClick = () => {
+    if (!postalCode) {
+      setPostalPendingView('cart');
+      navigate('postal-check');
+    } else {
+      navigate('cart');
+    }
+  };
+
+  const handlePostalConfirm = (code) => {
+    sessionStorage.setItem('postalCode', code);
+    setPostalCode(code);
+    navigate(postalPendingView || 'cart');
+    setPostalPendingView(null);
+  };
+
+  const handlePostalCancel = () => {
+    setPostalPendingView(null);
+    goBack();
+  };
 
   const handleProductClick = (product, vendedor) => {
     setSelectedProduct(product);
@@ -283,6 +305,19 @@ function App() {
           user={user}
           onLogout={handleLogout}
           onBackHome={goHome}
+        />;
+
+      case 'postal-check':
+        return <PostalCheck
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onLoginClick={() => navigate('loginOptions')}
+          onCartClick={handleCartClick}
+          onOrdersClick={handleOrdersClick}
+          onHomeClick={goHome}
+          onConfirm={handlePostalConfirm}
+          onCancel={handlePostalCancel}
         />;
 
       case 'market-map':

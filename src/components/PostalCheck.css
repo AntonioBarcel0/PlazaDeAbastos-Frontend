@@ -1,0 +1,149 @@
+.postal-page {
+  position: fixed;
+  inset: 0;
+  background-color: #791927;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  overflow-y: auto;
+  min-height: 134vh;
+}
+
+.postal-inner {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* ── Input grande (placeholder = label visual) ── */
+.postal-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  text-align: center;
+  font-family: 'Afacad', sans-serif;
+  font-size: clamp(2.2rem, 6vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: white;
+  caret-color: rgba(255, 255, 255, 0.8);
+}
+
+.postal-input::placeholder {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.postal-input.is-ok    { color: #c8e6b0; }
+.postal-input.is-error { color: #f5b8b8; }
+
+/* ── Línea separadora ── */
+.postal-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.22);
+  margin: 0.6rem 0 1.6rem;
+}
+
+/* ── Textos ── */
+.postal-sub {
+  font-family: 'Afacad', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.55;
+  margin: 0 0 0.6rem;
+}
+
+.postal-feedback {
+  font-family: 'Afacad', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.postal-feedback--ok    { color: #c8e6b0; }
+.postal-feedback--error { color: #f5b8b8; }
+
+/* ── Botones ── */
+.postal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.postal-btn {
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  border-radius: 50px;
+  font-family: 'Afacad', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.18s, opacity 0.18s, color 0.18s;
+}
+
+.postal-btn--primary {
+  background: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.75);
+  border: none;
+}
+
+.postal-btn--primary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.postal-btn--primary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.postal-btn--ghost {
+  background: transparent;
+  color: white;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+}
+
+.postal-btn--ghost:hover {
+  border-color: white;
+}
+
+/* ── Logo / volver ── */
+.postal-back {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.75rem;
+  font-family: 'Afacad', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.postal-back:hover { color: white; }
+
+.postal-logo {
+  position: absolute;
+  top: 1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 116px;
+  width: auto;
+  opacity: 0.85;
+}
+
+@media (max-width: 480px) {
+  .postal-back { top: 1rem; left: 1.25rem; }
+}
