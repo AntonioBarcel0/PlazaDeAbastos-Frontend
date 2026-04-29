@@ -1,6 +1,6 @@
 .login-options-page {
   width: 100%;
-  min-height: 100vh;
+  min-height: var(--full-vh);
   background-color: #8b2332;
   display: flex;
   align-items: center;

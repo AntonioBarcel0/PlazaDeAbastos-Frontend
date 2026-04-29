@@ -104,7 +104,7 @@ const STALLS = [
 
 function MarketMap({
   user, onLogout, onDashboardClick, onCartClick, onOrdersClick,
-  onHomeClick, onMarketplaceClick, onSelectPuestoClick, onLoginClick, onStoreClick,
+  onHomeClick, onMarketplaceClick, onSelectPuestoClick, onLoginClick, onStoreClick, onInstruccionesClick,
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [hovered, setHovered]         = useState(null);
@@ -125,6 +125,7 @@ function MarketMap({
         onMarketplaceClick={onMarketplaceClick}
         onSelectPuestoClick={onSelectPuestoClick}
         onMapClick={() => {}}
+        onInstruccionesClick={onInstruccionesClick}
       />
 
       <main className="map-main">
@@ -202,7 +203,7 @@ function MarketMap({
             <rect x={72} y={18} width={684} height={14} fill="#fdf8f3" />
             <polygon points={BUILDING_POINTS} fill="none" stroke="#8b2332" strokeWidth="3" />
 
-            {/* ── Entrada ── */}
+            {/* ── Entrada principal (sur) ── */}
             <rect x={334} y={505} width={160} height={6} fill="#fdf8f3" />
             <text
               x={414} y={522}
@@ -212,6 +213,42 @@ function MarketMap({
             >
               ▲ ENTRADA
             </text>
+
+            {/* ── Entrada superior-izquierda (pasillo vertical izq.) ── */}
+            <rect x={263} y={21} width={40} height={17} fill="#fdf8f3" />
+            <text
+              x={283} y={34}
+              textAnchor="middle" fill="#8b2332"
+              fontSize="9" fontWeight="700" fontFamily="Afacad, sans-serif"
+            >▼</text>
+
+            {/* ── Entrada superior-derecha (pasillo vertical der.) ── */}
+            <rect x={560} y={13} width={40} height={15} fill="#fdf8f3" />
+            <text
+              x={580} y={26}
+              textAnchor="middle" fill="#8b2332"
+              fontSize="9" fontWeight="700" fontFamily="Afacad, sans-serif"
+            >▼</text>
+
+            {/* ── Entrada lateral izquierda (pasillo horizontal) ── */}
+            <rect x={56} y={218} width={18} height={48} fill="#fdf8f3" />
+            <text
+              x={10} y={246}
+              textAnchor="middle" fill="#8b2332"
+              fontSize="8" fontWeight="700" fontFamily="Afacad, sans-serif"
+              letterSpacing="1.5"
+              transform="rotate(-90, 10, 246)"
+            >ENTRADA</text>
+
+            {/* ── Entrada lateral derecha (pasillo horizontal) ── */}
+            <rect x={755} y={218} width={18} height={48} fill="#fdf8f3" />
+            <text
+              x={818} y={246}
+              textAnchor="middle" fill="#8b2332"
+              fontSize="8" fontWeight="700" fontFamily="Afacad, sans-serif"
+              letterSpacing="1.5"
+              transform="rotate(90, 818, 246)"
+            >ENTRADA</text>
           </svg>
 
           {/* ── Tooltip ── */}

@@ -19,7 +19,7 @@ const MODO_LABEL = {
   domicilio: 'Entrega a domicilio',
 };
 
-function MisPedidos({ user, onLogout, onDashboardClick, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick }) {
+function MisPedidos({ user, onLogout, onDashboardClick, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -88,6 +88,8 @@ function MisPedidos({ user, onLogout, onDashboardClick, onHomeClick, onMarketpla
         onClose={() => setSidebarOpen(false)}
         onMarketplaceClick={onMarketplaceClick}
         onSelectPuestoClick={onSelectPuestoClick}
+        onMapClick={onMapClick}
+        onInstruccionesClick={onInstruccionesClick}
       />
 
       <main className="mp-main">

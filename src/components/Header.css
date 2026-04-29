@@ -51,8 +51,8 @@
 }
 
 .logo:hover {
-  opacity: 0.85;
-  transform: translateX(-50%) scale(1.04);
+  opacity: 0.90;
+
 }
 
 .logo:active {

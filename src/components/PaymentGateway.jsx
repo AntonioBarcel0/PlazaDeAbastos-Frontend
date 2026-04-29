@@ -33,7 +33,7 @@ const maskNumber = (number) => {
 function PaymentGateway({
   user, onLogout, onDashboardClick, onCartClick, onOrdersClick,
   onBack, onSuccess, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onLoginClick,
-  orderData,
+  orderData, onMapClick, onInstruccionesClick,
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { cart, cartByVendor, cartTotal, clearCart } = useCart();
@@ -132,6 +132,8 @@ function PaymentGateway({
         onClose={() => setSidebarOpen(false)}
         onMarketplaceClick={onMarketplaceClick}
         onSelectPuestoClick={onSelectPuestoClick}
+        onMapClick={onMapClick}
+        onInstruccionesClick={onInstruccionesClick}
       />
 
       <main className="pg-main">

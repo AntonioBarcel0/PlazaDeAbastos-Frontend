@@ -10,7 +10,7 @@ import './StoreView.css';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
-function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onProductClick, onCartClick, onOrdersClick }) {
+function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onProductClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedor, setVendedor] = useState(null);
   const [productos, setProductos] = useState([]);
@@ -126,6 +126,8 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
         onClose={() => setSidebarOpen(false)}
         onMarketplaceClick={onMarketplaceClick}
         onSelectPuestoClick={onSelectPuestoClick}
+        onMapClick={onMapClick}
+        onInstruccionesClick={onInstruccionesClick}
       />
 
       {/* ── Hero del puesto ── */}

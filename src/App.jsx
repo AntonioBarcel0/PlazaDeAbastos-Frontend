@@ -116,6 +116,13 @@ function App() {
   const handleCheckoutClick = () => navigate('checkout');
   const handleOrdersClick = () => navigate('mis-pedidos');
   const handleMapClick = () => navigate('market-map');
+
+  const handleInstruccionesClick = () => {
+    goHome();
+    setTimeout(() => {
+      document.getElementById('how-to-order')?.scrollIntoView({ behavior: 'smooth' });
+    }, 350);
+  };
   const handlePaymentRequest = (orderData) => {
     setPendingOrderData(orderData);
     navigate('payment');
@@ -134,6 +141,7 @@ function App() {
           onCartClick={handleCartClick}
           onOrdersClick={handleOrdersClick}
           onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       case 'select-puesto':
@@ -147,6 +155,8 @@ function App() {
           onMarketplaceClick={() => navigate('marketplace')}
           onCartClick={handleCartClick}
           onOrdersClick={handleOrdersClick}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       case 'marketplace':
@@ -161,6 +171,8 @@ function App() {
           onSelectPuestoClick={() => navigate('select-puesto')}
           onCartClick={handleCartClick}
           onOrdersClick={handleOrdersClick}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       case 'store-view':
@@ -176,6 +188,8 @@ function App() {
           onProductClick={handleProductClick}
           onCartClick={handleCartClick}
           onOrdersClick={handleOrdersClick}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       case 'product-detail':
@@ -206,6 +220,8 @@ function App() {
           onSelectPuestoClick={() => navigate('select-puesto')}
           onCheckout={handleCheckoutClick}
           onOrdersClick={handleOrdersClick}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       case 'checkout':
@@ -222,6 +238,8 @@ function App() {
           onSuccess={goHome}
           onOrdersClick={handleOrdersClick}
           onPaymentRequest={handlePaymentRequest}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       case 'payment':
@@ -238,6 +256,8 @@ function App() {
           onSuccess={goHome}
           onOrdersClick={handleOrdersClick}
           orderData={pendingOrderData}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       case 'loginOptions':
@@ -283,6 +303,8 @@ function App() {
           onSelectPuestoClick={() => navigate('select-puesto')}
           onCartClick={handleCartClick}
           onOrdersClick={handleOrdersClick}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       case 'admin-dashboard':
@@ -332,6 +354,7 @@ function App() {
           onSelectPuestoClick={() => navigate('select-puesto')}
           onOrdersClick={handleOrdersClick}
           onStoreClick={handleStoreClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       default:

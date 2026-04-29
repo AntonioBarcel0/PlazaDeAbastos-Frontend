@@ -4,7 +4,7 @@ import Sidebar from './Sidebar';
 import { useCart, isKg, itemSubtotal } from '../context/CartContext';
 import './Checkout.css';
 
-function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuccess, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onLoginClick, onOrdersClick, onPaymentRequest }) {
+function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuccess, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onLoginClick, onOrdersClick, onPaymentRequest, onMapClick, onInstruccionesClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { cart, cartByVendor, cartTotal } = useCart();
   const [form, setForm] = useState({
@@ -79,6 +79,8 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
         onClose={() => setSidebarOpen(false)}
         onMarketplaceClick={onMarketplaceClick}
         onSelectPuestoClick={onSelectPuestoClick}
+        onMapClick={onMapClick}
+        onInstruccionesClick={onInstruccionesClick}
       />
 
       <main className="checkout-main">

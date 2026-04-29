@@ -1,11 +1,11 @@
 .product-detail-container {
-  min-height: 100vh;
+  min-height: var(--full-vh);
   background-color: #fff;
 }
 
 .product-detail-layout {
   display: flex;
-  height: calc(100vh - 120px);
+  height: calc(var(--full-vh) - 120px);
   margin-top: 120px;
 }
 

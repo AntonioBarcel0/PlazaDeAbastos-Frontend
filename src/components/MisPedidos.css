@@ -1,5 +1,5 @@
 .mp-container {
-  min-height: 100vh;
+  min-height: var(--full-vh);
   background-color: #f5f5f5;
 }
 

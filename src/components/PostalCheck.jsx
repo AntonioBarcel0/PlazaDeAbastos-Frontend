@@ -1,27 +1,68 @@
 import { useState } from 'react';
 import './PostalCheck.css';
 
-const VALID_PREFIXES = { '23': 'Jaén', '18': 'Granada', '14': 'Córdoba', '02': 'Albacete' };
+const UBEDA = { lat: 38.0098, lon: -3.3733 };
+const MAX_KM = 20;
+
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const toRad = (x) => (x * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+async function geocodePostalCode(code) {
+  const url = `https://nominatim.openstreetmap.org/search?postalcode=${code}&country=es&format=json&limit=1&addressdetails=1`;
+  const res = await fetch(url, { headers: { 'Accept-Language': 'es' } });
+  if (!res.ok) throw new Error('Error de red');
+  const data = await res.json();
+  if (!data.length) return null;
+  const { lat, lon, address } = data[0];
+  const ciudad =
+    address.city || address.town || address.village || address.municipality || '';
+  return { lat: parseFloat(lat), lon: parseFloat(lon), ciudad };
+}
 
 function PostalCheck({ onConfirm, onCancel }) {
   const [code, setCode]     = useState('');
-  const [status, setStatus] = useState(null); // null | 'ok' | 'error'
-  const [zona, setZona]     = useState('');
+  const [status, setStatus] = useState(null); // null | 'loading' | 'ok' | 'far' | 'notfound' | 'neterror'
+  const [info, setInfo]     = useState(null); // { ciudad, km }
 
   const handleChange = (e) => {
     const val = e.target.value.replace(/\D/g, '').slice(0, 5);
     setCode(val);
     setStatus(null);
-    setZona('');
+    setInfo(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (code.length !== 5) return;
-    const provincia = VALID_PREFIXES[code.slice(0, 2)];
-    if (provincia) { setZona(provincia); setStatus('ok'); }
-    else            { setStatus('error'); }
+
+    setStatus('loading');
+    setInfo(null);
+
+    try {
+      const result = await geocodePostalCode(code);
+      if (!result) { setStatus('notfound'); return; }
+
+      const km = haversine(UBEDA.lat, UBEDA.lon, result.lat, result.lon);
+      const rounded = Math.round(km);
+      setInfo({ ciudad: result.ciudad, km: rounded });
+      setStatus(km <= MAX_KM ? 'ok' : 'far');
+    } catch {
+      setStatus('neterror');
+    }
   };
+
+  const inputClass = `postal-input${
+    status === 'ok'  ? ' is-ok'    :
+    status === 'far' || status === 'notfound' || status === 'neterror' ? ' is-error' : ''
+  }`;
 
   return (
     <div className="postal-page" style={{ position: 'relative' }}>
@@ -36,7 +77,7 @@ function PostalCheck({ onConfirm, onCancel }) {
       <div className="postal-inner">
         <form onSubmit={handleSubmit} noValidate style={{ width: '100%' }}>
           <input
-            className={`postal-input${status === 'ok' ? ' is-ok' : status === 'error' ? ' is-error' : ''}`}
+            className={inputClass}
             type="text"
             inputMode="numeric"
             placeholder="código postal"
@@ -44,37 +85,65 @@ function PostalCheck({ onConfirm, onCancel }) {
             onChange={handleChange}
             maxLength={5}
             autoFocus
+            disabled={status === 'loading'}
           />
 
           <div className="postal-divider" />
 
-          {status === null && (
+          {/* Mensajes de estado */}
+          {(status === null || status === 'loading') && (
             <p className="postal-sub">
-              Antes de continuar, comprueba que<br />repartimos en tu localidad.
+              {status === 'loading'
+                ? 'Comprobando tu localidad…'
+                : 'Antes de continuar, comprueba que repartimos en tu localidad.'}
             </p>
           )}
-          {status === 'ok' && (
+          {status === 'ok' && info && (
             <p className="postal-feedback postal-feedback--ok">
-              ¡Perfecto! Repartimos en {zona}.
+              ¡Perfecto! {info.ciudad && <>{info.ciudad} está a </>}
+              solo {info.km} km de Úbeda. Repartimos en tu zona.
             </p>
           )}
-          {status === 'error' && (
+          {status === 'far' && info && (
             <p className="postal-feedback postal-feedback--error">
-              Lo sentimos, de momento no repartimos<br />en esa zona.
+              {info.ciudad && <>{info.ciudad} está a </>}{info.km} km de Úbeda.
+              De momento solo repartimos en un radio de {MAX_KM} km.
+            </p>
+          )}
+          {status === 'notfound' && (
+            <p className="postal-feedback postal-feedback--error">
+              No hemos encontrado ese código postal. Comprueba que es correcto.
+            </p>
+          )}
+          {status === 'neterror' && (
+            <p className="postal-feedback postal-feedback--error">
+              Error de conexión. Inténtalo de nuevo.
             </p>
           )}
 
           <div className="postal-actions">
             {status === 'ok' ? (
-              <button type="button" className="postal-btn postal-btn--primary" onClick={() => onConfirm(code)}>
+              <button
+                type="button"
+                className="postal-btn postal-btn--primary"
+                onClick={() => onConfirm(code)}
+              >
                 Continuar con el pedido
               </button>
             ) : (
-              <button type="submit" className="postal-btn postal-btn--primary" disabled={code.length !== 5}>
-                Comprobar zona
+              <button
+                type="submit"
+                className="postal-btn postal-btn--primary"
+                disabled={code.length !== 5 || status === 'loading'}
+              >
+                {status === 'loading' ? 'Comprobando…' : 'Comprobar zona'}
               </button>
             )}
-            <button type="button" className="postal-btn postal-btn--ghost" onClick={onCancel}>
+            <button
+              type="button"
+              className="postal-btn postal-btn--ghost"
+              onClick={onCancel}
+            >
               cancelar
             </button>
           </div>

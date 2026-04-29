@@ -22,7 +22,7 @@ const SORT_OPTIONS = [
   { value: 'cat', label: 'Categoría' },
 ];
 
-function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHomeClick, onMarketplaceClick, onCartClick, onOrdersClick }) {
+function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHomeClick, onMarketplaceClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedores, setVendedores] = useState([]);
   const [filteredVendedores, setFilteredVendedores] = useState([]);
@@ -145,6 +145,8 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
         onClose={() => setSidebarOpen(false)}
         onMarketplaceClick={onMarketplaceClick}
         onSelectPuestoClick={() => {}}
+        onMapClick={onMapClick}
+        onInstruccionesClick={onInstruccionesClick}
       />
 
       <main className="sp-main">

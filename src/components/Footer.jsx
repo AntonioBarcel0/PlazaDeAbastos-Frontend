@@ -86,7 +86,11 @@ function Footer() {
 
       {/* Logo inferior */}
       <div className="footer-brand">
-        <span className="footer-brand-text">Plaza de Abastos</span>
+        <img
+          src="https://res.cloudinary.com/dlmnchkjg/image/upload/v1770290044/Plaza_de_Abastos_dn46eq.png"
+          alt="Plaza de Abastos"
+          className="footer-brand-logo"
+        />
       </div>
     </footer>
   );
