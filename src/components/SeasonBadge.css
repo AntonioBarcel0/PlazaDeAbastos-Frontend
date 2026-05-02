@@ -1,0 +1,44 @@
+/* ── Variante tarjeta ── */
+.season-badge--card {
+  display: block;
+  width: fit-content;
+  margin: 0.6rem auto 0;
+  background-color: #3a5f2e;
+  color: white;
+  font-family: 'Afacad', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.22rem 0.75rem;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.season-badge--card.season-badge--out {
+  display: none;
+}
+
+/* ── Variante detalle: etiqueta sobre fondo rojo ── */
+.season-badge--detail {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Afacad', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.85rem;
+  border-radius: 20px;
+}
+
+.season-badge--detail.season-badge--in {
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #3a5f2e;
+}
+
+.season-badge--detail.season-badge--out {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 400;
+}

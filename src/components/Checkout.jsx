@@ -2,12 +2,11 @@ import { useState } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import { useCart, isKg, itemSubtotal } from '../context/CartContext';
-import { api } from '../services/api';
 import './Checkout.css';
 
-function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuccess, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onLoginClick, onOrdersClick }) {
+function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuccess, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onLoginClick, onOrdersClick, onPaymentRequest, onMapClick, onInstruccionesClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { cart, cartByVendor, cartTotal, clearCart } = useCart();
+  const { cart, cartByVendor, cartTotal } = useCart();
   const [form, setForm] = useState({
     modoEntrega: 'recogida',
     direccionEntrega: '',
@@ -15,42 +14,30 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
     notasCliente: '',
     fechaEntrega: '',
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [orderSuccess, setOrderSuccess] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setError('');
-    setLoading(true);
 
-    try {
-      const orderData = {
-        items: cart.map(item => ({
-          productId: item.productId,
-          cantidad: item.cantidad,
-        })),
-        modoEntrega: form.modoEntrega,
-      };
+    const orderData = {
+      items: cart.map(item => ({
+        productId: item.productId,
+        cantidad: item.cantidad,
+      })),
+      modoEntrega: form.modoEntrega,
+      totalEstimado: cartTotal,
+    };
 
-      if (form.direccionEntrega.trim()) orderData.direccionEntrega = form.direccionEntrega.trim();
-      if (form.telefonoContacto.trim()) orderData.telefonoContacto = form.telefonoContacto.trim();
-      if (form.notasCliente.trim()) orderData.notasCliente = form.notasCliente.trim();
-      if (form.fechaEntrega) orderData.fechaEntrega = form.fechaEntrega;
+    if (form.direccionEntrega.trim()) orderData.direccionEntrega = form.direccionEntrega.trim();
+    if (form.telefonoContacto.trim()) orderData.telefonoContacto = form.telefonoContacto.trim();
+    if (form.notasCliente.trim()) orderData.notasCliente = form.notasCliente.trim();
+    if (form.fechaEntrega) orderData.fechaEntrega = form.fechaEntrega;
 
-      const result = await api.createOrder(orderData);
-      clearCart();
-      setOrderSuccess(result.order || result);
-    } catch (err) {
-      setError(err.message || 'Error al realizar el pedido. Inténtalo de nuevo.');
-    } finally {
-      setLoading(false);
-    }
+    onPaymentRequest(orderData);
   };
 
   const headerProps = {
@@ -82,35 +69,6 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
     );
   }
 
-  if (orderSuccess) {
-    const subOrderCount = orderSuccess.subOrders?.length || 1;
-    return (
-      <div className="checkout-container">
-        <Header {...headerProps} />
-        <main className="checkout-main">
-          <div className="checkout-success">
-            <span className="checkout-success-icon">✓</span>
-            <h2>¡Pedido realizado!</h2>
-            <p>
-              {subOrderCount > 1
-                ? `Tu pedido se ha dividido en ${subOrderCount} sub-pedidos, uno por cada puesto.`
-                : 'Tu pedido ha sido enviado al vendedor.'}
-            </p>
-            {orderSuccess.id && (
-              <p className="checkout-order-id">Referencia: <strong>{orderSuccess.id.substring(0, 8)}</strong></p>
-            )}
-            <p className="checkout-success-note">
-              Cada vendedor confirmará su parte del pedido en breve.
-            </p>
-            <button className="btn-success-home" onClick={onSuccess}>
-              Volver al inicio
-            </button>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
   const vendorIds = Object.keys(cartByVendor);
 
   return (
@@ -121,6 +79,8 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
         onClose={() => setSidebarOpen(false)}
         onMarketplaceClick={onMarketplaceClick}
         onSelectPuestoClick={onSelectPuestoClick}
+        onMapClick={onMapClick}
+        onInstruccionesClick={onInstruccionesClick}
       />
 
       <main className="checkout-main">
@@ -179,8 +139,6 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
           <form className="checkout-form" onSubmit={handleSubmit}>
             <h2 className="checkout-form-title">Datos del pedido</h2>
             <p className="checkout-form-subtitle">Selecciona el modo de entrega y completa los datos</p>
-
-            {error && <p className="checkout-error">{error}</p>}
 
             {/* Modo de entrega */}
             <div className="form-group">
@@ -256,8 +214,8 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
               />
             </div>
 
-            <button type="submit" className="btn-submit" disabled={loading}>
-              {loading ? 'Procesando...' : 'Realizar pedido'}
+            <button type="submit" className="btn-submit">
+              Continuar al pago
             </button>
           </form>
         </div>

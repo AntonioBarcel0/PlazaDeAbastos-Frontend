@@ -10,6 +10,9 @@ import StoreView from './components/StoreView';
 import SelectPuesto from './components/SelectPuesto';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
+import PaymentGateway from './components/PaymentGateway';
+import MarketMap from './components/MarketMap';
+import PostalCheck from './components/PostalCheck';
 import ProductDetail from './pages/ProductDetail';
 import MisPedidos from './components/MisPedidos';
 import { CartProvider } from './context/CartContext';
@@ -23,6 +26,9 @@ function App() {
   const [selectedVendedorId, setSelectedVendedorId] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedProductVendedor, setSelectedProductVendedor] = useState(null);
+  const [pendingOrderData, setPendingOrderData] = useState(null);
+  const [postalCode, setPostalCode] = useState(() => sessionStorage.getItem('postalCode') || null);
+  const [postalPendingView, setPostalPendingView] = useState(null);
 
   const navigate = (view) => {
     window.history.pushState({ view }, '');
@@ -80,7 +86,26 @@ function App() {
     navigate('store-view');
   };
 
-  const handleCartClick = () => navigate('cart');
+  const handleCartClick = () => {
+    if (!postalCode) {
+      setPostalPendingView('cart');
+      navigate('postal-check');
+    } else {
+      navigate('cart');
+    }
+  };
+
+  const handlePostalConfirm = (code) => {
+    sessionStorage.setItem('postalCode', code);
+    setPostalCode(code);
+    navigate(postalPendingView || 'cart');
+    setPostalPendingView(null);
+  };
+
+  const handlePostalCancel = () => {
+    setPostalPendingView(null);
+    goBack();
+  };
 
   const handleProductClick = (product, vendedor) => {
     setSelectedProduct(product);
@@ -90,6 +115,18 @@ function App() {
 
   const handleCheckoutClick = () => navigate('checkout');
   const handleOrdersClick = () => navigate('mis-pedidos');
+  const handleMapClick = () => navigate('market-map');
+
+  const handleInstruccionesClick = () => {
+    goHome();
+    setTimeout(() => {
+      document.getElementById('how-to-order')?.scrollIntoView({ behavior: 'smooth' });
+    }, 350);
+  };
+  const handlePaymentRequest = (orderData) => {
+    setPendingOrderData(orderData);
+    navigate('payment');
+  };
 
   const renderView = () => {
     switch(currentView) {
@@ -103,6 +140,8 @@ function App() {
           onSelectPuestoClick={() => navigate('select-puesto')}
           onCartClick={handleCartClick}
           onOrdersClick={handleOrdersClick}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       case 'select-puesto':
@@ -116,6 +155,8 @@ function App() {
           onMarketplaceClick={() => navigate('marketplace')}
           onCartClick={handleCartClick}
           onOrdersClick={handleOrdersClick}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       case 'marketplace':
@@ -130,6 +171,8 @@ function App() {
           onSelectPuestoClick={() => navigate('select-puesto')}
           onCartClick={handleCartClick}
           onOrdersClick={handleOrdersClick}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       case 'store-view':
@@ -145,6 +188,8 @@ function App() {
           onProductClick={handleProductClick}
           onCartClick={handleCartClick}
           onOrdersClick={handleOrdersClick}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       case 'product-detail':
@@ -175,6 +220,8 @@ function App() {
           onSelectPuestoClick={() => navigate('select-puesto')}
           onCheckout={handleCheckoutClick}
           onOrdersClick={handleOrdersClick}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       case 'checkout':
@@ -190,6 +237,27 @@ function App() {
           onSelectPuestoClick={() => navigate('select-puesto')}
           onSuccess={goHome}
           onOrdersClick={handleOrdersClick}
+          onPaymentRequest={handlePaymentRequest}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
+        />;
+
+      case 'payment':
+        return <PaymentGateway
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onLoginClick={() => navigate('loginOptions')}
+          onCartClick={handleCartClick}
+          onBack={() => navigate('checkout')}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
+          onSuccess={goHome}
+          onOrdersClick={handleOrdersClick}
+          orderData={pendingOrderData}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       case 'loginOptions':
@@ -235,6 +303,8 @@ function App() {
           onSelectPuestoClick={() => navigate('select-puesto')}
           onCartClick={handleCartClick}
           onOrdersClick={handleOrdersClick}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       case 'admin-dashboard':
@@ -257,6 +327,34 @@ function App() {
           user={user}
           onLogout={handleLogout}
           onBackHome={goHome}
+        />;
+
+      case 'postal-check':
+        return <PostalCheck
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onLoginClick={() => navigate('loginOptions')}
+          onCartClick={handleCartClick}
+          onOrdersClick={handleOrdersClick}
+          onHomeClick={goHome}
+          onConfirm={handlePostalConfirm}
+          onCancel={handlePostalCancel}
+        />;
+
+      case 'market-map':
+        return <MarketMap
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onLoginClick={() => navigate('loginOptions')}
+          onCartClick={handleCartClick}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
+          onOrdersClick={handleOrdersClick}
+          onStoreClick={handleStoreClick}
+          onInstruccionesClick={handleInstruccionesClick}
         />;
 
       default:

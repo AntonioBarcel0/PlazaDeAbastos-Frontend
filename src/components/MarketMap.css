@@ -1,0 +1,167 @@
+.map-container {
+  min-height: var(--full-vh);
+  background-color: #f5f5f5;
+}
+
+.map-main {
+  padding: 130px 3rem 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.map-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 0.3rem;
+}
+
+.map-subtitle {
+  font-size: 0.95rem;
+  color: #888;
+  margin: 0 0 1.75rem;
+}
+
+/* ── SVG wrapper (posición relativa para el tooltip) ── */
+.map-svg-wrap {
+  position: relative;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09);
+  overflow: hidden;
+}
+
+.map-svg {
+  width: 100%;
+  display: block;
+}
+
+/* ── Tooltip ── */
+.map-tooltip {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 20, 20, 0.92);
+  color: white;
+  border-radius: 10px;
+  padding: 0.65rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  pointer-events: none;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.map-tooltip-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.map-tooltip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.map-tooltip-name {
+  margin: 0;
+  font-family: 'Afacad', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.map-tooltip-cat {
+  margin: 0;
+  font-family: 'Afacad', sans-serif;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.map-tooltip-cta {
+  font-family: 'Afacad', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #f5c842;
+  letter-spacing: 0.04em;
+  margin-left: 0.25rem;
+}
+
+/* ── Leyenda ── */
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2.2rem;
+  margin-top: 1.25rem;
+  padding: 1.25rem 1.75rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.map-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  transition: opacity 0.18s ease;
+  user-select: none;
+}
+
+.map-legend-item--dim {
+  opacity: 0.3;
+}
+
+.map-legend-item--active .map-legend-label {
+  color: #1a1a1a;
+}
+
+.map-legend-dot {
+  width: 17px;
+  height: 17px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.map-legend-item--active .map-legend-dot {
+  transform: scale(1.25);
+}
+
+.map-legend-label {
+  font-family: 'Afacad', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #444;
+  letter-spacing: 0.07em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .map-main {
+    padding: 90px 1rem 2rem;
+  }
+
+  .map-legend {
+    gap: 0.6rem 1.5rem;
+    padding: 1rem 1.25rem;
+  }
+
+  .map-legend-label {
+    font-size: 0.82rem;
+  }
+
+  .map-legend-dot {
+    width: 13px;
+    height: 13px;
+  }
+
+  .map-tooltip {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.9rem;
+  }
+}

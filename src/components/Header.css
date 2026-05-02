@@ -51,8 +51,8 @@
 }
 
 .logo:hover {
-  opacity: 0.85;
-  transform: translateX(-50%) scale(1.04);
+  opacity: 0.90;
+
 }
 
 .logo:active {
@@ -116,12 +116,6 @@
   background-color: #6d1b27;
 }
 
-.cart-icon,
-.log-icon {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
 
 /* --- Mis pedidos (cliente) --- */
 .orders-btn {

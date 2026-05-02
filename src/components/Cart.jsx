@@ -6,7 +6,7 @@ import './Cart.css';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
-function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCheckout, onLoginClick, onOrdersClick }) {
+function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCheckout, onLoginClick, onOrdersClick, onMapClick, onInstruccionesClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { cart, cartByVendor, cartTotal, removeFromCart, updateQuantity, clearCart } = useCart();
 
@@ -28,6 +28,8 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeCli
           onClose={() => setSidebarOpen(false)}
           onMarketplaceClick={onMarketplaceClick}
           onSelectPuestoClick={onSelectPuestoClick}
+        onMapClick={onMapClick}
+        onInstruccionesClick={onInstruccionesClick}
         />
         <main className="cart-main">
           <div className="cart-empty">
@@ -62,6 +64,8 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeCli
         onClose={() => setSidebarOpen(false)}
         onMarketplaceClick={onMarketplaceClick}
         onSelectPuestoClick={onSelectPuestoClick}
+        onMapClick={onMapClick}
+        onInstruccionesClick={onInstruccionesClick}
       />
 
       <main className="cart-main">

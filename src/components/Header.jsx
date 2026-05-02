@@ -1,3 +1,4 @@
+import { LogIn, ShoppingBasket } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import './Header.css';
 
@@ -37,20 +38,12 @@ function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDash
           </>
         ) : (
           <button className="log-btn" onClick={onLoginClick} aria-label="registro">
-            <img 
-              src="https://res.cloudinary.com/dlmnchkjg/image/upload/v1770290764/Captura_de_pantalla_2026-02-05_a_las_12.25.59_k694e7.png" 
-              alt="registro"
-              className="log-icon"
-            />
+            <LogIn size={44} strokeWidth={2.8} color="white" />
           </button>
         )}
 
         <button className="cart-btn" onClick={onCartClick} aria-label="Carrito de compra">
-          <img
-            src="https://res.cloudinary.com/dlmnchkjg/image/upload/v1770290214/Captura_de_pantalla_2026-02-05_a_las_12.16.48_syfomx.png"
-            alt="Carrito compra"
-            className="cart-icon"
-          />
+          <ShoppingBasket size={44} strokeWidth={2.3} color="white" />
           {cartCount > 0 && (
             <span className="cart-badge">{cartCount}</span>
           )}

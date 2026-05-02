@@ -7,23 +7,21 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
-  background-color: #fff;
+  min-height: 60vh;
+  background-color: #ffffff;
   z-index: 999;
   display: flex;
   flex-direction: column;
 
-  /* Oculto por defecto */
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  /* Persiana: recorta de arriba a abajo */
+  clip-path: inset(0 0 100% 0);
+  pointer-events: none;
+  transition: clip-path 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar-overlay.open {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+  clip-path: inset(0 0 0% 0);
+  pointer-events: auto;
 }
 
 /* --- Zona de navegación --- */
@@ -35,6 +33,7 @@
 
 /* --- Columna principal --- */
 .sidebar-col--main {
+  padding-top: 40px;
   flex: 2;
 }
 
@@ -78,18 +77,20 @@
 
 /* Columnas secundarias — enlaces pequeños */
 .sidebar-col--secondary {
-  padding-top: 0;
+  padding-bottom: 200px;
+  padding-top: 30px;
 }
 
 .sidebar-link--secondary {
-  font-family: 'Alfa Slab One', serif;
-  font-size: 2.7rem;
-  font-weight: 400;
+  font-family: 'Afacad', serif;
+  font-size: 1.7rem;
+  font-weight: 600;
   color: #8b2332;
   text-decoration: none;
-  line-height: 1.7;
+  line-height: 2.7;
   display: block;
   transition: opacity 0.2s ease;
+
 }
 
 .sidebar-link--secondary:hover {

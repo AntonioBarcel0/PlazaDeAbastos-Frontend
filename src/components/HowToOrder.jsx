@@ -4,15 +4,15 @@ import './HowToOrder.css';
 const STEPS = [
   {
     id: 1,
-    description: 'Explora los puestos del mercado y elige los productos frescos que necesitas.',
+    description: 'Confirma tu dirección postal, explora los puestos del mercado y elige los productos frescos que necesitas.',
   },
   {
     id: 2,
-    description: 'Añade los productos al carrito y confirma tu pedido de forma rápida y segura.',
+    description: 'Añade los productos al carrito de los puestos que desees y confirma tu pedido de forma rápida y segura.',
   },
   {
     id: 3,
-    description: 'Recibe tus productos en casa con total frescura y calidad garantizada.',
+    description: 'Recibe todos tus productos en casa con total frescura y calidad garantizada.',
   },
 ];
 
@@ -20,7 +20,7 @@ function HowToOrder() {
   const total = STEPS.length;
 
   return (
-    <section className="how-section">
+    <section className="how-section" id="how-to-order">
       <h2 className="how-title">Como hacer tu pedido</h2>
       <div className="how-grid">
         {STEPS.map(step => (

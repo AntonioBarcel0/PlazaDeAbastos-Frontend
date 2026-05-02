@@ -1,6 +1,6 @@
 import './Sidebar.css';
 
-function Sidebar({ isOpen, onClose, onSelectPuestoClick, onMarketplaceClick }) {
+function Sidebar({ isOpen, onClose, onSelectPuestoClick, onMarketplaceClick, onMapClick, onInstruccionesClick }) {
   return (
     <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-nav">
@@ -8,11 +8,11 @@ function Sidebar({ isOpen, onClose, onSelectPuestoClick, onMarketplaceClick }) {
         {/* Columna izquierda — enlaces grandes */}
         <div className="sidebar-col sidebar-col--main">
           <ul className="sidebar-list">
-            <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); onMarketplaceClick && onMarketplaceClick(); }}>Puestos</a></li>
-            <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); }}>A domicilio</a></li>
+            <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); onSelectPuestoClick && onSelectPuestoClick(); }}>Puestos</a></li>
+            <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); onMapClick && onMapClick(); }}>Plano del mercado</a></li>
             <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); onSelectPuestoClick && onSelectPuestoClick(); }}>Elige tu cesta</a></li>
             <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); }}>Mi perfil</a></li>
-            <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); }}>Instrucciones</a></li>
+            <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); onInstruccionesClick && onInstruccionesClick(); }}>Instrucciones</a></li>
           </ul>
         </div>
 

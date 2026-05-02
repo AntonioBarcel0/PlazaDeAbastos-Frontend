@@ -1,3 +1,7 @@
+:root {
+  --full-vh: 100vh;
+}
+
 /* ── Afacad autoalojada con size-adjust ────────── */
 @font-face {
   font-family: 'Afacad';
@@ -66,7 +70,7 @@ h1, h2, h3 {
 }
 
 .App {
-  min-height: 100vh;
+  min-height: var(--full-vh);
   position: relative;
 }
 
