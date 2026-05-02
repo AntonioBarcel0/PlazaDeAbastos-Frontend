@@ -1,5 +1,5 @@
 :root {
-  --full-vh: calc(100vh / 0.75);
+  --full-vh: 100vh;
 }
 
 /* ── Afacad autoalojada con size-adjust ────────── */

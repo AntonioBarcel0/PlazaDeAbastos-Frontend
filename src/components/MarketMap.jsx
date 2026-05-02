@@ -108,6 +108,7 @@ function MarketMap({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [hovered, setHovered]         = useState(null);
+  const [hoveredCat, setHoveredCat]   = useState(null);
 
   const headerProps = {
     onMenuClick: () => setSidebarOpen(s => !s),
@@ -148,10 +149,17 @@ function MarketMap({
 
             {/* ── Puestos ── */}
             {STALLS.map(s => {
-              const isHov = hovered?.id === s.id;
+              const isHov     = hovered?.id === s.id;
+              const isCatHov  = hoveredCat === s.cat;
+              const hasCatFilter = hoveredCat !== null;
               const color = CAT_COLOR[s.cat];
               const cx    = s.x + s.w / 2;
               const tall  = s.h >= 80;
+
+              const opacity     = hasCatFilter ? (isCatHov ? 1 : 0.18) : (isHov ? 1 : 0.82);
+              const strokeColor = (isHov || (hasCatFilter && isCatHov)) ? 'white' : 'rgba(0,0,0,0.15)';
+              const strokeW     = (isHov || (hasCatFilter && isCatHov)) ? 2 : 1;
+
               return (
                 <g
                   key={s.id}
@@ -164,9 +172,9 @@ function MarketMap({
                     x={s.x} y={s.y} width={s.w} height={s.h}
                     rx="3" ry="3"
                     fill={color}
-                    opacity={isHov ? 1 : 0.82}
-                    stroke={isHov ? 'white' : 'rgba(0,0,0,0.15)'}
-                    strokeWidth={isHov ? 2 : 1}
+                    opacity={opacity}
+                    stroke={strokeColor}
+                    strokeWidth={strokeW}
                   />
                   {/* número */}
                   <text
@@ -252,7 +260,7 @@ function MarketMap({
           </svg>
 
           {/* ── Tooltip ── */}
-          {hovered && (
+          {hovered && !hoveredCat && (
             <div className="map-tooltip">
               <span className="map-tooltip-icon">{CAT_ICON[hovered.cat]}</span>
               <div className="map-tooltip-body">
@@ -267,9 +275,14 @@ function MarketMap({
         {/* ── Leyenda ── */}
         <div className="map-legend">
           {Object.entries(CAT_COLOR).map(([cat, color]) => (
-            <div key={cat} className="map-legend-item">
+            <div
+              key={cat}
+              className={`map-legend-item${hoveredCat && hoveredCat !== cat ? ' map-legend-item--dim' : ''}${hoveredCat === cat ? ' map-legend-item--active' : ''}`}
+              onMouseEnter={() => setHoveredCat(cat)}
+              onMouseLeave={() => setHoveredCat(null)}
+            >
               <span className="map-legend-dot" style={{ backgroundColor: color }} />
-              <span className="map-legend-label">{cat}</span>
+              <span className="map-legend-label">{cat.toUpperCase()}</span>
             </div>
           ))}
         </div>

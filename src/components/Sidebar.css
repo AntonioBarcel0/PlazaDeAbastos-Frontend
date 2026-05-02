@@ -7,8 +7,8 @@
   top: 0;
   left: 0;
   width: 100%;
-  min-height: 95vh;
-  background-color: #fff;
+  min-height: 60vh;
+  background-color: #ffffff;
   z-index: 999;
   display: flex;
   flex-direction: column;
