@@ -15,6 +15,10 @@ import MarketMap from './components/MarketMap';
 import PostalCheck from './components/PostalCheck';
 import ProductDetail from './pages/ProductDetail';
 import MisPedidos from './components/MisPedidos';
+import EligeTuCesta from './components/EligeTuCesta';
+import CrearCesta from './components/CrearCesta';
+import ComprarCesta from './components/ComprarCesta';
+import CestaDetalle from './components/CestaDetalle';
 import AtencionCliente from './components/AtencionCliente';
 import Contacto from './components/Contacto';
 import FAQ from './components/FAQ';
@@ -33,6 +37,7 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedProductVendedor, setSelectedProductVendedor] = useState(null);
   const [pendingOrderData, setPendingOrderData] = useState(null);
+  const [selectedTipo, setSelectedTipo] = useState(null);
   const [postalCode, setPostalCode] = useState(() => sessionStorage.getItem('postalCode') || null);
   const [postalPendingView, setPostalPendingView] = useState(null);
 
@@ -124,6 +129,24 @@ function App() {
   const handleMapClick = () => navigate('market-map');
 
   const handlePageClick = (view) => navigate(view);
+
+  const handleCrearCesta = () => {
+    if (!postalCode) {
+      setPostalPendingView('crear-cesta');
+      navigate('postal-check');
+    } else {
+      navigate('crear-cesta');
+    }
+  };
+
+  const handleComprarCesta = () => {
+    if (!postalCode) {
+      setPostalPendingView('comprar-cesta');
+      navigate('postal-check');
+    } else {
+      navigate('comprar-cesta');
+    }
+  };
 
   const handleInstruccionesClick = () => {
     goHome();
@@ -373,6 +396,76 @@ function App() {
           onStoreClick={handleStoreClick}
           onInstruccionesClick={handleInstruccionesClick}
           onPageClick={handlePageClick}
+        />;
+
+      case 'comprar-cesta':
+        return <ComprarCesta
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onLoginClick={() => navigate('loginOptions')}
+          onCartClick={handleCartClick}
+          onOrdersClick={handleOrdersClick}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
+          onTipoSelect={(tipo) => { setSelectedTipo(tipo); navigate('cesta-detalle'); }}
+        />;
+
+      case 'cesta-detalle':
+        return <CestaDetalle
+          tipo={selectedTipo}
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onLoginClick={() => navigate('loginOptions')}
+          onCartClick={handleCartClick}
+          onOrdersClick={handleOrdersClick}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
+          onBack={() => navigate('comprar-cesta')}
+        />;
+
+      case 'crear-cesta':
+        return <CrearCesta
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onLoginClick={() => navigate('loginOptions')}
+          onCartClick={handleCartClick}
+          onOrdersClick={handleOrdersClick}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
+          onPuestosClick={() => navigate('select-puesto')}
+        />;
+
+      case 'elige-tu-cesta':
+        return <EligeTuCesta
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onLoginClick={() => navigate('loginOptions')}
+          onCartClick={handleCartClick}
+          onOrdersClick={handleOrdersClick}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
+          onCrearCesta={handleCrearCesta}
+          onComprarCesta={handleComprarCesta}
         />;
 
       case 'cliente':

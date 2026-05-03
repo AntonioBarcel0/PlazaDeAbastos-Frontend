@@ -24,10 +24,11 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
     e.preventDefault();
 
     const orderData = {
-      items: cart.map(item => ({
-        productId: item.productId,
-        cantidad: item.cantidad,
-      })),
+      items: cart.map(item =>
+        item.itemType === 'cesta'
+          ? { cestaId: item.cestaId, cantidad: item.cantidad }
+          : { productId: item.productId, cantidad: item.cantidad }
+      ),
       modoEntrega: form.modoEntrega,
       totalEstimado: cartTotal,
     };

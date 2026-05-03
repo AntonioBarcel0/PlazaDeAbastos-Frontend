@@ -480,6 +480,66 @@ export const api = {
     const data = await response.json();
     if (!response.ok) throw new Error(data.message || 'Error al obtener estadísticas');
     return data;
+  },
+
+  // ============== CESTAS PREDEFINIDAS ==============
+
+  // Obtener cestas activas (público, filtro opcional por tipo)
+  getCestas: async (tipo = null) => {
+    const params = tipo ? `?tipo=${tipo}` : '';
+    const response = await fetch(`${API_URL}/cestas${params}`);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al obtener cestas');
+    return data;
+  },
+
+  // Obtener mis cestas (comerciante)
+  getMisCestas: async () => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/cestas/mis-cestas`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al obtener tus cestas');
+    return data;
+  },
+
+  // Crear cesta (comerciante)
+  createCesta: async (cestaData) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/cestas`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(cestaData)
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al crear la cesta');
+    return data;
+  },
+
+  // Actualizar cesta (comerciante)
+  updateCesta: async (id, cestaData) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/cestas/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(cestaData)
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al actualizar la cesta');
+    return data;
+  },
+
+  // Eliminar cesta (comerciante)
+  deleteCesta: async (id) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/cestas/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al eliminar la cesta');
+    return data;
   }
 };
 

@@ -1,0 +1,207 @@
+.cd-container {
+  width: 100%;
+  min-height: var(--full-vh);
+  background: #fafafa;
+}
+
+.cd-main {
+  padding-top: 70px;
+  min-height: var(--full-vh);
+  box-sizing: border-box;
+}
+
+/* ── Cabecera de la sección ── */
+.cd-header-section {
+  background: #8b2332;
+  padding: 3.5rem 4rem 3rem;
+}
+
+.cd-back-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Afacad', sans-serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color 0.2s;
+}
+
+.cd-back-btn:hover {
+  color: #ffffff;
+}
+
+.cd-tipo-label {
+  font-family: 'Afacad', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem;
+}
+
+.cd-title {
+  font-family: 'Alfa Slab One', serif;
+  font-size: 3.8rem;
+  font-weight: 400;
+  color: #ffffff;
+  margin: 0 0 0.5rem;
+  line-height: 1.1;
+}
+
+.cd-subtitle {
+  font-family: 'Afacad', sans-serif;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0;
+}
+
+/* ── Grid de cestas ── */
+.cd-content {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+}
+
+.cd-empty {
+  text-align: center;
+  padding: 5rem 2rem;
+  font-family: 'Afacad', sans-serif;
+}
+
+.cd-empty h2 {
+  font-family: 'Alfa Slab One', serif;
+  font-size: 1.8rem;
+  color: #1a1a1a;
+  margin: 0 0 0.75rem;
+}
+
+.cd-empty p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.cd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.75rem;
+}
+
+/* ── Tarjeta de cesta ── */
+.cd-card {
+  background: #ffffff;
+  border: 1px solid rgba(139, 35, 50, 0.12);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.cd-card:hover {
+  box-shadow: 0 12px 40px rgba(139, 35, 50, 0.14);
+  transform: translateY(-4px);
+}
+
+.cd-card-body {
+  padding: 1.75rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.cd-vendor {
+  font-family: 'Afacad', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #8b2332;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.cd-card-name {
+  font-family: 'Alfa Slab One', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.cd-card-desc {
+  font-family: 'Afacad', sans-serif;
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+}
+
+.cd-card-items {
+  font-family: 'Afacad', sans-serif;
+  font-size: 0.9rem;
+  color: #8b2332;
+  background: rgba(139, 35, 50, 0.06);
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.cd-card-footer {
+  padding: 0 1.75rem 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cd-card-price {
+  font-family: 'Alfa Slab One', serif;
+  font-size: 1.7rem;
+  color: #8b2332;
+}
+
+.cd-add-btn {
+  background: #8b2332;
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  padding: 0.65rem 1.6rem;
+  font-family: 'Afacad', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.22s ease, transform 0.15s ease;
+}
+
+.cd-add-btn:hover {
+  background: #6e1c28;
+  transform: scale(1.03);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .cd-header-section {
+    padding: 2.5rem 1.5rem 2rem;
+  }
+
+  .cd-title {
+    font-size: 2.6rem;
+  }
+
+  .cd-content {
+    padding: 2rem 1rem 4rem;
+  }
+
+  .cd-grid {
+    grid-template-columns: 1fr;
+  }
+}

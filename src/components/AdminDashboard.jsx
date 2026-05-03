@@ -16,8 +16,15 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [user, setUser] = useState(propUser);
-  const [activeTab, setActiveTab] = useState('productos'); // 'productos' | 'pedidos' | 'perfil'
+  const [activeTab, setActiveTab] = useState('productos'); // 'productos' | 'pedidos' | 'cestas' | 'perfil'
   const [profileData, setProfileData] = useState({ especialidad: '', imagenPerfil: null });
+
+  // Cestas predefinidas
+  const [cestas, setCestas] = useState([]);
+  const [cestasLoading, setCestasLoading] = useState(false);
+  const [showCestaForm, setShowCestaForm] = useState(false);
+  const [editingCesta, setEditingCesta] = useState(null);
+  const [cestaForm, setCestaForm] = useState({ tipo: 'frutas', nombre: '', precio: '', descripcion: '', items: '' });
   const [profilePreview, setProfilePreview] = useState(null);
   const [profileFile, setProfileFile] = useState(null);
   const [profileSaving, setProfileSaving] = useState(false);
@@ -29,6 +36,79 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
     }
     loadProducts();
   }, [user]);
+
+  useEffect(() => {
+    if (activeTab === 'cestas') loadCestas();
+  }, [activeTab]);
+
+  const loadCestas = async () => {
+    try {
+      setCestasLoading(true);
+      const data = await api.getMisCestas();
+      setCestas(data.cestas || []);
+    } catch (err) {
+      toast.error('Error al cargar cestas: ' + err.message);
+    } finally {
+      setCestasLoading(false);
+    }
+  };
+
+  const openCestaForm = (cesta = null) => {
+    setEditingCesta(cesta);
+    setCestaForm(cesta ? {
+      tipo: cesta.tipo,
+      nombre: cesta.nombre,
+      precio: String(cesta.precio),
+      descripcion: cesta.descripcion || '',
+      items: (cesta.items || []).join(', '),
+    } : { tipo: 'frutas', nombre: '', precio: '', descripcion: '', items: '' });
+    setShowCestaForm(true);
+  };
+
+  const handleCestaSubmit = async (e) => {
+    e.preventDefault();
+    const payload = {
+      tipo: cestaForm.tipo,
+      nombre: cestaForm.nombre.trim(),
+      precio: parseFloat(cestaForm.precio),
+      descripcion: cestaForm.descripcion.trim() || null,
+      items: cestaForm.items ? cestaForm.items.split(',').map(s => s.trim()).filter(Boolean) : [],
+    };
+    try {
+      if (editingCesta) {
+        await api.updateCesta(editingCesta.id, payload);
+        toast.success('Cesta actualizada correctamente');
+      } else {
+        await api.createCesta(payload);
+        toast.success('Cesta creada correctamente');
+      }
+      setShowCestaForm(false);
+      setEditingCesta(null);
+      loadCestas();
+    } catch (err) {
+      toast.error('Error: ' + err.message);
+    }
+  };
+
+  const handleDeleteCesta = async (id) => {
+    if (!confirm('¿Eliminar esta cesta?')) return;
+    try {
+      await api.deleteCesta(id);
+      toast.success('Cesta eliminada');
+      loadCestas();
+    } catch (err) {
+      toast.error('Error: ' + err.message);
+    }
+  };
+
+  const handleToggleCestaActiva = async (cesta) => {
+    try {
+      await api.updateCesta(cesta.id, { activa: !cesta.activa });
+      loadCestas();
+    } catch (err) {
+      toast.error('Error al actualizar: ' + err.message);
+    }
+  };
 
   useEffect(() => {
     if (activeTab === 'perfil' && user) {
@@ -159,6 +239,11 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
               + Nuevo Producto
             </button>
           )}
+          {activeTab === 'cestas' && (
+            <button className="btn-primary" onClick={() => openCestaForm()}>
+              + Nueva Cesta
+            </button>
+          )}
         </div>
 
         <div className="dashboard-tabs">
@@ -173,6 +258,12 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
             onClick={() => setActiveTab('pedidos')}
           >
             Pedidos
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'cestas' ? 'active' : ''}`}
+            onClick={() => setActiveTab('cestas')}
+          >
+            Mis Cestas
           </button>
           <button
             className={`tab-button ${activeTab === 'perfil' ? 'active' : ''}`}
@@ -372,6 +463,127 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
               )}
             </div>
           </>
+        )}
+
+        {activeTab === 'cestas' && (
+          <div className="products-table">
+            <h2>Mis Cestas Predefinidas</h2>
+
+            {showCestaForm && (
+              <form className="cesta-form" onSubmit={handleCestaSubmit}>
+                <h3>{editingCesta ? 'Editar cesta' : 'Nueva cesta'}</h3>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Tipo</label>
+                    <select
+                      value={cestaForm.tipo}
+                      onChange={e => setCestaForm(p => ({ ...p, tipo: e.target.value }))}
+                    >
+                      <option value="frutas">Frutas</option>
+                      <option value="verduras">Verduras</option>
+                      <option value="mixta">Frutas &amp; Verduras</option>
+                      <option value="comestibles">Comestibles</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Nombre</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ej: Cesta de temporada"
+                      value={cestaForm.nombre}
+                      onChange={e => setCestaForm(p => ({ ...p, nombre: e.target.value }))}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Precio (€)</label>
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      step="0.01"
+                      placeholder="0.00"
+                      value={cestaForm.precio}
+                      onChange={e => setCestaForm(p => ({ ...p, precio: e.target.value }))}
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Descripción</label>
+                  <textarea
+                    rows={2}
+                    placeholder="Breve descripción de la cesta..."
+                    value={cestaForm.descripcion}
+                    onChange={e => setCestaForm(p => ({ ...p, descripcion: e.target.value }))}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Contenido (separado por comas)</label>
+                  <input
+                    type="text"
+                    placeholder="Ej: Manzana, Naranja, Pera, Kiwi"
+                    value={cestaForm.items}
+                    onChange={e => setCestaForm(p => ({ ...p, items: e.target.value }))}
+                  />
+                </div>
+                <div className="form-actions">
+                  <button type="submit" className="btn-primary">
+                    {editingCesta ? 'Guardar cambios' : 'Crear cesta'}
+                  </button>
+                  <button type="button" className="btn-cancel" onClick={() => { setShowCestaForm(false); setEditingCesta(null); }}>
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {cestasLoading ? (
+              <p>Cargando cestas...</p>
+            ) : cestas.length === 0 ? (
+              <div className="empty-state">
+                <p>No tienes cestas predefinidas aún</p>
+                <button className="btn-primary" onClick={() => openCestaForm()}>
+                  Crear primera cesta
+                </button>
+              </div>
+            ) : (
+              <div className="products-mobile-cards">
+                {cestas.map(cesta => (
+                  <div className="product-card" key={cesta.id}>
+                    <div className="product-card-header">
+                      <div className="product-card-title">
+                        <h3>{cesta.nombre}</h3>
+                        <p className="product-card-category">{cesta.tipo}</p>
+                      </div>
+                    </div>
+                    {cesta.descripcion && (
+                      <p style={{ padding: '0 1rem', color: '#555', fontSize: '0.92rem' }}>{cesta.descripcion}</p>
+                    )}
+                    {cesta.items && cesta.items.length > 0 && (
+                      <p style={{ padding: '0 1rem 0.5rem', color: '#8b2332', fontSize: '0.88rem' }}>
+                        {cesta.items.join(' · ')}
+                      </p>
+                    )}
+                    <div className="product-card-footer">
+                      <span style={{ fontFamily: "'Alfa Slab One', serif", color: '#8b2332', fontSize: '1.3rem' }}>
+                        {parseFloat(cesta.precio).toFixed(2)} €
+                      </span>
+                      <button
+                        className={`status-badge ${cesta.activa ? 'available' : 'unavailable'}`}
+                        onClick={() => handleToggleCestaActiva(cesta)}
+                      >
+                        {cesta.activa ? 'Activa' : 'Inactiva'}
+                      </button>
+                      <div className="product-card-actions">
+                        <button className="btn-edit" onClick={() => openCestaForm(cesta)}>Editar</button>
+                        <button className="btn-delete" onClick={() => handleDeleteCesta(cesta.id)}>Eliminar</button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         )}
 
         {activeTab === 'pedidos' && <OrderManagement />}

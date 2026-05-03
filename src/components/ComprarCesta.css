@@ -1,0 +1,157 @@
+.cb-container {
+  width: 100%;
+  height: var(--full-vh);
+  overflow: hidden;
+  background: #fff;
+}
+
+.cb-main {
+  padding-top: 70px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* ── Grid de 4 columnas ── */
+.cb-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: 100%;
+}
+
+/* ── Columna / opción ── */
+.cb-col {
+  position: relative;
+  border: none;
+  background: #ffffff;
+  border-right: 1px solid rgba(139, 35, 50, 0.14);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+  transition: background 0.32s ease;
+  text-align: center;
+}
+
+.cb-col:last-child {
+  border-right: none;
+}
+
+.cb-col:hover {
+  background: #8b2332;
+}
+
+/* ── Contenido centrado ── */
+.cb-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* ── Título ── */
+.cb-title {
+  font-family: 'Alfa Slab One', serif;
+  font-size: 4rem;
+  font-weight: 400;
+  color: #8b2332;
+  margin: 0;
+  line-height: 1.1;
+  transition: transform 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              color 0.32s ease;
+}
+
+.cb-col:hover .cb-title {
+  transform: translateY(-14px);
+  color: #ffffff;
+}
+
+/* ── Precio ── */
+.cb-price {
+  font-family: 'Afacad', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #8b2332;
+  margin: 0;
+  letter-spacing: 0.02em;
+  transition: color 0.32s ease;
+}
+
+.cb-col:hover .cb-price {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ── Lista de productos ── */
+.cb-products {
+  font-family: 'Afacad', sans-serif;
+  font-size: 0.95rem;
+  color: #8b2332;
+  margin: 0;
+  line-height: 1.65;
+  max-width: 220px;
+  transition: color 0.32s ease;
+}
+
+.cb-col:hover .cb-products {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .cb-container {
+    height: auto;
+  }
+
+  .cb-main {
+    height: auto;
+  }
+
+  .cb-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .cb-col {
+    min-height: 40vh;
+    border-right: 1px solid rgba(139, 35, 50, 0.14);
+    border-bottom: 1px solid rgba(139, 35, 50, 0.14);
+  }
+
+  .cb-col:nth-child(2n) {
+    border-right: none;
+  }
+
+  .cb-col:nth-child(3),
+  .cb-col:nth-child(4) {
+    border-bottom: none;
+  }
+
+  .cb-title {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .cb-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+  }
+
+  .cb-col {
+    min-height: 30vh;
+    border-right: none;
+    border-bottom: 1px solid rgba(139, 35, 50, 0.14);
+  }
+
+  .cb-col:last-child {
+    border-bottom: none;
+  }
+
+  .cb-title {
+    font-size: 2.5rem;
+  }
+
+  .cb-col:hover .cb-title {
+    transform: translateY(-8px);
+  }
+}
