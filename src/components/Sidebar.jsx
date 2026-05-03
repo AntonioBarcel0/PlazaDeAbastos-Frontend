@@ -1,6 +1,6 @@
 import './Sidebar.css';
 
-function Sidebar({ isOpen, onClose, onSelectPuestoClick, onMarketplaceClick, onMapClick, onInstruccionesClick, onPageClick }) {
+function Sidebar({ isOpen, onClose, onSelectPuestoClick, onMapClick, onInstruccionesClick, onPageClick }) {
   const nav = (view) => { onClose(); onPageClick && onPageClick(view); };
 
   return (
@@ -12,7 +12,7 @@ function Sidebar({ isOpen, onClose, onSelectPuestoClick, onMarketplaceClick, onM
           <ul className="sidebar-list">
             <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); onSelectPuestoClick && onSelectPuestoClick(); }}>Puestos</a></li>
             <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); onMapClick && onMapClick(); }}>Plano del mercado</a></li>
-            <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); onSelectPuestoClick && onSelectPuestoClick(); }}>Elige tu cesta</a></li>
+            <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); nav('elige-tu-cesta'); }}>Elige tu cesta</a></li>
             <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); }}>Mi perfil</a></li>
             <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); onInstruccionesClick && onInstruccionesClick(); }}>Instrucciones</a></li>
           </ul>

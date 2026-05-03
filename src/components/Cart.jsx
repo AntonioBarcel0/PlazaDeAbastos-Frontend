@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { useCart, isKg, itemSubtotal } from '../context/CartContext';
+import { useCart, isKg, itemSubtotal, isCestaItem } from '../context/CartContext';
 import './Cart.css';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
@@ -84,25 +84,32 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeCli
               return (
                 <div key={vid} className="cart-vendor-group">
                   <h3 className="cart-vendor-heading">{group.nombre}</h3>
-                  {group.items.map(item => (
-                    <div key={item.productId} className="cart-item">
+                  {group.items.map(item => {
+                    const isCesta = isCestaItem(item);
+                    const itemId = isCesta ? item.cestaId : item.productId;
+                    return (
+                    <div key={itemId} className="cart-item">
                       <div className="cart-item-image">
-                        {item.imagen ? (
+                        {!isCesta && item.imagen ? (
                           <img src={`${BASE_URL}${item.imagen}`} alt={item.nombre} />
                         ) : (
-                          <div className="cart-item-image-placeholder">📦</div>
+                          <div className="cart-item-image-placeholder">{isCesta ? '🧺' : '📦'}</div>
                         )}
                       </div>
 
                       <div className="cart-item-info">
                         <h3 className="cart-item-name">{item.nombre}</h3>
-                        <p className="cart-item-price">{item.precio.toFixed(2)}€/{item.unidad}</p>
+                        {isCesta ? (
+                          <p className="cart-item-price">{item.precio.toFixed(2)}€/ud</p>
+                        ) : (
+                          <p className="cart-item-price">{item.precio.toFixed(2)}€/{item.unidad}</p>
+                        )}
                       </div>
 
                       <div className="cart-item-controls">
                         <button
                           className="qty-btn"
-                          onClick={() => updateQuantity(item.productId, item.cantidad - (isKg(item.unidad) ? 50 : 1))}
+                          onClick={() => updateQuantity(itemId, item.cantidad - (isKg(item.unidad) ? 50 : 1))}
                           disabled={isKg(item.unidad) && item.cantidad <= 50}
                         >
                           −
@@ -116,11 +123,11 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeCli
                         </span>
                         <button
                           className="qty-btn"
-                          onClick={() => updateQuantity(item.productId, item.cantidad + (isKg(item.unidad) ? 50 : 1))}
+                          onClick={() => updateQuantity(itemId, item.cantidad + (isKg(item.unidad) ? 50 : 1))}
                           disabled={
-                            isKg(item.unidad)
+                            !isCesta && (isKg(item.unidad)
                               ? (item.stock != null && item.cantidad >= item.stock * 1000)
-                              : (item.stock !== null && item.stock !== undefined && item.cantidad >= item.stock)
+                              : (item.stock !== null && item.stock !== undefined && item.cantidad >= item.stock))
                           }
                         >
                           +
@@ -133,13 +140,14 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeCli
 
                       <button
                         className="cart-item-remove"
-                        onClick={() => removeFromCart(item.productId)}
-                        aria-label="Eliminar producto"
+                        onClick={() => removeFromCart(itemId)}
+                        aria-label="Eliminar del carrito"
                       >
                         ×
                       </button>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               );
             })}
