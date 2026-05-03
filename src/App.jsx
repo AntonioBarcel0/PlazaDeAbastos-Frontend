@@ -15,6 +15,12 @@ import MarketMap from './components/MarketMap';
 import PostalCheck from './components/PostalCheck';
 import ProductDetail from './pages/ProductDetail';
 import MisPedidos from './components/MisPedidos';
+import AtencionCliente from './components/AtencionCliente';
+import Contacto from './components/Contacto';
+import FAQ from './components/FAQ';
+import Privacidad from './components/Privacidad';
+import Terminos from './components/Terminos';
+import Cookies from './components/Cookies';
 import { CartProvider } from './context/CartContext';
 import { api } from './services/api';
 import { Toaster } from 'react-hot-toast';
@@ -117,6 +123,8 @@ function App() {
   const handleOrdersClick = () => navigate('mis-pedidos');
   const handleMapClick = () => navigate('market-map');
 
+  const handlePageClick = (view) => navigate(view);
+
   const handleInstruccionesClick = () => {
     goHome();
     setTimeout(() => {
@@ -142,6 +150,7 @@ function App() {
           onOrdersClick={handleOrdersClick}
           onMapClick={handleMapClick}
           onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
         />;
 
       case 'select-puesto':
@@ -157,6 +166,7 @@ function App() {
           onOrdersClick={handleOrdersClick}
           onMapClick={handleMapClick}
           onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
         />;
 
       case 'marketplace':
@@ -173,6 +183,7 @@ function App() {
           onOrdersClick={handleOrdersClick}
           onMapClick={handleMapClick}
           onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
         />;
 
       case 'store-view':
@@ -190,6 +201,7 @@ function App() {
           onOrdersClick={handleOrdersClick}
           onMapClick={handleMapClick}
           onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
         />;
 
       case 'product-detail':
@@ -205,6 +217,7 @@ function App() {
           onSelectPuestoClick={() => navigate('select-puesto')}
           onCartClick={handleCartClick}
           onOrdersClick={handleOrdersClick}
+          onPageClick={handlePageClick}
         />;
 
       case 'cart':
@@ -222,6 +235,7 @@ function App() {
           onOrdersClick={handleOrdersClick}
           onMapClick={handleMapClick}
           onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
         />;
 
       case 'checkout':
@@ -240,6 +254,7 @@ function App() {
           onPaymentRequest={handlePaymentRequest}
           onMapClick={handleMapClick}
           onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
         />;
 
       case 'payment':
@@ -258,6 +273,7 @@ function App() {
           orderData={pendingOrderData}
           onMapClick={handleMapClick}
           onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
         />;
 
       case 'loginOptions':
@@ -305,6 +321,7 @@ function App() {
           onOrdersClick={handleOrdersClick}
           onMapClick={handleMapClick}
           onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
         />;
 
       case 'admin-dashboard':
@@ -355,7 +372,36 @@ function App() {
           onOrdersClick={handleOrdersClick}
           onStoreClick={handleStoreClick}
           onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
         />;
+
+      case 'cliente':
+      case 'contacto':
+      case 'faq':
+      case 'privacidad':
+      case 'terminos':
+      case 'cookies': {
+        const infoProps = {
+          user, onLogout: handleLogout,
+          onDashboardClick: () => navigate('admin-dashboard'),
+          onCartClick: handleCartClick,
+          onOrdersClick: handleOrdersClick,
+          onHomeClick: goHome,
+          onLoginClick: () => navigate('loginOptions'),
+          onMarketplaceClick: () => navigate('marketplace'),
+          onSelectPuestoClick: () => navigate('select-puesto'),
+          onMapClick: handleMapClick,
+          onInstruccionesClick: handleInstruccionesClick,
+          onPageClick: handlePageClick,
+        };
+        if (currentView === 'cliente')    return <AtencionCliente {...infoProps} />;
+        if (currentView === 'contacto')   return <Contacto {...infoProps} />;
+        if (currentView === 'faq')        return <FAQ {...infoProps} />;
+        if (currentView === 'privacidad') return <Privacidad {...infoProps} />;
+        if (currentView === 'terminos')   return <Terminos {...infoProps} />;
+        if (currentView === 'cookies')    return <Cookies {...infoProps} />;
+        break;
+      }
 
       default:
         return <Home

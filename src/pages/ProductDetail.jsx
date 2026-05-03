@@ -12,7 +12,7 @@ const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api').r
 const GRAM_STEP = 50;
 const GRAM_MIN  = 50;
 
-function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick }) {
+function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick, onPageClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [gramos, setGramos] = useState(250); // solo para productos por peso
   const { cart, addToCart, updateQuantity } = useCart();
@@ -49,6 +49,7 @@ function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, on
         onClose={() => setSidebarOpen(false)}
         onMarketplaceClick={onMarketplaceClick}
         onSelectPuestoClick={onSelectPuestoClick}
+        onPageClick={onPageClick}
       />
 
       <div className="product-detail-layout">
