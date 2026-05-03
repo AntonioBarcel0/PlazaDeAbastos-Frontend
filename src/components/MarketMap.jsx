@@ -104,7 +104,7 @@ const STALLS = [
 
 function MarketMap({
   user, onLogout, onDashboardClick, onCartClick, onOrdersClick,
-  onHomeClick, onMarketplaceClick, onSelectPuestoClick, onLoginClick, onStoreClick, onInstruccionesClick,
+  onHomeClick, onMarketplaceClick, onSelectPuestoClick, onLoginClick, onStoreClick, onInstruccionesClick, onPageClick,
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [hovered, setHovered]         = useState(null);
@@ -127,6 +127,7 @@ function MarketMap({
         onSelectPuestoClick={onSelectPuestoClick}
         onMapClick={() => {}}
         onInstruccionesClick={onInstruccionesClick}
+        onPageClick={onPageClick}
       />
 
       <main className="map-main">
