@@ -1,8 +1,8 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 import SelectPuesto from '../SelectPuesto';
 
-// ── Mocks ────────────────────────────────────────────────────────────────────
+// ── Mocks ─────────────────────────────────────────────────────────────────────
 
 vi.mock('../../services/api', () => ({
   api: { getVendedores: vi.fn() },
@@ -11,17 +11,20 @@ vi.mock('../../services/api', () => ({
 vi.mock('../Header', () => ({ default: () => <div data-testid="header" /> }));
 vi.mock('../Sidebar', () => ({ default: () => <div data-testid="sidebar" /> }));
 
-// ── Datos de prueba ──────────────────────────────────────────────────────────
+// ── Datos de prueba ───────────────────────────────────────────────────────────
 
+// Carnicería/pescadería quedan excluidos por EXCLUDED_KEYWORDS en el componente
 const VENDEDORES_MOCK = [
-  { id: '1', nombreCompleto: 'Antonio Martos Muro',    categorias: ['Pescadería', 'mariscos'], imagenPrincipal: null },
-  { id: '2', nombreCompleto: 'Dolores Muñoz Guerrero', categorias: ['Panadería'],             imagenPrincipal: null },
-  { id: '3', nombreCompleto: 'Felicia García Gómez',  categorias: ['Charcutería', 'comestibles'], imagenPrincipal: null },
-  { id: '4', nombreCompleto: 'Gabriel Martínez Cartas', categorias: ['Carnicería'],           imagenPrincipal: null },
-  { id: '5', nombreCompleto: 'Juan Jurado Ruíz',       categorias: ['Frutas'],               imagenPrincipal: null },
+  { id: '1', nombreCompleto: 'Antonio Carnicero López', categorias: ['Carnicería'], especialidad: 'Carnicería', imagenPrincipal: null },
+  { id: '2', nombreCompleto: 'Dolores Muñoz Guerrero',  categorias: ['Comestibles'], especialidad: 'Comestibles', imagenPrincipal: null },
+  { id: '3', nombreCompleto: 'Juan Jurado Ruíz',        categorias: ['Frutas'],      especialidad: 'Frutería',    imagenPrincipal: null },
+  { id: '4', nombreCompleto: 'María Josefa Molina',     categorias: ['Comestibles'], especialidad: 'Comestibles', imagenPrincipal: null },
 ];
 
-// ── Helper ───────────────────────────────────────────────────────────────────
+// Vendedores visibles (Antonio queda excluido por 'carnicer')
+const VISIBLES = VENDEDORES_MOCK.slice(1); // Dolores, Juan, María
+
+// ── Helper ────────────────────────────────────────────────────────────────────
 
 const defaultProps = {
   user: null,
@@ -35,33 +38,31 @@ async function renderAndWait(props = {}) {
   const { api } = await import('../../services/api');
   api.getVendedores.mockResolvedValue({ vendedores: VENDEDORES_MOCK });
   render(<SelectPuesto {...defaultProps} {...props} />);
-  // Espera a que desaparezca el estado de carga
   await screen.findByText('Juan Jurado Ruíz');
 }
 
-// ── Tests ────────────────────────────────────────────────────────────────────
+// ── Tests ─────────────────────────────────────────────────────────────────────
 
 describe('SelectPuesto', () => {
 
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
+  afterEach(() => vi.clearAllMocks());
 
-  // 1 ─────────────────────────────────────────────────────────────────────────
+  // 1
   test('muestra el título "Puestos" tras la carga', async () => {
     await renderAndWait();
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Puestos');
   });
 
-  // 2 ─────────────────────────────────────────────────────────────────────────
-  test('muestra todos los puestos recibidos de la API', async () => {
+  // 2
+  test('muestra los puestos no excluidos y oculta los de carnicería/pescadería', async () => {
     await renderAndWait();
-    for (const v of VENDEDORES_MOCK) {
+    for (const v of VISIBLES) {
       expect(screen.getByText(v.nombreCompleto)).toBeInTheDocument();
     }
+    expect(screen.queryByText('Antonio Carnicero López')).not.toBeInTheDocument();
   });
 
-  // 3 ─────────────────────────────────────────────────────────────────────────
+  // 3
   test('el buscador filtra puestos por nombre', async () => {
     await renderAndWait();
 
@@ -70,81 +71,68 @@ describe('SelectPuesto', () => {
     });
 
     expect(screen.getByText('Juan Jurado Ruíz')).toBeInTheDocument();
-    expect(screen.queryByText('Antonio Martos Muro')).not.toBeInTheDocument();
-    expect(screen.queryByText('Gabriel Martínez Cartas')).not.toBeInTheDocument();
+    expect(screen.queryByText('Dolores Muñoz Guerrero')).not.toBeInTheDocument();
+    expect(screen.queryByText('María Josefa Molina')).not.toBeInTheDocument();
   });
 
-  // 4 ─────────────────────────────────────────────────────────────────────────
-  test('el filtro "Frutería" solo muestra puestos de frutas', async () => {
+  // 4
+  test('el filtro "Frutería" muestra solo puestos de frutas', async () => {
     await renderAndWait();
 
     fireEvent.click(screen.getByRole('button', { name: 'Frutería' }));
 
     expect(screen.getByText('Juan Jurado Ruíz')).toBeInTheDocument();
-    expect(screen.queryByText('Antonio Martos Muro')).not.toBeInTheDocument();
-    expect(screen.queryByText('Gabriel Martínez Cartas')).not.toBeInTheDocument();
+    expect(screen.queryByText('Dolores Muñoz Guerrero')).not.toBeInTheDocument();
+    expect(screen.queryByText('María Josefa Molina')).not.toBeInTheDocument();
   });
 
-  // 5 ─────────────────────────────────────────────────────────────────────────
-  test('el filtro "Pescadería" solo muestra pescaderías', async () => {
-    await renderAndWait();
-
-    fireEvent.click(screen.getByRole('button', { name: 'Pescadería' }));
-
-    expect(screen.getByText('Antonio Martos Muro')).toBeInTheDocument();
-    expect(screen.queryByText('Juan Jurado Ruíz')).not.toBeInTheDocument();
-    expect(screen.queryByText('Gabriel Martínez Cartas')).not.toBeInTheDocument();
-  });
-
-  // 6 ─────────────────────────────────────────────────────────────────────────
-  test('el filtro "Carnicería" solo muestra carnicerías', async () => {
-    await renderAndWait();
-
-    fireEvent.click(screen.getByRole('button', { name: 'Carnicería' }));
-
-    expect(screen.getByText('Gabriel Martínez Cartas')).toBeInTheDocument();
-    expect(screen.queryByText('Juan Jurado Ruíz')).not.toBeInTheDocument();
-    expect(screen.queryByText('Antonio Martos Muro')).not.toBeInTheDocument();
-  });
-
-  // 7 ─────────────────────────────────────────────────────────────────────────
-  test('el filtro "Comestibles" incluye charcutería y comestibles', async () => {
+  // 5
+  test('el filtro "Comestibles" muestra puestos con categoría comestibles', async () => {
     await renderAndWait();
 
     fireEvent.click(screen.getByRole('button', { name: 'Comestibles' }));
 
-    expect(screen.getByText('Felicia García Gómez')).toBeInTheDocument();
+    expect(screen.getByText('Dolores Muñoz Guerrero')).toBeInTheDocument();
+    expect(screen.getByText('María Josefa Molina')).toBeInTheDocument();
     expect(screen.queryByText('Juan Jurado Ruíz')).not.toBeInTheDocument();
   });
 
-  // 8 ─────────────────────────────────────────────────────────────────────────
-  test('ordenar Z-A invierte el orden de los puestos', async () => {
+  // 6
+  test('el filtro "Todos" muestra todos los puestos no excluidos', async () => {
     await renderAndWait();
 
-    // Abre el dropdown de ordenación
+    fireEvent.click(screen.getByRole('button', { name: 'Frutería' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Todos' }));
+
+    for (const v of VISIBLES) {
+      expect(screen.getByText(v.nombreCompleto)).toBeInTheDocument();
+    }
+  });
+
+  // 7
+  test('ordenar Z-A invierte el orden de los puestos visibles', async () => {
+    await renderAndWait();
+
     fireEvent.click(screen.getByRole('button', { name: /nombre \(a/i }));
-    // Selecciona Z-A
     fireEvent.click(screen.getByText('Nombre (Z–A)'));
 
     const nombres = screen.getAllByRole('heading', { level: 3 }).map(h => h.textContent);
-    // Juan (J) debe aparecer primero en orden Z-A
-    expect(nombres[0]).toBe('Juan Jurado Ruíz');
-    // Antonio (A) debe aparecer el último
-    expect(nombres[nombres.length - 1]).toBe('Antonio Martos Muro');
+    // Z-A: María (M) > Juan (J) > Dolores (D)
+    expect(nombres[0]).toBe('María Josefa Molina');
+    expect(nombres[nombres.length - 1]).toBe('Dolores Muñoz Guerrero');
   });
 
-  // 9 ─────────────────────────────────────────────────────────────────────────
-  test('ordenar por Categoría agrupa correctamente', async () => {
+  // 8
+  test('ordenar por Categoría mantiene todos los puestos visibles en el DOM', async () => {
     await renderAndWait();
 
     fireEvent.click(screen.getByRole('button', { name: /nombre \(a/i }));
     fireEvent.click(screen.getByText('Categoría'));
 
-    // Tras ordenar por categoría, todos los puestos siguen en el DOM
-    expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(VENDEDORES_MOCK.length);
+    expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(VISIBLES.length);
   });
 
-  // 10 ────────────────────────────────────────────────────────────────────────
+  // 9
   test('muestra mensaje vacío cuando la búsqueda no tiene resultados', async () => {
     await renderAndWait();
 
@@ -156,41 +144,37 @@ describe('SelectPuesto', () => {
     expect(screen.queryByRole('heading', { level: 3 })).not.toBeInTheDocument();
   });
 
-  // 11 ────────────────────────────────────────────────────────────────────────
-  test('clicar "Seleccionar" llama a onPuestoSelect con el id correcto', async () => {
+  // 10
+  test('clicar "Ir al puesto →" llama a onPuestoSelect con el id correcto', async () => {
     const onPuestoSelect = vi.fn();
     await renderAndWait({ onPuestoSelect });
 
-    // El primer botón "Seleccionar" corresponde al primer vendedor en A-Z: Antonio (id '1')
-    const botones = screen.getAllByText('Seleccionar');
+    // En orden A-Z el primero visible es Dolores (id '2')
+    const botones = screen.getAllByText('Ir al puesto →');
     fireEvent.click(botones[0]);
 
     expect(onPuestoSelect).toHaveBeenCalledTimes(1);
-    expect(onPuestoSelect).toHaveBeenCalledWith('1');
+    expect(onPuestoSelect).toHaveBeenCalledWith('2');
   });
 
-  // 12 ────────────────────────────────────────────────────────────────────────
+  // 11
   test('el botón "Filtrar" resetea el filtro de categoría', async () => {
     await renderAndWait();
 
-    // Aplica un filtro
     fireEvent.click(screen.getByRole('button', { name: 'Frutería' }));
-    expect(screen.queryByText('Antonio Martos Muro')).not.toBeInTheDocument();
+    expect(screen.queryByText('Dolores Muñoz Guerrero')).not.toBeInTheDocument();
 
-    // Resetea con el botón Filtrar
     fireEvent.click(screen.getByRole('button', { name: 'Filtrar' }));
-    expect(screen.getByText('Antonio Martos Muro')).toBeInTheDocument();
+    expect(screen.getByText('Dolores Muñoz Guerrero')).toBeInTheDocument();
   });
 
-  // 13 ────────────────────────────────────────────────────────────────────────
+  // 12
   test('el buscador y el filtro de categoría actúan en conjunto', async () => {
     await renderAndWait();
 
-    // Filtra por Frutas: solo Juan
     fireEvent.click(screen.getByRole('button', { name: 'Frutería' }));
-    // Busca algo que no existe en Frutas
     fireEvent.change(screen.getByPlaceholderText('Buscar'), {
-      target: { value: 'Antonio' },
+      target: { value: 'Dolores' }, // Dolores no es de Frutas
     });
 
     expect(screen.getByText(/no se encontraron puestos/i)).toBeInTheDocument();
