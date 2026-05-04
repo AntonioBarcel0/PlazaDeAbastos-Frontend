@@ -3,6 +3,7 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
 import SeasonBadge from './SeasonBadge';
+import VENDOR_IMAGES from '../utils/vendorImages';
 import OriginBadge from './OriginBadge';
 import { useCart, isKg } from '../context/CartContext';
 import { api } from '../services/api';
@@ -157,9 +158,9 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
         </div>
 
         <div className="sv-hero-image">
-          {vendedor.imagenPrincipal ? (
+          {vendedor.imagenPrincipal || VENDOR_IMAGES[vendedor.id] ? (
             <img
-              src={`${BASE_URL}${vendedor.imagenPrincipal}`}
+              src={vendedor.imagenPrincipal ? `${BASE_URL}${vendedor.imagenPrincipal}` : VENDOR_IMAGES[vendedor.id]}
               alt={vendedor.nombreCompleto}
               className="sv-hero-img"
             />

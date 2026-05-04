@@ -1,31 +1,46 @@
+import { useState, useEffect } from 'react';
+import { api } from '../services/api';
 import './LaPlaza.css';
 
-// TODO: Conectar con API /api/vendedores para datos dinámicos
+const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
+
 const VENDORS = [
-  'Carnicería Domínguez',
-  'Frutas Jurado',
-  'Dulces Higueras',
-  'Comestibles García',
-  'Pescadería Martínez',
-  'Verduras Sánchez',
-  'Panadería López',
-  'Lácteos Romero',
+  'Frutas Jurado', 'Frutas Padilla', 'Frutas Molina', 'Comestibles Rodríguez',
+  'Especias Moyano', 'Panadería Muñoz', 'Verduras Cortés', 'Jardinería Moreno',
 ];
 
-// TODO: Conectar con API /api/products para recomendaciones dinámicas
-const RECOMMENDATIONS = [
-  { id: 1 },
-  { id: 2 },
-  { id: 3 },
-];
-
-// TODO: Conectar con API /api/products?temporada=true para productos de temporada
 const SEASONAL = [
   { id: 1, name: 'Alcachofa', price: '3,99€/Kg' },
   { id: 2, name: 'Alcachofa', price: '3,99€/Kg' },
 ];
 
-function LaPlaza({ onMarketplaceClick }) {
+function seededRand(seed) {
+  let s = seed >>> 0;
+  return () => { s = (Math.imul(1664525, s) + 1013904223) >>> 0; return s / 4294967296; };
+}
+function pickN(arr, n, rand) {
+  const pool = [...arr]; const out = [];
+  while (out.length < n && pool.length > 0) { const i = Math.floor(rand() * pool.length); out.push(pool.splice(i, 1)[0]); }
+  return out;
+}
+function todayKey() { const d = new Date(); return `recos_${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }
+function dateSeed() { const d = new Date(); return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate(); }
+
+function LaPlaza({ onMarketplaceClick, onStoreClick }) {
+  const [recos, setRecos] = useState([null, null, null]);
+
+  useEffect(() => {
+    const key = todayKey();
+    const cached = localStorage.getItem(key);
+    if (cached) { try { setRecos(JSON.parse(cached)); return; } catch {} }
+    api.getProducts().then(data => {
+      const products = (data.products || data.productos || []).filter(p => p.disponible !== false && p.stock !== 0);
+      const rand = seededRand(dateSeed());
+      const sel = pickN(products, 3, rand);
+      localStorage.setItem(key, JSON.stringify(sel));
+      setRecos(sel);
+    }).catch(() => {});
+  }, []);
   return (
     <>
       <section className="laplaza-section">
@@ -44,9 +59,22 @@ function LaPlaza({ onMarketplaceClick }) {
         <div className="recommendations-wrap">
           <h3 className="recommendations-title">Recomendaciones</h3>
           <div className="recommendations-grid">
-            {RECOMMENDATIONS.map(r => (
-              <div key={r.id} className="rec-card">
-                {/* TODO: <img src="cloudinary-url" alt="producto" className="rec-image" /> */}
+            {recos.map((producto, i) => (
+              <div
+                key={i}
+                className="rec-card"
+                onClick={() => producto?.vendedorId && onStoreClick && onStoreClick(producto.vendedorId)}
+                style={{ cursor: producto?.vendedorId ? 'pointer' : 'default' }}
+              >
+                {producto?.imagen && (
+                  <img src={`${BASE_URL}${producto.imagen}`} alt={producto.nombre} className="rec-image" />
+                )}
+                {producto && (
+                  <div className="rec-overlay">
+                    <p className="rec-overlay-name">{producto.nombre}</p>
+                    <p className="rec-overlay-price">{parseFloat(producto.precio).toFixed(2)}€/{producto.unidad}</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>

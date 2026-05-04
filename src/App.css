@@ -54,19 +54,12 @@ body {
   font-family: 'Afacad', sans-serif;
   line-height: 1.65;
   overflow-x: hidden;
-  zoom: 0.75;
 }
 
 h1, h2, h3 {
   font-family: 'Alfa Slab One', serif;
   font-weight: 400;
   line-height: 1.25;
-}
-
-@media (max-width: 768px) {
-  body {
-    zoom: 1;
-  }
 }
 
 .App {

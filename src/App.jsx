@@ -174,6 +174,7 @@ function App() {
           onMapClick={handleMapClick}
           onInstruccionesClick={handleInstruccionesClick}
           onPageClick={handlePageClick}
+          onStoreClick={handleStoreClick}
         />;
 
       case 'select-puesto':
@@ -503,6 +504,7 @@ function App() {
           onLogout={handleLogout}
           onDashboardClick={() => navigate('admin-dashboard')}
           onMarketplaceClick={() => navigate('marketplace')}
+          onStoreClick={handleStoreClick}
         />;
     }
   };

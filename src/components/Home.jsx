@@ -8,7 +8,7 @@ import HowToOrder from './HowToOrder';
 import Footer from './Footer';
 import './Home.css';
 
-function Home({ onLoginClick, user, onLogout, onDashboardClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick }) {
+function Home({ onLoginClick, user, onLogout, onDashboardClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick, onStoreClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleMenuClick = () => {
@@ -53,7 +53,7 @@ function Home({ onLoginClick, user, onLogout, onDashboardClick, onMarketplaceCli
       <main className="home-main">
         <Hero onMarketplaceClick={onMarketplaceClick} onMapClick={onMapClick} />
         <Baskets onMarketplaceClick={onMarketplaceClick} onSelectPuestoClick={onSelectPuestoClick} />
-        <LaPlaza onMarketplaceClick={onMarketplaceClick} />
+        <LaPlaza onMarketplaceClick={onMarketplaceClick} onStoreClick={onStoreClick} />
         <HowToOrder />
       </main>
       <Footer />
