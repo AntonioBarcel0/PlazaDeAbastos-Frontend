@@ -253,7 +253,7 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
                 <div className="sp-card-image-wrap">
                   {vendedor.imagenPrincipal || VENDOR_IMAGES[vendedor.id] ? (
                     <img
-                      src={vendedor.imagenPrincipal ? `${BASE_URL}${vendedor.imagenPrincipal}` : VENDOR_IMAGES[vendedor.id]}
+                      src={vendedor.imagenPrincipal ? (vendedor.imagenPrincipal.startsWith('http') ? vendedor.imagenPrincipal : `${BASE_URL}${vendedor.imagenPrincipal}`) : VENDOR_IMAGES[vendedor.id]}
                       alt={vendedor.nombreCompleto}
                       className="sp-card-image"
                     />

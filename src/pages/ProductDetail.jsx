@@ -145,7 +145,7 @@ function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, on
         <div className="product-detail-image">
           {product.imagen ? (
             <img
-              src={`${BASE_URL}${product.imagen}`}
+              src={product.imagen.startsWith('http') ? product.imagen : `${BASE_URL}${product.imagen}`}
               alt={product.nombre}
               className="product-detail-img"
             />

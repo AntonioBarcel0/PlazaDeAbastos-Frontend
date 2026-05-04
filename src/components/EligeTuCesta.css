@@ -5,14 +5,12 @@
   overflow: hidden;
 }
 
-/* Main ocupa todo menos el header (70px) */
 .etc-main {
   padding-top: 70px;
   height: 100%;
   box-sizing: border-box;
 }
 
-/* Grid de dos columnas que llena el espacio restante */
 .etc-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -26,6 +24,14 @@
   position: relative;
   overflow: hidden;
   border-right: 1px solid rgba(139, 21, 56, 0.1);
+
+  /* Flexbox para centrar el contenido de forma relativa */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 10%;
+  gap: 1.5rem;
 }
 
 .etc-card--right {
@@ -34,17 +40,14 @@
 
 /* ── Título ── */
 .etc-title {
-  font-size: 5.5rem;
+  font-size: clamp(2rem, 4.5vw, 5.5rem);
   font-weight: normal;
   color: #8B1538;
   text-align: center;
   margin: 0;
   font-family: 'Alfa Slab One', serif;
   line-height: 1.2;
-  position: absolute;
-  top: 220px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   z-index: 10;
   width: 100%;
   white-space: nowrap;
@@ -56,17 +59,14 @@
   color: white;
   border: none;
   border-radius: 7px;
-  padding: 18px 50px;
-  font-size: 1.7rem;
+  padding: 0.9rem 3rem;
+  font-size: clamp(1rem, 1.4vw, 1.7rem);
   font-weight: lighter;
   cursor: pointer;
   transition: background-color 0.3s ease;
   font-family: 'Alfa Slab One', serif;
   letter-spacing: 1px;
-  position: absolute;
-  top: 365px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   z-index: 10;
   white-space: nowrap;
 }
@@ -75,7 +75,7 @@
   background-color: #6B0F2B;
 }
 
-/* ── Imagen ── */
+/* ── Imagen (fondo de la tarjeta) ── */
 .etc-image-wrap {
   position: absolute;
   top: 0;
@@ -114,33 +114,17 @@
     height: 50vh;
     border-right: none;
     border-bottom: 1px solid rgba(139, 21, 56, 0.1);
+    padding-top: 8%;
   }
 
   .etc-card--right {
     border-bottom: none;
   }
-
-  .etc-title {
-    font-size: 3rem;
-    top: 120px;
-  }
-
-  .etc-button {
-    top: 200px;
-    font-size: 1.2rem;
-    padding: 14px 36px;
-  }
 }
 
 @media (max-width: 768px) {
-  .etc-title {
-    font-size: 2.2rem;
-    top: 100px;
-  }
-
-  .etc-button {
-    top: 170px;
-    font-size: 1rem;
-    padding: 12px 30px;
+  .etc-card {
+    padding-top: 6%;
+    gap: 1rem;
   }
 }
