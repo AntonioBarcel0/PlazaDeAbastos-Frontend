@@ -22,9 +22,6 @@ function ProductForm({ product, onClose }) {
   const categorias = [
     'Frutas',
     'Verduras',
-    'Pescado',
-    'Carne',
-    'Embutidos',
     'Lácteos',
     'Pan y Bollería',
     'Conservas',

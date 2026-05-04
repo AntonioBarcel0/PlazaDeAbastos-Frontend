@@ -11,7 +11,7 @@
 }
 
 .sv-hero-info {
-  flex: 1;
+  flex: 0 0 45%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -77,7 +77,7 @@
 }
 
 .sv-hero-image {
-  flex: 1;
+  flex: 0 0 55%;
   overflow: hidden;
 }
 
@@ -208,6 +208,14 @@
 .product-unit {
   font-size: 0.88rem;
   color: #888;
+}
+
+/* Badges (temporada + origen) en línea */
+.product-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
 }
 
 /* Imagen centrada, objeto completo */

@@ -3,16 +3,19 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
 import { api } from '../services/api';
+import VENDOR_IMAGES from '../utils/vendorImages';
 import './SelectPuesto.css';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
 const CATEGORIAS = ['Todos', 'Frutería', 'Comestibles', 'Otros'];
 
+const EXCLUDED_KEYWORDS = ['carnicer', 'pescader', 'charcuter', 'carne', 'pescado', 'marisco'];
+
 // Palabras clave para emparejar cada categoría de filtro con la especialidad del vendedor
 const FILTER_KEYWORDS = {
   'Frutería':    ['fruta', 'frutas'],
-  'Comestibles': ['comestible', 'charcuter', 'queso'],
+  'Comestibles': ['comestible', 'queso', 'especias', 'conserva'],
   'Otros':       ['jardiner', 'especia', 'panadera', 'panader'],
 };
 
@@ -67,7 +70,11 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
   };
 
   const applyFilters = () => {
-    let result = [...vendedores];
+    let result = [...vendedores].filter(v => {
+      const esp = (v.especialidad || '').toLowerCase();
+      const cats = (v.categorias || []).map(c => c.toLowerCase());
+      return !EXCLUDED_KEYWORDS.some(kw => esp.includes(kw) || cats.some(c => c.includes(kw)));
+    });
 
     if (selectedCategoria !== 'Todos') {
       const keywords = FILTER_KEYWORDS[selectedCategoria] || [selectedCategoria.toLowerCase()];
@@ -244,9 +251,9 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
 
                 {/* Panel derecho — imagen */}
                 <div className="sp-card-image-wrap">
-                  {vendedor.imagenPrincipal ? (
+                  {vendedor.imagenPrincipal || VENDOR_IMAGES[vendedor.id] ? (
                     <img
-                      src={`${BASE_URL}${vendedor.imagenPrincipal}`}
+                      src={vendedor.imagenPrincipal ? (vendedor.imagenPrincipal.startsWith('http') ? vendedor.imagenPrincipal : `${BASE_URL}${vendedor.imagenPrincipal}`) : VENDOR_IMAGES[vendedor.id]}
                       alt={vendedor.nombreCompleto}
                       className="sp-card-image"
                     />

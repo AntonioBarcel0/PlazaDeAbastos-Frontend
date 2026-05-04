@@ -3,9 +3,12 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
 import { api } from '../services/api';
+import VENDOR_IMAGES from '../utils/vendorImages';
 import './Marketplace.css';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
+
+const EXCLUDED_KEYWORDS = ['carnicer', 'pescader', 'charcuter', 'carne', 'pescado', 'marisco'];
 
 function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -21,9 +24,6 @@ function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeCli
     'Todos',
     'Frutas',
     'Verduras',
-    'Pescado',
-    'Carne',
-    'Embutidos',
     'Lácteos',
     'Pan y Bollería',
     'Conservas',
@@ -54,7 +54,11 @@ function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeCli
   };
 
   const filterVendedores = () => {
-    let filtered = vendedores;
+    let filtered = vendedores.filter(v => {
+      const esp = (v.especialidad || '').toLowerCase();
+      const cats = (v.categorias || []).map(c => c.toLowerCase());
+      return !EXCLUDED_KEYWORDS.some(kw => esp.includes(kw) || cats.some(c => c.includes(kw)));
+    });
 
     // Filtrar por categoría
     if (selectedCategoria !== 'Todos') {
@@ -174,9 +178,9 @@ function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeCli
             filteredVendedores.map(vendedor => (
               <div key={vendedor.id} className="store-card">
                 <div className="store-image-container">
-                  {vendedor.imagenPrincipal ? (
+                  {vendedor.imagenPrincipal || VENDOR_IMAGES[vendedor.id] ? (
                     <img
-                      src={`${BASE_URL}${vendedor.imagenPrincipal}`}
+                      src={vendedor.imagenPrincipal ? (vendedor.imagenPrincipal.startsWith('http') ? vendedor.imagenPrincipal : `${BASE_URL}${vendedor.imagenPrincipal}`) : VENDOR_IMAGES[vendedor.id]}
                       alt={vendedor.nombreCompleto}
                       className="store-image"
                     />

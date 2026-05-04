@@ -3,6 +3,7 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
 import SeasonBadge from './SeasonBadge';
+import VENDOR_IMAGES from '../utils/vendorImages';
 import OriginBadge from './OriginBadge';
 import { useCart, isKg } from '../context/CartContext';
 import { api } from '../services/api';
@@ -157,9 +158,9 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
         </div>
 
         <div className="sv-hero-image">
-          {vendedor.imagenPrincipal ? (
+          {vendedor.imagenPrincipal || VENDOR_IMAGES[vendedor.id] ? (
             <img
-              src={`${BASE_URL}${vendedor.imagenPrincipal}`}
+              src={vendedor.imagenPrincipal ? (vendedor.imagenPrincipal.startsWith('http') ? vendedor.imagenPrincipal : `${BASE_URL}${vendedor.imagenPrincipal}`) : VENDOR_IMAGES[vendedor.id]}
               alt={vendedor.nombreCompleto}
               className="sv-hero-img"
             />
@@ -223,8 +224,6 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
                     className="product-card"
                     onClick={() => onProductClick && onProductClick(producto, vendedor)}
                   >
-                    <SeasonBadge nombre={producto.nombre} categoria={producto.categoria} variant="card" />
-
                     {/* ── Nombre + precio (arriba) ── */}
                     <div className="product-card-top">
                       <h3 className="product-name">{producto.nombre}</h3>
@@ -232,14 +231,17 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
                         {parseFloat(producto.precio).toFixed(2)}€
                         <span className="product-unit">/{producto.unidad}</span>
                       </p>
-                      <OriginBadge nombre={producto.nombre} descripcion={producto.descripcion} variant="card" />
+                      <div className="product-card-badges">
+                        <SeasonBadge nombre={producto.nombre} categoria={producto.categoria} variant="card" />
+                        <OriginBadge nombre={producto.nombre} descripcion={producto.descripcion} variant="card" />
+                      </div>
                     </div>
 
                     {/* ── Imagen ── */}
                     <div className="product-image-container">
                       {producto.imagen ? (
                         <img
-                          src={`${BASE_URL}${producto.imagen}`}
+                          src={producto.imagen.startsWith('http') ? producto.imagen : `${BASE_URL}${producto.imagen}`}
                           alt={producto.nombre}
                           className="product-image"
                         />

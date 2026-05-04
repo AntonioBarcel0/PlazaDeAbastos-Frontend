@@ -86,13 +86,45 @@
   background: #ddd8d0;
   border-radius: 2px;
   overflow: hidden;
-  /* TODO: Quitar background cuando se añada imagen real */
+  position: relative;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+
+.rec-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(139,35,50,0.15);
 }
 
 .rec-card .rec-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.rec-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(to top, rgba(44,26,26,0.82) 0%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.rec-overlay-name {
+  font-family: 'Alfa Slab One', serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #fff;
+  margin: 0;
+}
+
+.rec-overlay-price {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.85);
+  margin: 0;
 }
 
 

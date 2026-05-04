@@ -17,13 +17,16 @@
 .basket-card {
   background: #ffffff;
   position: relative;
+  height: var(--full-vh);
+  overflow: hidden;
+
+  /* Flexbox para que el título y botón se posicionen relativamente */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 0;
-  height: var(--full-vh);
-  overflow: hidden;
+  padding-top: 10%;
+  gap: 1.5rem;
 }
 
 .basket-card:first-child {
@@ -31,7 +34,7 @@
 }
 
 .basket-title {
-  font-size: 5.5rem;
+  font-size: clamp(2rem, 4.5vw, 5.5rem);
   font-weight: normal;
   color: #8B1538;
   text-align: center;
@@ -39,12 +42,10 @@
   font-family: 'Alfa Slab One', serif;
   text-transform: none;
   line-height: 1.2;
-  position: absolute;
-  top: 250px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   z-index: 10;
   width: 100%;
+  white-space: nowrap;
 }
 
 .basket-button {
@@ -52,18 +53,16 @@
   color: white;
   border: none;
   border-radius: 7px;
-  padding: 18px 50px;
-  font-size: 1.7rem;
-  font-weight:lighter;
+  padding: 0.9rem 3rem;
+  font-size: clamp(1rem, 1.4vw, 1.7rem);
+  font-weight: lighter;
   cursor: pointer;
   transition: background-color 0.3s ease;
   font-family: 'Alfa Slab One', serif;
   letter-spacing: 1px;
-  position: absolute;
-  top: 400px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   z-index: 10;
+  white-space: nowrap;
 }
 
 .basket-button:hover {
@@ -96,56 +95,19 @@
   }
 
   .basket-card {
-    min-height: auto;
-    padding: 40px 30px;
+    height: var(--full-vh);
+    padding-top: 8%;
   }
 
   .basket-card:first-child {
     border-right: none;
     border-bottom: 1px solid rgba(139, 21, 56, 0.1);
   }
-
-  .basket-title {
-    font-size: 2.5rem;
-  }
 }
 
 @media (max-width: 768px) {
-  .baskets-section {
-    padding: 60px 0 0 0;
-  }
-
   .basket-card {
-    padding: 30px 20px;
-  }
-
-  .basket-title {
-    font-size: 2rem;
-    margin-bottom: 20px;
-  }
-
-  .basket-button {
-    padding: 15px 40px;
-    font-size: 1.1rem;
-    margin-bottom: 30px;
-  }
-
-  .basket-image {
-    max-width: 400px;
-  }
-}
-
-@media (max-width: 480px) {
-  .basket-title {
-    font-size: 1.6rem;
-  }
-
-  .basket-button {
-    padding: 12px 30px;
-    font-size: 1rem;
-  }
-
-  .basket-image {
-    max-width: 300px;
+    padding-top: 6%;
+    gap: 1rem;
   }
 }

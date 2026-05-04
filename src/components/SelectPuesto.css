@@ -162,7 +162,7 @@
 /* ── Card — mismo esquema que ProductDetail hero ─── */
 .sp-card {
   display: flex;
-  height: 220px;
+  height: 280px;
   cursor: pointer;
   border-bottom: 1px solid #e0e0e0;
   transition: opacity 0.2s;
@@ -172,7 +172,7 @@
 
 /* Panel izquierdo: fondo rojo oscuro + info */
 .sp-card-info {
-  flex: 1;
+  flex: 0 0 42%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -234,7 +234,7 @@
 
 /* Panel derecho: imagen */
 .sp-card-image-wrap {
-  flex: 1;
+  flex: 0 0 58%;
   overflow: hidden;
   background-color: #e8e8e8;
 }
@@ -243,6 +243,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center top;
 }
 
 .sp-card-placeholder {
@@ -283,7 +284,7 @@
   }
 
   .sp-card-image-wrap {
-    height: 180px;
+    height: 220px;
     flex: none;
     order: -1;
   }
