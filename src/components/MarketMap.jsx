@@ -128,6 +128,10 @@ function MarketMap({
         onMapClick={() => {}}
         onInstruccionesClick={onInstruccionesClick}
         onPageClick={onPageClick}
+        user={user}
+        onLoginClick={onLoginClick}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={onDashboardClick}
       />
 
       <main className="map-main">

@@ -86,6 +86,10 @@ function FAQ({
         onSelectPuestoClick={onSelectPuestoClick}
         onMapClick={onMapClick}
         onInstruccionesClick={onInstruccionesClick}
+        user={user}
+        onLoginClick={onLoginClick}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={onDashboardClick}
       />
 
       <main className="info-main">

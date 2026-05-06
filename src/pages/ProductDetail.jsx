@@ -50,6 +50,9 @@ function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, on
         onMarketplaceClick={onMarketplaceClick}
         onSelectPuestoClick={onSelectPuestoClick}
         onPageClick={onPageClick}
+        user={user}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={onDashboardClick}
       />
 
       <div className="product-detail-layout">

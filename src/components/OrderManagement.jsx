@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Truck, Store } from 'lucide-react';
 import { api } from '../services/api';
 import toast from 'react-hot-toast';
 import './OrderManagement.css';
@@ -158,7 +159,7 @@ const OrderManagement = () => {
                   <td>#{order.id.substring(0, 8)}</td>
                   <td>{order.clienteNombre}</td>
                   <td>{new Date(order.createdAt).toLocaleDateString('es-ES')}</td>
-                  <td>{order.modoEntrega === 'domicilio' ? '🚚 Domicilio' : '🏪 Recogida'}</td>
+                  <td>{order.modoEntrega === 'domicilio' ? <><Truck size={16} style={{verticalAlign: 'middle', marginRight: 4}} /> Domicilio</> : <><Store size={16} style={{verticalAlign: 'middle', marginRight: 4}} /> Recogida</>}</td>
                   <td>{order.totalItems} productos</td>
                   <td className="total">{parseFloat(order.subtotal).toFixed(2)}€</td>
                   <td>

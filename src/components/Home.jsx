@@ -40,19 +40,19 @@ function Home({ onLoginClick, user, onLogout, onDashboardClick, onMarketplaceCli
       <Sidebar
         isOpen={sidebarOpen}
         onClose={handleSidebarClose}
-        onLoginClick={onLoginClick}
-        user={user}
-        onLogout={onLogout}
-        onDashboardClick={onDashboardClick}
         onSelectPuestoClick={onSelectPuestoClick}
         onMapClick={onMapClick}
         onInstruccionesClick={onInstruccionesClick}
         onPageClick={onPageClick}
+        user={user}
+        onLoginClick={onLoginClick}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={onDashboardClick}
       />
 
       <main className="home-main">
         <Hero onMarketplaceClick={onMarketplaceClick} onMapClick={onMapClick} />
-        <Baskets onMarketplaceClick={onMarketplaceClick} onSelectPuestoClick={onSelectPuestoClick} />
+        <Baskets onSelectPuestoClick={onSelectPuestoClick} onEligeTuCestaClick={onPageClick ? () => onPageClick('elige-tu-cesta') : undefined} />
         <LaPlaza onMarketplaceClick={onMarketplaceClick} onStoreClick={onStoreClick} />
         <HowToOrder />
       </main>

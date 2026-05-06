@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Store } from 'lucide-react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
@@ -8,15 +9,18 @@ import './SelectPuesto.css';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
-const CATEGORIAS = ['Todos', 'Frutería', 'Comestibles', 'Otros'];
+const CATEGORIAS = ['Todos', 'Frutería', 'Comestibles', 'Quesos', 'Panadería', 'Encurtidos', 'Frutos Secos'];
 
 const EXCLUDED_KEYWORDS = ['carnicer', 'pescader', 'charcuter', 'carne', 'pescado', 'marisco'];
 
-// Palabras clave para emparejar cada categoría de filtro con la especialidad del vendedor
+// Palabras clave para emparejar cada categoría de filtro con la especialidad/categoría del vendedor
 const FILTER_KEYWORDS = {
-  'Frutería':    ['fruta', 'frutas'],
-  'Comestibles': ['comestible', 'queso', 'especias', 'conserva'],
-  'Otros':       ['jardiner', 'especia', 'panadera', 'panader'],
+  'Frutería':      ['fruta', 'frutas', 'verdura', 'verduras'],
+  'Comestibles':   ['comestible', 'comestibles'],
+  'Quesos':        ['queso', 'queser', 'lácteo', 'lácteos'],
+  'Panadería':     ['pan ', 'panader', 'boller'],
+  'Encurtidos':    ['encurtido', 'conserva', 'conservas'],
+  'Frutos Secos':  ['frutos secos', 'fruto seco'],
 };
 
 const SORT_OPTIONS = [
@@ -78,11 +82,11 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
 
     if (selectedCategoria !== 'Todos') {
       const keywords = FILTER_KEYWORDS[selectedCategoria] || [selectedCategoria.toLowerCase()];
-      result = result.filter(v =>
-        v.categorias && v.categorias.some(cat =>
-          keywords.some(kw => cat.toLowerCase().includes(kw))
-        )
-      );
+      result = result.filter(v => {
+        const cats = (v.categorias || []).map(c => c.toLowerCase());
+        const esp = (v.especialidad || '').toLowerCase();
+        return keywords.some(kw => cats.some(c => c.includes(kw)) || esp.includes(kw));
+      });
     }
 
     if (searchTerm.trim()) {
@@ -155,6 +159,9 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
         onMapClick={onMapClick}
         onInstruccionesClick={onInstruccionesClick}
         onPageClick={onPageClick}
+        user={user}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={onDashboardClick}
       />
 
       <main className="sp-main">
@@ -258,7 +265,7 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
                       className="sp-card-image"
                     />
                   ) : (
-                    <div className="sp-card-placeholder">🏪</div>
+                    <div className="sp-card-placeholder"><Store size={48} strokeWidth={1.5} color="#8b2332" /></div>
                   )}
                 </div>
               </div>

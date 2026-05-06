@@ -33,23 +33,23 @@ describe('Baskets', () => {
   });
 
   // 4 ─────────────────────────────────────────────────────────────────────────
-  test('"Añadir" en "Compra tu cesta" llama a onMarketplaceClick', () => {
-    const onMarketplaceClick = vi.fn();
-    render(<Baskets onMarketplaceClick={onMarketplaceClick} />);
+  test('"Añadir" en "Compra tu cesta" llama a onEligeTuCestaClick', () => {
+    const onEligeTuCestaClick = vi.fn();
+    render(<Baskets onEligeTuCestaClick={onEligeTuCestaClick} />);
 
     const botones = screen.getAllByRole('button', { name: 'Añadir' });
     fireEvent.click(botones[1]);
 
-    expect(onMarketplaceClick).toHaveBeenCalledTimes(1);
+    expect(onEligeTuCestaClick).toHaveBeenCalledTimes(1);
   });
 
   // 5 ─────────────────────────────────────────────────────────────────────────
-  test('"Añadir" en "Crea tu cesta" no llama a onMarketplaceClick', () => {
-    const onMarketplaceClick = vi.fn();
+  test('"Añadir" en "Crea tu cesta" no llama a onEligeTuCestaClick', () => {
+    const onEligeTuCestaClick = vi.fn();
     const onSelectPuestoClick = vi.fn();
     render(
       <Baskets
-        onMarketplaceClick={onMarketplaceClick}
+        onEligeTuCestaClick={onEligeTuCestaClick}
         onSelectPuestoClick={onSelectPuestoClick}
       />
     );
@@ -57,7 +57,7 @@ describe('Baskets', () => {
     const [botonCrear] = screen.getAllByRole('button', { name: 'Añadir' });
     fireEvent.click(botonCrear);
 
-    expect(onMarketplaceClick).not.toHaveBeenCalled();
+    expect(onEligeTuCestaClick).not.toHaveBeenCalled();
     expect(onSelectPuestoClick).toHaveBeenCalledTimes(1);
   });
 

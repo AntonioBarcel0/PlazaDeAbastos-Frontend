@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { getCurrentSeason } from '../utils/seasonality';
 import { api } from '../services/api';
 import './LaPlaza.css';
 
@@ -9,10 +11,22 @@ const VENDORS = [
   'Especias Moyano', 'Panadería Muñoz', 'Verduras Cortés', 'Jardinería Moreno',
 ];
 
-const SEASONAL = [
-  { id: 1, name: 'Alcachofa', price: '3,99€/Kg' },
-  { id: 2, name: 'Alcachofa', price: '3,99€/Kg' },
-];
+/* Keywords de temporada por estación (sin tildes, minúsculas) */
+const SEASON_KEYWORDS = {
+  primavera: ['alcachofa','freson','fresa','esparrago','guisante','haba','lechuga','rabano','cereza','albaricoque','acelga','espinaca'],
+  verano:    ['berenjena','calabacin','sandia','tomate','pepino','melocoton','melon','pimiento','ciruela','higo','lechuga','esparrago','albaricoque','cereza'],
+  otono:     ['brocoli','castana','caqui','champinon','coliflor','granada','manzana','membrillo','nuez','pera','seta','uva','higo','pimiento','alcachofa'],
+  invierno:  ['col','limon','mandarina','naranja','puerro','repollo','zanahoria','brocoli','coliflor','manzana','pera','acelga','espinaca'],
+};
+
+const normalize = (s) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+function isSeasonalProduct(product) {
+  const season = getCurrentSeason();
+  const keywords = SEASON_KEYWORDS[season] || [];
+  const text = normalize(product.nombre + ' ' + (product.categoria || ''));
+  return keywords.some(kw => text.includes(kw));
+}
 
 function seededRand(seed) {
   let s = seed >>> 0;
@@ -28,19 +42,54 @@ function dateSeed() { const d = new Date(); return d.getFullYear()*10000+(d.getM
 
 function LaPlaza({ onMarketplaceClick, onStoreClick }) {
   const [recos, setRecos] = useState([null, null, null]);
+  const [seasonalProducts, setSeasonalProducts] = useState([]);
+  const [seasonalPage, setSeasonalPage] = useState(0);
+  const [isSliding, setIsSliding] = useState(false);
+  const [slideDirection, setSlideDirection] = useState('next');
+  const carouselRef = useRef(null);
 
   useEffect(() => {
     const key = todayKey();
     const cached = localStorage.getItem(key);
-    if (cached) { try { setRecos(JSON.parse(cached)); return; } catch {} }
+    if (cached) { try { setRecos(JSON.parse(cached)); } catch {} }
+
     api.getProducts().then(data => {
       const products = (data.products || data.productos || []).filter(p => p.disponible !== false && p.stock !== 0);
-      const rand = seededRand(dateSeed());
-      const sel = pickN(products, 3, rand);
-      localStorage.setItem(key, JSON.stringify(sel));
-      setRecos(sel);
+
+      // Recomendaciones
+      if (!cached) {
+        const rand = seededRand(dateSeed());
+        const sel = pickN(products, 3, rand);
+        localStorage.setItem(key, JSON.stringify(sel));
+        setRecos(sel);
+      }
+
+      // Productos de temporada
+      const seasonal = products.filter(isSeasonalProduct);
+      setSeasonalProducts(seasonal);
     }).catch(() => {});
   }, []);
+
+  const totalPages = Math.ceil(seasonalProducts.length / 2);
+  const visibleSeasonal = seasonalProducts.slice(seasonalPage * 2, seasonalPage * 2 + 2);
+
+  const slideTo = (newPage, direction) => {
+    if (isSliding) return;
+    setSlideDirection(direction);
+    setIsSliding(true);
+    setTimeout(() => {
+      setSeasonalPage(newPage);
+      setIsSliding(false);
+    }, 400);
+  };
+
+  const prevSeasonal = () => {
+    if (seasonalPage > 0) slideTo(seasonalPage - 1, 'prev');
+  };
+  const nextSeasonal = () => {
+    if (seasonalPage < totalPages - 1) slideTo(seasonalPage + 1, 'next');
+  };
+
   return (
     <>
       <section className="laplaza-section">
@@ -67,7 +116,7 @@ function LaPlaza({ onMarketplaceClick, onStoreClick }) {
                 style={{ cursor: producto?.vendedorId ? 'pointer' : 'default' }}
               >
                 {producto?.imagen && (
-                  <img src={`${BASE_URL}${producto.imagen}`} alt={producto.nombre} className="rec-image" />
+                  <img src={producto.imagen.startsWith('http') ? producto.imagen : `${BASE_URL}${producto.imagen}`} alt={producto.nombre} className="rec-image" />
                 )}
                 {producto && (
                   <div className="rec-overlay">
@@ -82,28 +131,81 @@ function LaPlaza({ onMarketplaceClick, onStoreClick }) {
       </section>
 
       {/* Productos de temporada */}
-      <section className="seasonal-section">
-        <div className="seasonal-badge-wrap">
-          <span className="seasonal-badge">Productos de temporada</span>
-        </div>
-        <div className="seasonal-grid">
-          {SEASONAL.map(product => (
-            <div key={product.id} className="seasonal-card">
-              {/* TODO: añadir background-image con URL de Cloudinary en .seasonal-img */}
-              <div className="seasonal-img" />
-              <div className="seasonal-name-band">
-                <h3 className="seasonal-name">{product.name}</h3>
-              </div>
-              <div className="seasonal-footer">
-                <p className="seasonal-price">{product.price}</p>
-                <button className="seasonal-btn" onClick={onMarketplaceClick}>
-                  Ver producto
-                </button>
+      {seasonalProducts.length > 0 && (
+        <section className="seasonal-section">
+          <div className="seasonal-badge-wrap">
+            <span className="seasonal-badge">Productos de temporada</span>
+          </div>
+
+          <div className="seasonal-carousel" ref={carouselRef}>
+            <button
+              className="seasonal-arrow seasonal-arrow--left"
+              onClick={prevSeasonal}
+              disabled={seasonalPage === 0}
+              aria-label="Anterior"
+            >
+              <ChevronLeft size={28} />
+            </button>
+
+            <div className="seasonal-track-wrapper">
+              <div className={`seasonal-grid ${isSliding ? `seasonal-slide-${slideDirection}` : ''}`}>
+                {visibleSeasonal.map(product => (
+                  <div
+                    key={product.id}
+                    className="seasonal-card"
+                    onClick={() => product.vendedorId && onStoreClick && onStoreClick(product.vendedorId)}
+                    style={{ cursor: product.vendedorId ? 'pointer' : 'default' }}
+                  >
+                    {product.imagen ? (
+                      <img
+                        src={product.imagen.startsWith('http') ? product.imagen : `${BASE_URL}${product.imagen}`}
+                        alt={product.nombre}
+                        className="seasonal-img"
+                      />
+                    ) : (
+                      <div className="seasonal-img seasonal-img--placeholder" />
+                    )}
+                    <div className="seasonal-overlay">
+                      <div className="seasonal-overlay-top">
+                        <span className="seasonal-tag">De temporada</span>
+                      </div>
+                      <div className="seasonal-overlay-bottom">
+                        <h3 className="seasonal-name">{product.nombre}</h3>
+                        <p className="seasonal-price">{parseFloat(product.precio).toFixed(2)}€/{product.unidad}</p>
+                        <button className="seasonal-btn" onClick={(e) => { e.stopPropagation(); product.vendedorId && onStoreClick && onStoreClick(product.vendedorId); }}>
+                          Ver producto
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
-        </div>
-      </section>
+
+            <button
+              className="seasonal-arrow seasonal-arrow--right"
+              onClick={nextSeasonal}
+              disabled={seasonalPage >= totalPages - 1}
+              aria-label="Siguiente"
+            >
+              <ChevronRight size={28} />
+            </button>
+          </div>
+
+          {totalPages > 1 && (
+            <div className="seasonal-dots">
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <button
+                  key={i}
+                  className={`seasonal-dot ${i === seasonalPage ? 'seasonal-dot--active' : ''}`}
+                  onClick={() => slideTo(i, i > seasonalPage ? 'next' : 'prev')}
+                  aria-label={`Página ${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      )}
     </>
   );
 }
