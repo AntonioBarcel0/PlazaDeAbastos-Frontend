@@ -5,73 +5,181 @@
 .how-section {
   width: 100%;
   background: #fff;
-  padding: 70px 50px 80px;
+  padding: 80px 50px 90px;
   border-top: 1px solid rgba(139, 35, 50, 0.08);
 }
 
-.how-title {
+/* --- Header --- */
+.how-header {
   text-align: center;
+  max-width: 640px;
+  margin: 0 auto 60px;
+}
+
+.how-title {
   font-family: 'Alfa Slab One', serif;
   font-size: 1.6rem;
   font-weight: 400;
   color: #8b2332;
-  margin-bottom: 50px;
+  margin: 0 0 16px;
   letter-spacing: 0.5px;
 }
 
-.how-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-}
-
-.how-card {
-  display: flex;
-  flex-direction: column;
-}
-
-.how-img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  background: #d5cfc9;
-  object-fit: cover;
-  /* TODO: Reemplazar por imagen real de Cloudinary:
-     Usar <img src="url" className="how-img" /> en el JSX
-  */
-}
-
-.how-card-body {
-  padding: 18px 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.how-description {
-  font-size: 0.95rem;
-  color: #333;
-  line-height: 1.6;
+.how-subtitle {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.7;
   margin: 0;
 }
 
-.how-step-number {
-  font-size: 0.85rem;
-  color: #888;
-  align-self: flex-end;
+/* --- Timeline layout --- */
+.how-timeline {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.how-step {
+  display: flex;
+  gap: 28px;
+  position: relative;
+}
+
+/* Indicador izquierdo (icono + linea) */
+.how-step-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.how-step-icon-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid #8b2332;
+  background: #fff;
+  color: #8b2332;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.3s, color 0.3s;
+}
+
+.how-step:hover .how-step-icon-circle {
+  background: #8b2332;
+  color: #fff;
+}
+
+.how-step-line {
+  width: 2px;
+  flex: 1;
+  min-height: 20px;
+  background: rgba(139, 35, 50, 0.15);
+}
+
+/* Contenido derecho */
+.how-step-content {
+  padding: 8px 0 40px;
+  position: relative;
+}
+
+.how-step-number-badge {
+  display: inline-block;
+  font-family: 'Alfa Slab One', serif;
+  font-size: 0.7rem;
+  color: #8b2332;
+  border: 1.5px solid #8b2332;
+  border-radius: 50px;
+  padding: 2px 12px;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.how-step-title {
+  font-family: 'Alfa Slab One', serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: #1a1a1a;
+  margin: 0 0 10px;
+}
+
+.how-step-description {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 520px;
+}
+
+/* --- Tip final --- */
+.how-tip {
+  max-width: 700px;
+  margin: 10px auto 0;
+  background: rgba(139, 35, 50, 0.04);
+  border-left: 3px solid #8b2332;
+  border-radius: 0 8px 8px 0;
+  padding: 20px 28px;
+}
+
+.how-tip-text {
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.how-tip-text strong {
+  color: #8b2332;
 }
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
   .how-section {
-    padding: 50px 20px 60px;
+    padding: 60px 20px 70px;
   }
 
-  .how-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
+  .how-header {
+    margin-bottom: 40px;
   }
 
   .how-title {
     font-size: 1.3rem;
+  }
+
+  .how-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .how-step {
+    gap: 18px;
+  }
+
+  .how-step-icon-circle {
+    width: 48px;
+    height: 48px;
+  }
+
+  .how-step-icon-circle svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .how-step-content {
+    padding: 4px 0 30px;
+  }
+
+  .how-step-title {
+    font-size: 1rem;
+  }
+
+  .how-step-description {
+    font-size: 0.88rem;
+  }
+
+  .how-tip {
+    padding: 16px 20px;
   }
 }

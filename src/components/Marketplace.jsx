@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Store } from 'lucide-react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
@@ -135,6 +136,9 @@ function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeCli
         onMapClick={onMapClick}
         onInstruccionesClick={onInstruccionesClick}
         onPageClick={onPageClick}
+        user={user}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={onDashboardClick}
       />
 
       <main className="marketplace-main">
@@ -186,7 +190,7 @@ function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeCli
                     />
                   ) : (
                     <div className="store-image-placeholder">
-                      🏪
+                      <Store size={48} strokeWidth={1.5} color="#8b2332" />
                     </div>
                   )}
                   <button 

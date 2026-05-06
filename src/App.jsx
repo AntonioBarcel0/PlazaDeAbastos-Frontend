@@ -31,18 +31,25 @@ import { Toaster } from 'react-hot-toast';
 import './App.css';
 
 function App() {
-  const [currentView, setCurrentView] = useState('home');
+  const [currentView, setCurrentView] = useState(() => {
+    return sessionStorage.getItem('currentView') || 'home';
+  });
   const [user, setUser] = useState(null);
-  const [selectedVendedorId, setSelectedVendedorId] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [selectedProductVendedor, setSelectedProductVendedor] = useState(null);
+  const [selectedVendedorId, setSelectedVendedorId] = useState(() => sessionStorage.getItem('selectedVendedorId') || null);
+  const [selectedProduct, setSelectedProduct] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem('selectedProduct')); } catch { return null; }
+  });
+  const [selectedProductVendedor, setSelectedProductVendedor] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem('selectedProductVendedor')); } catch { return null; }
+  });
   const [pendingOrderData, setPendingOrderData] = useState(null);
-  const [selectedTipo, setSelectedTipo] = useState(null);
+  const [selectedTipo, setSelectedTipo] = useState(() => sessionStorage.getItem('selectedTipo') || null);
   const [postalCode, setPostalCode] = useState(() => sessionStorage.getItem('postalCode') || null);
   const [postalPendingView, setPostalPendingView] = useState(null);
 
   const navigate = (view) => {
     window.history.pushState({ view }, '');
+    sessionStorage.setItem('currentView', view);
     setCurrentView(view);
   };
 
@@ -52,14 +59,18 @@ function App() {
 
   const goHome = () => {
     window.history.pushState({ view: 'home' }, '');
+    sessionStorage.setItem('currentView', 'home');
     setCurrentView('home');
   };
 
   useEffect(() => {
     // Sincronizar botón atrás del navegador con la app
-    window.history.replaceState({ view: 'home' }, '');
+    const savedView = sessionStorage.getItem('currentView') || 'home';
+    window.history.replaceState({ view: savedView }, '');
     const handlePopState = (e) => {
-      setCurrentView(e.state?.view || 'home');
+      const view = e.state?.view || 'home';
+      sessionStorage.setItem('currentView', view);
+      setCurrentView(view);
     };
     window.addEventListener('popstate', handlePopState);
 
@@ -88,11 +99,13 @@ function App() {
   };
 
   const handleStoreClick = (vendedorId) => {
+    sessionStorage.setItem('selectedVendedorId', vendedorId);
     setSelectedVendedorId(vendedorId);
     navigate('store-view');
   };
 
   const handlePuestoSelect = (vendedorId) => {
+    sessionStorage.setItem('selectedVendedorId', vendedorId);
     setSelectedVendedorId(vendedorId);
     navigate('store-view');
   };
@@ -119,6 +132,8 @@ function App() {
   };
 
   const handleProductClick = (product, vendedor) => {
+    sessionStorage.setItem('selectedProduct', JSON.stringify(product));
+    sessionStorage.setItem('selectedProductVendedor', JSON.stringify(vendedor));
     setSelectedProduct(product);
     setSelectedProductVendedor(vendedor);
     navigate('product-detail');
@@ -357,6 +372,13 @@ function App() {
           user={user}
           onLogout={handleLogout}
           onBackHome={goHome}
+          onSelectPuestoClick={() => navigate('select-puesto')}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
+          onCartClick={handleCartClick}
+          onOrdersClick={handleOrdersClick}
+          onLoginClick={() => navigate('loginOptions')}
         />;
 
       case 'gestor-dashboard':
@@ -368,6 +390,13 @@ function App() {
           user={user}
           onLogout={handleLogout}
           onBackHome={goHome}
+          onSelectPuestoClick={() => navigate('select-puesto')}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
+          onCartClick={handleCartClick}
+          onOrdersClick={handleOrdersClick}
+          onLoginClick={() => navigate('loginOptions')}
         />;
 
       case 'postal-check':
@@ -413,7 +442,7 @@ function App() {
           onMapClick={handleMapClick}
           onInstruccionesClick={handleInstruccionesClick}
           onPageClick={handlePageClick}
-          onTipoSelect={(tipo) => { setSelectedTipo(tipo); navigate('cesta-detalle'); }}
+          onTipoSelect={(tipo) => { sessionStorage.setItem('selectedTipo', tipo); setSelectedTipo(tipo); navigate('cesta-detalle'); }}
         />;
 
       case 'cesta-detalle':

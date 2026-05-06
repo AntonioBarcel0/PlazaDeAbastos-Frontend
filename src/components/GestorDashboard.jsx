@@ -31,7 +31,7 @@ const ESTADO_FILTER = [
   { value: 'cancelado', label: 'Cancelado' },
 ];
 
-function GestorDashboard({ user, onLogout, onBackHome }) {
+function GestorDashboard({ user, onLogout, onBackHome, onSelectPuestoClick, onMapClick, onInstruccionesClick, onPageClick, onCartClick, onOrdersClick, onLoginClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [orders, setOrders] = useState([]);
   const [stats, setStats] = useState(null);
@@ -103,8 +103,14 @@ function GestorDashboard({ user, onLogout, onBackHome }) {
       <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-        onMarketplaceClick={() => {}}
-        onSelectPuestoClick={() => {}}
+        onSelectPuestoClick={onSelectPuestoClick}
+        onMapClick={onMapClick}
+        onInstruccionesClick={onInstruccionesClick}
+        onPageClick={onPageClick}
+        user={user}
+        onLoginClick={onLoginClick}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={() => {}}
       />
 
       <main className="gd-main">

@@ -31,6 +31,10 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeCli
         onMapClick={onMapClick}
         onInstruccionesClick={onInstruccionesClick}
         onPageClick={onPageClick}
+        user={user}
+        onLoginClick={onLoginClick}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={onDashboardClick}
         />
         <main className="cart-main">
           <div className="cart-empty">
@@ -68,6 +72,10 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeCli
         onMapClick={onMapClick}
         onInstruccionesClick={onInstruccionesClick}
         onPageClick={onPageClick}
+        user={user}
+        onLoginClick={onLoginClick}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={onDashboardClick}
       />
 
       <main className="cart-main">

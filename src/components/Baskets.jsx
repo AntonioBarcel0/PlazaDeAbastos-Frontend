@@ -1,12 +1,6 @@
 import './Baskets.css';
 
-function Baskets({ onMarketplaceClick, onSelectPuestoClick }) {
-  const handleComprarClick = () => {
-    if (onMarketplaceClick) {
-      onMarketplaceClick();
-    }
-  };
-
+function Baskets({ onSelectPuestoClick, onEligeTuCestaClick }) {
   return (
     <section className="baskets-section" id="baskets">
       <div className="baskets-container">
@@ -26,7 +20,7 @@ function Baskets({ onMarketplaceClick, onSelectPuestoClick }) {
         {/* Cesta 2 - Compra tu cesta */}
         <div className="basket-card">
           <h2 className="basket-title">Compra tu cesta</h2>
-          <button className="basket-button" onClick={handleComprarClick}>Añadir</button>
+          <button className="basket-button" onClick={onEligeTuCestaClick}>Añadir</button>
           <div className="basket-image-container">
             <img 
               src="https://res.cloudinary.com/dlmnchkjg/image/upload/v1771336582/cestallena_sgtve5.png" 

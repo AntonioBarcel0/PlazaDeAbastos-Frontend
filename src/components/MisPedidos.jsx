@@ -91,6 +91,9 @@ function MisPedidos({ user, onLogout, onDashboardClick, onHomeClick, onMarketpla
         onMapClick={onMapClick}
         onInstruccionesClick={onInstruccionesClick}
         onPageClick={onPageClick}
+        user={user}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={onDashboardClick}
       />
 
       <main className="mp-main">

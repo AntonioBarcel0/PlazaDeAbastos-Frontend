@@ -83,6 +83,10 @@ function Checkout({ user, onLogout, onDashboardClick, onCartClick, onBack, onSuc
         onMapClick={onMapClick}
         onInstruccionesClick={onInstruccionesClick}
         onPageClick={onPageClick}
+        user={user}
+        onLoginClick={onLoginClick}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={onDashboardClick}
       />
 
       <main className="checkout-main">

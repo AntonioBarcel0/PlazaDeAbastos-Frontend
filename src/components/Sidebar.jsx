@@ -1,7 +1,20 @@
 import './Sidebar.css';
 
-function Sidebar({ isOpen, onClose, onSelectPuestoClick, onMapClick, onInstruccionesClick, onPageClick }) {
+function Sidebar({ isOpen, onClose, onSelectPuestoClick, onMapClick, onInstruccionesClick, onPageClick, user, onLoginClick, onOrdersClick, onDashboardClick }) {
   const nav = (view) => { onClose(); onPageClick && onPageClick(view); };
+
+  const handleProfileClick = () => {
+    onClose();
+    if (!user) {
+      onLoginClick && onLoginClick();
+    } else if (user.role === 'cliente') {
+      onOrdersClick && onOrdersClick();
+    } else if (user.role === 'comerciante' || user.role === 'admin') {
+      onDashboardClick && onDashboardClick();
+    } else if (user.role === 'gestor') {
+      onDashboardClick && onDashboardClick();
+    }
+  };
 
   return (
     <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`}>
@@ -13,7 +26,7 @@ function Sidebar({ isOpen, onClose, onSelectPuestoClick, onMapClick, onInstrucci
             <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); onSelectPuestoClick && onSelectPuestoClick(); }}>Puestos</a></li>
             <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); onMapClick && onMapClick(); }}>Plano del mercado</a></li>
             <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); nav('elige-tu-cesta'); }}>Elige tu cesta</a></li>
-            <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); }}>Mi perfil</a></li>
+            <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); handleProfileClick(); }}>Mi perfil</a></li>
             <li><a href="#" className="sidebar-link sidebar-link--main" onClick={(e) => { e.preventDefault(); onClose(); onInstruccionesClick && onInstruccionesClick(); }}>Instrucciones</a></li>
           </ul>
         </div>

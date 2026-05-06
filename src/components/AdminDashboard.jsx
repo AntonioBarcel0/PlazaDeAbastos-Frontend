@@ -9,7 +9,7 @@ import './AdminDashboard.css';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '');
 
-function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
+function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoClick, onMapClick, onInstruccionesClick, onPageClick, onCartClick, onOrdersClick, onLoginClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -84,7 +84,7 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
       }
       setShowCestaForm(false);
       setEditingCesta(null);
-      loadCestas();
+      await loadCestas();
     } catch (err) {
       toast.error('Error: ' + err.message);
     }
@@ -224,8 +224,14 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
       <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-        onMarketplaceClick={() => {}}
-        onSelectPuestoClick={() => {}}
+        onSelectPuestoClick={onSelectPuestoClick}
+        onMapClick={onMapClick}
+        onInstruccionesClick={onInstruccionesClick}
+        onPageClick={onPageClick}
+        user={user}
+        onLoginClick={onLoginClick}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={() => {}}
       />
 
       <main className="admin-main">
@@ -282,12 +288,12 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
               >
                 {profilePreview || profileData.imagenPerfil ? (
                   <img
-                    src={profilePreview || `${BASE_URL}${profileData.imagenPerfil}`}
+                    src={profilePreview || (profileData.imagenPerfil?.startsWith('http') ? profileData.imagenPerfil : `${BASE_URL}${profileData.imagenPerfil}`)}
                     alt="Imagen del puesto"
                     className="profile-img"
                   />
                 ) : (
-                  <div className="profile-img-placeholder">🏪</div>
+                  <div className="profile-img-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#8b2332" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"/></svg></div>
                 )}
                 <div className="profile-img-overlay">Cambiar imagen</div>
               </div>
@@ -381,7 +387,7 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
                           <td>
                             {product.imagen ? (
                               <img
-                                src={`${BASE_URL}${product.imagen}`}
+                                src={product.imagen.startsWith('http') ? product.imagen : `${BASE_URL}${product.imagen}`}
                                 alt={product.nombre}
                                 className="product-thumb"
                               />
@@ -422,7 +428,7 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome }) {
                         <div className="product-card-header">
                           {product.imagen ? (
                             <img
-                              src={`${BASE_URL}${product.imagen}`}
+                              src={product.imagen.startsWith('http') ? product.imagen : `${BASE_URL}${product.imagen}`}
                               alt={product.nombre}
                               className="product-card-img"
                             />

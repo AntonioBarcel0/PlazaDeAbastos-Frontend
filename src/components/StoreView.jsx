@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Store } from 'lucide-react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
@@ -130,6 +131,9 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
         onMapClick={onMapClick}
         onInstruccionesClick={onInstruccionesClick}
         onPageClick={onPageClick}
+        user={user}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={onDashboardClick}
       />
 
       {/* ── Hero del puesto ── */}
@@ -165,7 +169,7 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
               className="sv-hero-img"
             />
           ) : (
-            <div className="sv-hero-img-placeholder">🏪</div>
+            <div className="sv-hero-img-placeholder"><Store size={64} strokeWidth={1.5} color="#8b2332" /></div>
           )}
         </div>
       </div>
