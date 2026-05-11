@@ -82,7 +82,7 @@
   width: 46px;
   height: 36px;
   background: linear-gradient(135deg, #d4a843 0%, #f0c860 40%, #c8922a 100%);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -265,7 +265,7 @@
   width: 100%;
   padding: 0.85rem 1rem;
   border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-family: inherit;
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -293,7 +293,7 @@
   border: none;
   padding: 1rem;
   min-height: 54px;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
@@ -431,7 +431,7 @@
   font-size: 0.75rem;
   font-weight: 600;
   padding: 0.35rem 0.65rem;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
 }
 
 /* ── Éxito ────────────────────────────────────────── */
@@ -484,7 +484,7 @@
   display: flex;
   justify-content: space-between;
   background-color: #f9f9f9;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 0.85rem 1.25rem;
   margin-bottom: 2rem;
   font-size: 1rem;
@@ -496,7 +496,7 @@
   color: white;
   border: none;
   padding: 1rem 2.5rem;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;

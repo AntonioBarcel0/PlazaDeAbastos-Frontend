@@ -78,7 +78,7 @@
 .stat-card {
   background: white;
   padding: 1.5rem;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   border: 1px solid #e8e8e8;
   text-align: center;
 }
@@ -100,7 +100,7 @@
 .products-table {
   background: white;
   padding: 2rem;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   border: 1px solid #e8e8e8;
 }
 
@@ -143,7 +143,7 @@
   width: 56px;
   height: 56px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   display: block;
 }
 
@@ -160,7 +160,7 @@
 .status-badge {
   padding: 0.3rem 0.9rem;
   min-height: 32px;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   border: none;
   font-size: 0.8rem;
   font-weight: 600;
@@ -194,7 +194,7 @@
   border: none;
   padding: 0.75rem 1.5rem;
   min-height: 44px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -211,7 +211,7 @@
   border: 1.5px solid var(--color-brand);
   padding: 0.4rem 0.9rem;
   min-height: 36px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
@@ -229,7 +229,7 @@
   border: 1.5px solid #c0392b;
   padding: 0.4rem 0.9rem;
   min-height: 36px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
@@ -264,7 +264,7 @@
 /* ── Perfil del puesto ───────────────────────────── */
 .profile-tab {
   background: white;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   border: 1px solid #e8e8e8;
   padding: 2.5rem;
   display: flex;
@@ -357,7 +357,7 @@
 .profile-field-group input {
   padding: 0.75rem 1rem;
   border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 0.95rem;
   font-family: inherit;
   transition: border-color 0.2s;
@@ -379,7 +379,7 @@
   color: white;
   border: none;
   padding: 0.85rem 2rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -412,7 +412,7 @@
 .cesta-card {
   background: #fafafa;
   border: 1px solid #eee;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -463,14 +463,14 @@
   width: 120px;
   height: 90px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   border: 1px solid #e0e0e0;
 }
 
 .product-card {
   background: #fafafa;
   border: 1px solid #eee;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -487,7 +487,7 @@
   width: 64px;
   height: 64px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   flex-shrink: 0;
 }
 
@@ -608,7 +608,7 @@
 .cesta-form {
   background: #fff;
   border: 1px solid rgba(139, 35, 50, 0.15);
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   padding: 1.75rem;
   margin-bottom: 2rem;
 }
@@ -647,7 +647,7 @@
 .cesta-form select,
 .cesta-form textarea {
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 0.6rem 0.85rem;
   font-family: 'Afacad', sans-serif;
   font-size: 1rem;
@@ -674,7 +674,7 @@
   border: 1px solid #ccc;
   color: #555;
   padding: 0.6rem 1.4rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-family: 'Afacad', sans-serif;
   font-size: 0.95rem;
   cursor: pointer;

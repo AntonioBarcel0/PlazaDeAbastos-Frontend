@@ -32,7 +32,7 @@
   color: white;
   border: none;
   padding: 0.75rem 2rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
@@ -54,7 +54,7 @@
 .mp-card {
   background: white;
   border: 1px solid #e8e8e8;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
 }
 
@@ -97,7 +97,7 @@
   font-size: 0.72rem;
   font-weight: 600;
   padding: 0.22rem 0.6rem;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }

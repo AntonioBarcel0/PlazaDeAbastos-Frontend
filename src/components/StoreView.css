@@ -134,7 +134,7 @@
   max-width: 500px;
   padding: 1rem 1.5rem;
   border: 2px solid #e0e0e0;
-  border-radius: 50px;
+  border-radius: var(--radius-btn);
   font-size: 1rem;
   background-color: white;
 }
@@ -254,7 +254,7 @@
   background-color: var(--color-brand);
   color: white;
   border: none;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -277,7 +277,7 @@
   display: flex;
   align-items: center;
   background-color: #f5f5f5;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   overflow: hidden;
 }
 
@@ -318,7 +318,7 @@
 .cart-conflict-banner {
   background-color: #fff8e1;
   border: 1px solid #f9a825;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   padding: 1.25rem 1.5rem;
   margin-bottom: 1.5rem;
   display: flex;
@@ -344,7 +344,7 @@
   background-color: white;
   border: 2px solid #ccc;
   padding: 0.5rem 1.2rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
@@ -358,7 +358,7 @@
   color: white;
   border: none;
   padding: 0.5rem 1.2rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
@@ -381,7 +381,7 @@
   min-height: 44px;
   border: none;
   background-color: white;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
@@ -411,7 +411,7 @@
   align-items: center;
   gap: 0;
   background-color: #f5f5f5;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
@@ -457,7 +457,7 @@
   background-color: var(--color-brand);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -499,7 +499,7 @@
 .sv-cesta-card {
   background: white;
   border: 1px solid #e0e0e0;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
   overflow: hidden;

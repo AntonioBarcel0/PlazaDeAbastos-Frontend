@@ -11,7 +11,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   padding: 0.22rem 0.75rem;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   text-align: center;
 }
 
@@ -29,7 +29,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 0.28rem 0.85rem;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
 }
 
 .season-badge--detail.season-badge--in {

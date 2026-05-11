@@ -6,6 +6,14 @@
   --color-brand-dark:   #6d1b27;
   --color-brand-light:  rgba(139, 35, 50, 0.06);
   --color-brand-muted:  rgba(139, 35, 50, 0.15);
+
+  /* ── Sistema de border-radius ─────────────── */
+  --radius-sm:   6px;   /* inputs, tags pequeños  */
+  --radius-md:   8px;   /* tarjetas estándar       */
+  --radius-lg:   10px;  /* tarjetas destacadas     */
+  --radius-xl:   12px;  /* paneles grandes         */
+  --radius-pill: 20px;  /* badges / etiquetas      */
+  --radius-btn:  50px;  /* botones cápsula         */
 }
 
 /* ── Afacad autoalojada con size-adjust ────────── */
@@ -86,7 +94,7 @@ h1, h2, h3 {
   color: white;
   border: none;
   padding: 0.6rem 1.8rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.9rem;
   cursor: pointer;
   transition: background-color 0.2s;

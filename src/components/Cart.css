@@ -14,7 +14,7 @@
   text-align: center;
   padding: 4rem 2rem;
   background-color: white;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -42,7 +42,7 @@
   border: none;
   padding: 1rem 2rem;
   min-height: 48px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -93,7 +93,7 @@
 
 .cart-item {
   background-color: white;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   padding: 1.25rem;
   display: flex;
@@ -104,7 +104,7 @@
 .cart-item-image {
   width: 80px;
   height: 80px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   flex-shrink: 0;
   background-color: #f0f0f0;
@@ -160,7 +160,7 @@
   height: 44px;
   border: 2px solid #e0e0e0;
   background-color: white;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 1.2rem;
   font-weight: 700;
   cursor: pointer;
@@ -224,7 +224,7 @@
 /* --- Resumen lateral --- */
 .cart-summary {
   background-color: white;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   padding: 1.75rem;
   position: sticky;
@@ -273,7 +273,7 @@
   border: none;
   padding: 1rem;
   min-height: 52px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 1.05rem;
   font-weight: 600;
   cursor: pointer;
@@ -297,7 +297,7 @@
   border: 2px solid var(--color-brand);
   padding: 0.85rem;
   min-height: 48px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;

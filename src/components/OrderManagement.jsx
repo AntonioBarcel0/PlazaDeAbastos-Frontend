@@ -268,7 +268,7 @@ const OrderManagement = () => {
               </div>
 
               <div className="info-section">
-                <h3>Notas del Vendedor</h3>
+                <h3>Notas del puesto</h3>
                 <textarea
                   className="vendor-notes"
                   defaultValue={selectedOrder.notasVendedor || ''}

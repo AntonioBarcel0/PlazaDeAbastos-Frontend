@@ -20,7 +20,7 @@
   border: none;
   height: 70px;
   padding: 0 30px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-family: 'Alfa Slab One', serif;
   font-size: 1.3rem;
   font-weight: 400;
@@ -110,7 +110,7 @@
   right: 0;
   min-width: 220px;
   background: #fff;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   box-shadow: 0 8px 30px rgba(0,0,0,0.15);
   border: 1px solid rgba(0,0,0,0.08);
   z-index: 2000;
@@ -183,7 +183,7 @@
   border: none;
   width: 70px;
   height: 70px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -206,7 +206,7 @@
   font-weight: 700;
   min-width: 20px;
   height: 20px;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,7 +222,7 @@
   border: none;
   width: 70px;
   height: 70px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -263,7 +263,7 @@
     height: 40px;
     padding: 0 12px;
     font-size: 0.8rem;
-    border-radius: 20px;
+    border-radius: var(--radius-pill);
   }
 
   .profile-btn-name {

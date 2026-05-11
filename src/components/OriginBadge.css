@@ -6,7 +6,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
 }
 
 /* ── Km 0 — terracota cálida ── */

@@ -25,7 +25,7 @@
   background: white;
   color: var(--color-brand);
   border: 1.5px solid var(--color-brand);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
@@ -50,7 +50,7 @@
 .filter-select {
   padding: 0.5rem 1rem;
   border: 1.5px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
   cursor: pointer;
   font-family: inherit;
@@ -74,7 +74,7 @@
 .order-management .stat-card {
   background: white;
   padding: 1.25rem;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   border: 1px solid #e8e8e8;
   text-align: center;
   box-shadow: none;
@@ -96,7 +96,7 @@
 /* ── Orders table ────────────────────────────────── */
 .orders-table {
   background: white;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   border: 1px solid #e8e8e8;
   overflow: hidden;
 }
@@ -144,7 +144,7 @@
 /* ── Status select ───────────────────────────────── */
 .status-select {
   padding: 0.4rem 0.75rem;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   border: none;
   font-size: 0.8rem;
   font-weight: 600;
@@ -165,7 +165,7 @@
   background: white;
   color: var(--color-brand);
   border: 1.5px solid var(--color-brand);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.82rem;
   font-weight: 500;
   cursor: pointer;
@@ -183,7 +183,7 @@
   text-align: center;
   padding: 4rem 2rem;
   background: white;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   border: 1px solid #e8e8e8;
   color: #888;
   font-size: 0.95rem;
@@ -193,7 +193,7 @@
   background: #fee2e2;
   color: #991b1b;
   padding: 1rem 1.25rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   margin-bottom: 1.25rem;
   font-size: 0.9rem;
 }
@@ -211,7 +211,7 @@
 
 .modal-content {
   background: white;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   width: 90%;
   max-width: 900px;
   max-height: 90vh;
@@ -291,7 +291,7 @@
 .notas {
   background: #fafafa;
   padding: 0.85rem 1rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   border-left: 3px solid var(--color-brand);
   font-style: italic;
   color: #555;
@@ -338,7 +338,7 @@
   min-height: 90px;
   padding: 0.75rem 1rem;
   border: 1.5px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-family: inherit;
   font-size: 0.9rem;
   resize: vertical;
@@ -355,7 +355,7 @@
 .badge {
   display: inline-block;
   padding: 0.25rem 0.65rem;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   font-size: 0.8rem;
   font-weight: 600;
 }
@@ -379,7 +379,7 @@
   background: white;
   color: #555;
   border: 1.5px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;

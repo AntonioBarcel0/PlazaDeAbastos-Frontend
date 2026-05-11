@@ -29,7 +29,7 @@
 .sp-search {
   padding: 0.85rem 1.5rem;
   border: 2px solid #e0e0e0;
-  border-radius: 50px;
+  border-radius: var(--radius-btn);
   font-size: 1rem;
   width: 280px;
   background-color: white;
@@ -67,7 +67,7 @@
   min-height: 40px;
   border: none;
   background-color: transparent;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 1rem;
   font-weight: 500;
   color: #333;
@@ -95,7 +95,7 @@
   min-height: 44px;
   border: none;
   background-color: white;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 500;
   color: #555;
@@ -117,7 +117,7 @@
   top: calc(100% + 0.5rem);
   right: 0;
   background-color: white;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
   list-style: none;
   margin: 0;
@@ -228,7 +228,7 @@
   border: none;
   padding: 0.55rem 1.5rem;
   min-height: 40px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
