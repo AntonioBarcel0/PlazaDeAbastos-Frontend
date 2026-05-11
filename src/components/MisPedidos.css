@@ -200,7 +200,7 @@
 /* ── Card footer ─────────────────────────────────── */
 .mp-card-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1.25rem;
   border-top: 1px solid #e8e8e8;
@@ -212,6 +212,27 @@
   font-size: 1rem;
   color: var(--color-brand);
   white-space: nowrap;
+}
+
+.mp-cancel-btn {
+  background: none;
+  border: 1px solid #d9534f;
+  color: #d9534f;
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.mp-cancel-btn:hover:not(:disabled) {
+  background: #d9534f;
+  color: #fff;
+}
+
+.mp-cancel-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 /* ── Responsive ──────────────────────────────────── */

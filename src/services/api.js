@@ -229,6 +229,16 @@ export const api = {
     return data;
   },
 
+  cancelOrder: async (id) => {
+    const response = await fetch(`${API_URL}/orders/${id}/cancel`, {
+      method: 'PATCH',
+      headers: getAuthHeaders()
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'No se pudo cancelar el pedido');
+    return data;
+  },
+
   getOrderStats: async () => {
     const response = await fetch(`${API_URL}/orders/stats`, {
       headers: getAuthHeader()
