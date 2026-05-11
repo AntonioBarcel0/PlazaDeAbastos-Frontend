@@ -20,7 +20,7 @@ const MODO_LABEL = {
   domicilio: 'Entrega a domicilio',
 };
 
-function MisPedidos({ user, onLogout, onDashboardClick, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick }) {
+function MisPedidos({ user, onLogout, onDashboardClick, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick, onLoginClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -66,7 +66,7 @@ function MisPedidos({ user, onLogout, onDashboardClick, onHomeClick, onMarketpla
 
   const headerProps = {
     onMenuClick: () => setSidebarOpen(!sidebarOpen),
-    onLoginClick: () => {},
+    onLoginClick,
     onLogoClick: onHomeClick,
     user,
     onLogout,

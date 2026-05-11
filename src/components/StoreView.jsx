@@ -12,7 +12,7 @@ import toast from 'react-hot-toast';
 import './StoreView.css';
 
 
-function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onProductClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick }) {
+function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onProductClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick, onLoginClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedor, setVendedor] = useState(null);
   const [productos, setProductos] = useState([]);
@@ -98,7 +98,7 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
 
   const headerProps = {
     onMenuClick: () => setSidebarOpen(!sidebarOpen),
-    onLoginClick: () => {},
+    onLoginClick,
     onLogoClick: onHomeClick,
     user,
     onLogout,

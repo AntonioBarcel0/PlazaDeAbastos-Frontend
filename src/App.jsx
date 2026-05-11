@@ -206,6 +206,7 @@ function App() {
           onMapClick={handleMapClick}
           onInstruccionesClick={handleInstruccionesClick}
           onPageClick={handlePageClick}
+          onLoginClick={() => navigate('loginOptions')}
         />;
 
       case 'marketplace':
@@ -223,6 +224,7 @@ function App() {
           onMapClick={handleMapClick}
           onInstruccionesClick={handleInstruccionesClick}
           onPageClick={handlePageClick}
+          onLoginClick={() => navigate('loginOptions')}
         />;
 
       case 'store-view':
@@ -241,6 +243,7 @@ function App() {
           onMapClick={handleMapClick}
           onInstruccionesClick={handleInstruccionesClick}
           onPageClick={handlePageClick}
+          onLoginClick={() => navigate('loginOptions')}
         />;
 
       case 'product-detail':
@@ -361,6 +364,7 @@ function App() {
           onMapClick={handleMapClick}
           onInstruccionesClick={handleInstruccionesClick}
           onPageClick={handlePageClick}
+          onLoginClick={() => navigate('loginOptions')}
         />;
 
       case 'admin-dashboard':

@@ -10,7 +10,7 @@ import './Marketplace.css';
 
 const EXCLUDED_KEYWORDS = ['carnicer', 'pescader', 'charcuter', 'carne', 'pescado', 'marisco'];
 
-function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick }) {
+function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick, onLoginClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedores, setVendedores] = useState([]);
   const [filteredVendedores, setFilteredVendedores] = useState([]);
@@ -93,7 +93,7 @@ function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeCli
 
   const headerProps = {
     onMenuClick: handleMenuClick,
-    onLoginClick: () => {},
+    onLoginClick,
     onLogoClick: handleLogoClick,
     user,
     onLogout,
