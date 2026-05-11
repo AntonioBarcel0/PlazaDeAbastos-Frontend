@@ -15,7 +15,7 @@
 
 /* --- Boton Menu --- */
 .menu-btn {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: #fff;
   border: none;
   height: 70px;
@@ -31,7 +31,7 @@
 }
 
 .menu-btn:hover {
-  background-color: #6d1b27;
+  background-color: var(--color-brand-dark);
 }
 
 /* --- Logo --- */
@@ -80,7 +80,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: #fff;
   border: none;
   height: 48px;
@@ -94,7 +94,7 @@
 }
 
 .profile-btn:hover {
-  background-color: #6d1b27;
+  background-color: var(--color-brand-dark);
 }
 
 .profile-btn-name {
@@ -137,7 +137,7 @@
 .profile-dropdown-role {
   margin: 2px 0 0;
   font-size: 0.8rem;
-  color: #8b2332;
+  color: var(--color-brand);
   font-weight: 500;
 }
 
@@ -167,7 +167,7 @@
 }
 
 .profile-dropdown-logout {
-  color: #8b2332;
+  color: var(--color-brand);
   font-weight: 600;
 }
 
@@ -178,7 +178,7 @@
 /* --- Carrito --- */
 .cart-btn {
   position: relative;
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   border: none;
   width: 70px;
@@ -193,7 +193,7 @@
 }
 
 .cart-btn:hover {
-  background-color: #6d1b27;
+  background-color: var(--color-brand-dark);
 }
 
 .cart-badge {
@@ -217,7 +217,7 @@
 
 /* --- Login (no logueado) --- */
 .log-btn {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   border: none;
   width: 70px;
@@ -232,7 +232,7 @@
 }
 
 .log-btn:hover {
-  background-color: #6d1b27;
+  background-color: var(--color-brand-dark);
 }
 
 /* --- Responsive --- */

@@ -2,11 +2,10 @@ import { useState, useEffect } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import { useCart } from '../context/CartContext';
-import { api } from '../services/api';
+import { api, BASE_URL } from '../services/api';
 import toast from 'react-hot-toast';
 import './CestaDetalle.css';
 
-const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '');
 
 const TIPO_LABELS = {
   frutas: 'Frutas',

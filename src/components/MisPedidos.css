@@ -28,7 +28,7 @@
 }
 
 .mp-empty-btn {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   border: none;
   padding: 0.75rem 2rem;
@@ -40,7 +40,7 @@
 }
 
 .mp-empty-btn:hover {
-  background-color: #6d1a27;
+  background-color: var(--color-brand-dark);
 }
 
 /* ── List ────────────────────────────────────────── */
@@ -63,7 +63,7 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 1rem 1.25rem;
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   gap: 1rem;
 }
 
@@ -193,7 +193,7 @@
   margin-top: 0.5rem;
   padding: 0.5rem 0.75rem;
   background: #fafafa;
-  border-left: 3px solid #8b2332;
+  border-left: 3px solid var(--color-brand);
   border-radius: 0 4px 4px 0;
 }
 
@@ -210,7 +210,7 @@
 .mp-total {
   font-weight: 700;
   font-size: 1rem;
-  color: #8b2332;
+  color: var(--color-brand);
   white-space: nowrap;
 }
 

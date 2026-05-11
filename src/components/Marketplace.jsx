@@ -3,11 +3,10 @@ import { Store } from 'lucide-react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
-import { api } from '../services/api';
+import { api, BASE_URL } from '../services/api';
 import VENDOR_IMAGES from '../utils/vendorImages';
 import './Marketplace.css';
 
-const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
 const EXCLUDED_KEYWORDS = ['carnicer', 'pescader', 'charcuter', 'carne', 'pescado', 'marisco'];
 

@@ -16,7 +16,7 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 3rem 3rem 2.5rem 3rem;
-  background-color: #8b2332;
+  background-color: var(--color-brand);
 }
 
 .sv-back {
@@ -141,7 +141,7 @@
 
 .store-search:focus {
   outline: none;
-  border-color: #8b2332;
+  border-color: var(--color-brand);
 }
 
 .store-categories {
@@ -251,7 +251,7 @@
 .product-add-btn {
   padding: 0.55rem 1.5rem;
   min-height: 44px;
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   border: none;
   border-radius: 20px;
@@ -263,7 +263,7 @@
 }
 
 .product-add-btn:hover:not(:disabled) {
-  background-color: #6d1b27;
+  background-color: var(--color-brand-dark);
 }
 
 .product-add-btn--agotado,
@@ -289,7 +289,7 @@
   font-size: 1.4rem;
   font-weight: 700;
   cursor: pointer;
-  color: #8b2332;
+  color: var(--color-brand);
   transition: background-color 0.2s;
 }
 
@@ -354,7 +354,7 @@
 .conflict-btn-cancel:hover { border-color: #999; }
 
 .conflict-btn-confirm {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   border: none;
   padding: 0.5rem 1.2rem;
@@ -365,7 +365,7 @@
   transition: background-color 0.2s;
 }
 
-.conflict-btn-confirm:hover { background-color: #6d1b27; }
+.conflict-btn-confirm:hover { background-color: var(--color-brand-dark); }
 
 .empty-message {
   grid-column: 1 / -1;
@@ -393,7 +393,7 @@
 .category-btn:hover { background-color: #f0f0f0; }
 
 .category-btn.active {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
 }
 
@@ -423,7 +423,7 @@
   font-size: 1.5rem;
   font-weight: 700;
   cursor: pointer;
-  color: #8b2332;
+  color: var(--color-brand);
   transition: background-color 0.2s;
 }
 
@@ -448,13 +448,13 @@
   margin: 0;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #8b2332;
+  color: var(--color-brand);
 }
 
 .gram-picker-add {
   width: 100%;
   padding: 0.55rem 0;
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   border: none;
   border-radius: 6px;
@@ -466,7 +466,7 @@
 }
 
 .gram-picker-add:hover {
-  background-color: #6d1b27;
+  background-color: var(--color-brand-dark);
 }
 
 /* Control de gramos cuando el producto ya está en el carrito */
@@ -520,7 +520,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #8b2332;
+  color: var(--color-brand);
   margin: 0 0 0.4rem;
 }
 
@@ -557,7 +557,7 @@
   font-family: 'Alfa Slab One', serif;
   font-size: 1.3rem;
   font-weight: 400;
-  color: #8b2332;
+  color: var(--color-brand);
 }
 
 @media (max-width: 900px) {

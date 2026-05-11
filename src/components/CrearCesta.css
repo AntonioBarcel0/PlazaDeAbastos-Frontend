@@ -20,7 +20,7 @@
 
 /* ── Lado izquierdo ── */
 .cc-left {
-  background: #8b2332;
+  background: var(--color-brand);
   display: flex;
   align-items: center;
   padding: 60px 70px;
@@ -78,7 +78,7 @@
 .cc-btn:hover {
   background: #ffffff;
   border-color: #ffffff;
-  color: #8b2332;
+  color: var(--color-brand);
 }
 
 /* ── Lado derecho — imagen ── */

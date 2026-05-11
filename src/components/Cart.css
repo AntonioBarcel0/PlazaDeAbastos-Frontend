@@ -37,7 +37,7 @@
 }
 
 .btn-back-shop {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   border: none;
   padding: 1rem 2rem;
@@ -50,7 +50,7 @@
 }
 
 .btn-back-shop:hover {
-  background-color: #6d1b27;
+  background-color: var(--color-brand-dark);
 }
 
 /* --- Título y subtítulo --- */
@@ -70,10 +70,10 @@
 .cart-vendor-heading {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #8b2332;
+  color: var(--color-brand);
   margin: 0;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #8b2332;
+  border-bottom: 2px solid var(--color-brand);
 }
 
 /* --- Layout principal --- */
@@ -142,7 +142,7 @@
 
 .cart-item-price {
   margin: 0;
-  color: #8b2332;
+  color: var(--color-brand);
   font-weight: 600;
   font-size: 0.95rem;
 }
@@ -173,8 +173,8 @@
 }
 
 .qty-btn:hover:not(:disabled) {
-  border-color: #8b2332;
-  color: #8b2332;
+  border-color: var(--color-brand);
+  color: var(--color-brand);
 }
 
 .qty-btn:disabled {
@@ -218,7 +218,7 @@
 }
 
 .cart-item-remove:hover {
-  color: #8b2332;
+  color: var(--color-brand);
 }
 
 /* --- Resumen lateral --- */
@@ -268,7 +268,7 @@
 
 .btn-checkout {
   width: 100%;
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   border: none;
   padding: 1rem;
@@ -282,7 +282,7 @@
 }
 
 .btn-checkout:hover:not(:disabled) {
-  background-color: #6d1b27;
+  background-color: var(--color-brand-dark);
 }
 
 .btn-checkout:disabled {
@@ -293,8 +293,8 @@
 .btn-clear {
   width: 100%;
   background-color: white;
-  color: #8b2332;
-  border: 2px solid #8b2332;
+  color: var(--color-brand);
+  border: 2px solid var(--color-brand);
   padding: 0.85rem;
   min-height: 48px;
   border-radius: 8px;
@@ -305,7 +305,7 @@
 }
 
 .btn-clear:hover {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
 }
 

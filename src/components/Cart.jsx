@@ -2,9 +2,9 @@ import { useState } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import { useCart, isKg, itemSubtotal, isCestaItem } from '../context/CartContext';
+import { BASE_URL } from '../services/api';
 import './Cart.css';
 
-const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
 function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCheckout, onLoginClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -117,7 +117,7 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeCli
                       <div className="cart-item-controls">
                         <button
                           className="qty-btn"
-                          onClick={() => updateQuantity(itemId, item.cantidad - (isKg(item.unidad) ? 50 : 1))}
+                          onClick={() => updateQuantity(itemId, item.cantidad - (isKg(item.unidad) ? 50 : 1), isCesta ? null : item.vendedorId)}
                           disabled={isKg(item.unidad) && item.cantidad <= 50}
                         >
                           −
@@ -131,7 +131,7 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeCli
                         </span>
                         <button
                           className="qty-btn"
-                          onClick={() => updateQuantity(itemId, item.cantidad + (isKg(item.unidad) ? 50 : 1))}
+                          onClick={() => updateQuantity(itemId, item.cantidad + (isKg(item.unidad) ? 50 : 1), isCesta ? null : item.vendedorId)}
                           disabled={
                             !isCesta && (isKg(item.unidad)
                               ? (item.stock != null && item.cantidad >= item.stock * 1000)
@@ -148,7 +148,7 @@ function Cart({ user, onLogout, onDashboardClick, onCartClick, onBack, onHomeCli
 
                       <button
                         className="cart-item-remove"
-                        onClick={() => removeFromCart(itemId)}
+                        onClick={() => removeFromCart(itemId, isCesta ? null : item.vendedorId)}
                         aria-label="Eliminar del carrito"
                       >
                         ×

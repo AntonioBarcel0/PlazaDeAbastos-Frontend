@@ -38,8 +38,8 @@
   padding: 0.65rem 1.5rem;
   min-height: 44px;
   background: white;
-  color: #8b2332;
-  border: 1.5px solid #8b2332;
+  color: var(--color-brand);
+  border: 1.5px solid var(--color-brand);
   border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 500;
@@ -49,7 +49,7 @@
 }
 
 .gd-btn-refresh:hover {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
 }
 
@@ -73,8 +73,8 @@
 }
 
 .gd-stat-card--accent {
-  background-color: #8b2332;
-  border-color: #8b2332;
+  background-color: var(--color-brand);
+  border-color: var(--color-brand);
 }
 
 .gd-stat-card--accent .gd-stat-num,
@@ -85,7 +85,7 @@
 .gd-stat-num {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #8b2332;
+  color: var(--color-brand);
   line-height: 1;
 }
 
@@ -132,8 +132,8 @@
 }
 
 .gd-tab.active {
-  color: #8b2332;
-  border-bottom-color: #8b2332;
+  color: var(--color-brand);
+  border-bottom-color: var(--color-brand);
   font-weight: 600;
 }
 
@@ -151,7 +151,7 @@
 
 .gd-select:focus {
   outline: none;
-  border-color: #8b2332;
+  border-color: var(--color-brand);
 }
 
 /* ── Table ───────────────────────────────────────── */
@@ -168,7 +168,7 @@
 }
 
 .gd-table thead {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
 }
 
 .gd-table th {
@@ -240,7 +240,7 @@
 
 .gd-total {
   font-weight: 700;
-  color: #8b2332;
+  color: var(--color-brand);
   white-space: nowrap;
 }
 
@@ -309,7 +309,7 @@
 
 .gd-btn-deliver {
   padding: 0.35rem 0.75rem;
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   border: none;
   border-radius: 6px;
@@ -321,7 +321,7 @@
 }
 
 .gd-btn-deliver:hover:not(:disabled) {
-  background-color: #6d1a27;
+  background-color: var(--color-brand-dark);
 }
 
 .gd-btn-deliver:disabled {
@@ -424,7 +424,7 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding-bottom: 0.4rem;
-  border-bottom: 2px solid #8b2332;
+  border-bottom: 2px solid var(--color-brand);
 }
 
 .gd-info-section p {
@@ -441,7 +441,7 @@
 .gd-modal-total {
   font-size: 1.3rem;
   font-weight: bold;
-  color: #8b2332;
+  color: var(--color-brand);
 }
 
 /* Sub-order blocks */
@@ -528,7 +528,7 @@
 
 .gd-btn-deliver-modal {
   padding: 0.75rem 2rem;
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   border: none;
   border-radius: 8px;
@@ -539,7 +539,7 @@
 }
 
 .gd-btn-deliver-modal:hover:not(:disabled) {
-  background-color: #6d1a27;
+  background-color: var(--color-brand-dark);
 }
 
 .gd-btn-deliver-modal:disabled {

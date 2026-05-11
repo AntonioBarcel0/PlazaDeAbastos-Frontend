@@ -275,7 +275,7 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #8b2332;
+  border-color: var(--color-brand);
   box-shadow: 0 0 0 3px rgba(139, 35, 50, 0.1);
 }
 
@@ -288,7 +288,7 @@
 /* Botón pagar */
 .pg-btn-pay {
   width: 100%;
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   border: none;
   padding: 1rem;
@@ -307,7 +307,7 @@
 }
 
 .pg-btn-pay:hover:not(:disabled) {
-  background-color: #6d1b27;
+  background-color: var(--color-brand-dark);
   transform: translateY(-1px);
 }
 
@@ -381,7 +381,7 @@
 .pg-summary-vendor-name {
   font-size: 0.85rem;
   font-weight: 700;
-  color: #8b2332;
+  color: var(--color-brand);
   margin: 0 0 0.5rem 0;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -492,7 +492,7 @@
 }
 
 .pg-btn-home {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   border: none;
   padding: 1rem 2.5rem;
@@ -504,7 +504,7 @@
 }
 
 .pg-btn-home:hover {
-  background-color: #6d1b27;
+  background-color: var(--color-brand-dark);
 }
 
 /* ── Responsive ─────────────────────────────────── */

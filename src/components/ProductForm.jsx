@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { api } from '../services/api';
+import { api, BASE_URL } from '../services/api';
 import toast from 'react-hot-toast';
 import './ProductForm.css';
 
-const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '');
 
 function ProductForm({ product, onClose }) {
   const [formData, setFormData] = useState({
@@ -94,7 +93,7 @@ function ProductForm({ product, onClose }) {
 
       onClose(true);
     } catch (error) {
-      toast.error('Error: ' + error.message);
+      toast.error(error.message || 'No se pudo guardar el producto');
     } finally {
       setLoading(false);
     }

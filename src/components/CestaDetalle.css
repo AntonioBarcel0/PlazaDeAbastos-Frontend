@@ -12,7 +12,7 @@
 
 /* ── Cabecera de la sección ── */
 .cd-header-section {
-  background: #8b2332;
+  background: var(--color-brand);
   padding: 3.5rem 4rem 3rem;
 }
 
@@ -154,7 +154,7 @@
 .cd-vendor {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #8b2332;
+  color: var(--color-brand);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   margin: 0;
@@ -179,7 +179,7 @@
 
 .cd-card-items {
   font-size: 0.82rem;
-  color: #8b2332;
+  color: var(--color-brand);
   background: rgba(139, 35, 50, 0.06);
   border-radius: 6px;
   padding: 0.5rem 0.75rem;
@@ -199,11 +199,11 @@
 .cd-card-price {
   font-family: 'Alfa Slab One', serif;
   font-size: 1.4rem;
-  color: #8b2332;
+  color: var(--color-brand);
 }
 
 .cd-add-btn {
-  background: #8b2332;
+  background: var(--color-brand);
   color: #ffffff;
   border: none;
   border-radius: 20px;
@@ -216,7 +216,7 @@
   transition: background 0.2s;
 }
 
-.cd-add-btn:hover { background: #6d1b27; }
+.cd-add-btn:hover { background: var(--color-brand-dark); }
 
 /* Qty control (cuando ya está en carrito) */
 .cd-qty-control {
@@ -235,7 +235,7 @@
   font-size: 1.3rem;
   font-weight: 700;
   cursor: pointer;
-  color: #8b2332;
+  color: var(--color-brand);
   transition: background-color 0.2s;
 }
 

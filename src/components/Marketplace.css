@@ -37,7 +37,7 @@
 
 .marketplace-search:focus {
   outline: none;
-  border-color: #8b2332;
+  border-color: var(--color-brand);
 }
 
 .marketplace-actions {
@@ -108,7 +108,7 @@
 }
 
 .category-btn.active {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
 }
 
@@ -174,7 +174,7 @@
 }
 
 .store-view-btn:hover {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   transform: translateX(-50%) translateY(-2px);
   box-shadow: 0 4px 12px rgba(139, 35, 50, 0.3);
@@ -188,7 +188,7 @@
   margin: 0 0 0.5rem 0;
   font-size: 1.3rem;
   font-weight: bold;
-  color: #8b2332;
+  color: var(--color-brand);
 }
 
 .store-category {

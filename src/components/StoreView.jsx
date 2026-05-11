@@ -7,11 +7,10 @@ import SeasonBadge from './SeasonBadge';
 import VENDOR_IMAGES from '../utils/vendorImages';
 import OriginBadge from './OriginBadge';
 import { useCart, isKg } from '../context/CartContext';
-import { api } from '../services/api';
+import { api, BASE_URL } from '../services/api';
 import toast from 'react-hot-toast';
 import './StoreView.css';
 
-const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
 function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onProductClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);

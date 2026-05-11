@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { api } from '../services/api';
+import { api, BASE_URL } from '../services/api';
 import toast from 'react-hot-toast';
 import ProductForm from './ProductForm';
 import OrderManagement from './OrderManagement';
 import './AdminDashboard.css';
 
-const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '');
 
 function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoClick, onMapClick, onInstruccionesClick, onPageClick, onCartClick, onOrdersClick, onLoginClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -27,6 +26,7 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
   const [cestaForm, setCestaForm] = useState({ tipo: 'frutas', nombre: '', precio: '', descripcion: '', items: '' });
   const [cestaImageFile, setCestaImageFile] = useState(null);
   const [cestaImagePreview, setCestaImagePreview] = useState(null);
+  const [cestaSubmitting, setCestaSubmitting] = useState(false);
   const [profilePreview, setProfilePreview] = useState(null);
   const [profileFile, setProfileFile] = useState(null);
   const [profileSaving, setProfileSaving] = useState(false);
@@ -48,8 +48,8 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
       setCestasLoading(true);
       const data = await api.getMisCestas();
       setCestas(data.cestas || []);
-    } catch (err) {
-      toast.error('Error al cargar cestas: ' + err.message);
+    } catch {
+      toast.error('No se pudieron cargar las cestas');
     } finally {
       setCestasLoading(false);
     }
@@ -71,6 +71,7 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
 
   const handleCestaSubmit = async (e) => {
     e.preventDefault();
+    if (cestaSubmitting) return;
     const payload = {
       tipo: cestaForm.tipo,
       nombre: cestaForm.nombre.trim(),
@@ -79,6 +80,7 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
       items: cestaForm.items ? cestaForm.items.split(',').map(s => s.trim()).filter(Boolean) : [],
       imagenFile: cestaImageFile || undefined,
     };
+    setCestaSubmitting(true);
     try {
       if (editingCesta) {
         const result = await api.updateCesta(editingCesta.id, payload);
@@ -93,7 +95,9 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
       setEditingCesta(null);
       loadCestas();
     } catch (err) {
-      toast.error('Error: ' + err.message);
+      toast.error(err.message || 'No se pudo guardar la cesta');
+    } finally {
+      setCestaSubmitting(false);
     }
   };
 
@@ -104,7 +108,7 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
       toast.success('Cesta eliminada');
       loadCestas();
     } catch (err) {
-      toast.error('Error: ' + err.message);
+      toast.error(err.message || 'No se pudo eliminar la cesta');
     }
   };
 
@@ -112,8 +116,8 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
     try {
       await api.updateCesta(cesta.id, { activa: !cesta.activa });
       loadCestas();
-    } catch (err) {
-      toast.error('Error al actualizar: ' + err.message);
+    } catch {
+      toast.error('No se pudo cambiar el estado de la cesta');
     }
   };
 
@@ -156,7 +160,7 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
       setProfilePreview(null);
       toast.success('Perfil actualizado correctamente');
     } catch (err) {
-      toast.error('Error al guardar: ' + err.message);
+      toast.error(err.message || 'No se pudo guardar el perfil');
     } finally {
       setProfileSaving(false);
     }
@@ -168,7 +172,7 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
       const data = await api.getMyProducts();
       setProducts(data.products);
     } catch (error) {
-      toast.error('Error al cargar productos: ' + error.message);
+      toast.error('No se pudieron cargar los productos');
     } finally {
       setLoading(false);
     }
@@ -186,7 +190,7 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
       toast.success('Producto eliminado correctamente');
       loadProducts();
     } catch (error) {
-      toast.error('Error al eliminar: ' + error.message);
+      toast.error(error.message || 'No se pudo eliminar el producto');
     }
   };
 
@@ -201,7 +205,7 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
       await api.updateProduct(product.id, { disponible: !product.disponible });
       loadProducts();
     } catch (error) {
-      toast.error('Error al actualizar disponibilidad: ' + error.message);
+      toast.error(error.message || 'No se pudo cambiar la disponibilidad');
     }
   };
 
@@ -562,10 +566,10 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
                   </div>
                 </div>
                 <div className="form-actions">
-                  <button type="submit" className="btn-primary">
-                    {editingCesta ? 'Guardar cambios' : 'Crear cesta'}
+                  <button type="submit" className="btn-primary" disabled={cestaSubmitting}>
+                    {cestaSubmitting ? 'Guardando...' : editingCesta ? 'Guardar cambios' : 'Crear cesta'}
                   </button>
-                  <button type="button" className="btn-cancel" onClick={() => { setShowCestaForm(false); setEditingCesta(null); }}>
+                  <button type="button" className="btn-cancel" disabled={cestaSubmitting} onClick={() => { setShowCestaForm(false); setEditingCesta(null); }}>
                     Cancelar
                   </button>
                 </div>
@@ -599,15 +603,15 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
                       </div>
                     </div>
                     {cesta.descripcion && (
-                      <p style={{ padding: '0 1rem', color: '#555', fontSize: '0.92rem' }}>{cesta.descripcion}</p>
+                      <p className="cesta-card-desc">{cesta.descripcion}</p>
                     )}
                     {cesta.items && cesta.items.length > 0 && (
-                      <p style={{ padding: '0 1rem 0.5rem', color: '#8b2332', fontSize: '0.88rem' }}>
+                      <p className="cesta-card-items">
                         {cesta.items.join(' · ')}
                       </p>
                     )}
                     <div className="product-card-footer">
-                      <span style={{ fontFamily: "'Alfa Slab One', serif", color: '#8b2332', fontSize: '1.3rem' }}>
+                      <span className="cesta-card-price">
                         {parseFloat(cesta.precio).toFixed(2)} €
                       </span>
                       <button

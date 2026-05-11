@@ -1,7 +1,7 @@
 .register-page {
   width: 100%;
   min-height: var(--full-vh);
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,7 +43,7 @@
   min-height: 52px;
   font-size: 18px;
   font-family: inherit;
-  color: #8b2332;
+  color: var(--color-brand);
   background-color: white;
   border: none;
   border-radius: 50px;
@@ -52,7 +52,7 @@
 }
 
 .register-input::placeholder {
-  color: #8b2332;
+  color: var(--color-brand);
   opacity: 0.8;
 }
 
@@ -95,7 +95,7 @@
   font-size: 18px;
   font-family: 'Alfa Slab One', cursive;
   font-weight: 400;
-  color: #8b2332;
+  color: var(--color-brand);
   background-color: white;
   border: none;
   border-radius: 8px;

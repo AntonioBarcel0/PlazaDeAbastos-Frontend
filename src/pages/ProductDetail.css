@@ -16,7 +16,7 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 3rem 3rem 2.5rem 3rem;
-  background-color: #8b2332;
+  background-color: var(--color-brand);
 }
 
 .product-detail-center {
@@ -124,7 +124,7 @@
 .product-detail-add-btn {
   flex-shrink: 0;
   background-color: white;
-  color: #8b2332;
+  color: var(--color-brand);
   border: none;
   padding: 0.9rem 3rem;
   border-radius: 8px;
