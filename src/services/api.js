@@ -507,10 +507,17 @@ export const api = {
   // Crear cesta (comerciante)
   createCesta: async (cestaData) => {
     const token = localStorage.getItem('token');
+    const formData = new FormData();
+    formData.append('tipo', cestaData.tipo);
+    formData.append('nombre', cestaData.nombre);
+    formData.append('precio', cestaData.precio);
+    if (cestaData.descripcion) formData.append('descripcion', cestaData.descripcion);
+    formData.append('items', JSON.stringify(cestaData.items || []));
+    if (cestaData.imagenFile) formData.append('imagen', cestaData.imagenFile);
     const response = await fetch(`${API_URL}/cestas`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify(cestaData)
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.message || 'Error al crear la cesta');
@@ -520,10 +527,18 @@ export const api = {
   // Actualizar cesta (comerciante)
   updateCesta: async (id, cestaData) => {
     const token = localStorage.getItem('token');
+    const formData = new FormData();
+    if (cestaData.tipo !== undefined) formData.append('tipo', cestaData.tipo);
+    if (cestaData.nombre !== undefined) formData.append('nombre', cestaData.nombre);
+    if (cestaData.precio !== undefined) formData.append('precio', cestaData.precio);
+    if (cestaData.descripcion !== undefined) formData.append('descripcion', cestaData.descripcion || '');
+    if (cestaData.items !== undefined) formData.append('items', JSON.stringify(cestaData.items || []));
+    if (cestaData.activa !== undefined) formData.append('activa', cestaData.activa);
+    if (cestaData.imagenFile) formData.append('imagen', cestaData.imagenFile);
     const response = await fetch(`${API_URL}/cestas/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify(cestaData)
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.message || 'Error al actualizar la cesta');

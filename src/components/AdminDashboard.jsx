@@ -25,6 +25,8 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
   const [showCestaForm, setShowCestaForm] = useState(false);
   const [editingCesta, setEditingCesta] = useState(null);
   const [cestaForm, setCestaForm] = useState({ tipo: 'frutas', nombre: '', precio: '', descripcion: '', items: '' });
+  const [cestaImageFile, setCestaImageFile] = useState(null);
+  const [cestaImagePreview, setCestaImagePreview] = useState(null);
   const [profilePreview, setProfilePreview] = useState(null);
   const [profileFile, setProfileFile] = useState(null);
   const [profileSaving, setProfileSaving] = useState(false);
@@ -62,6 +64,8 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
       descripcion: cesta.descripcion || '',
       items: (cesta.items || []).join(', '),
     } : { tipo: 'frutas', nombre: '', precio: '', descripcion: '', items: '' });
+    setCestaImageFile(null);
+    setCestaImagePreview(null);
     setShowCestaForm(true);
   };
 
@@ -73,18 +77,21 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
       precio: parseFloat(cestaForm.precio),
       descripcion: cestaForm.descripcion.trim() || null,
       items: cestaForm.items ? cestaForm.items.split(',').map(s => s.trim()).filter(Boolean) : [],
+      imagenFile: cestaImageFile || undefined,
     };
     try {
       if (editingCesta) {
-        await api.updateCesta(editingCesta.id, payload);
+        const result = await api.updateCesta(editingCesta.id, payload);
+        setCestas(prev => prev.map(c => c.id === editingCesta.id ? result.cesta : c));
         toast.success('Cesta actualizada correctamente');
       } else {
-        await api.createCesta(payload);
+        const result = await api.createCesta(payload);
+        setCestas(prev => [result.cesta, ...prev]);
         toast.success('Cesta creada correctamente');
       }
       setShowCestaForm(false);
       setEditingCesta(null);
-      await loadCestas();
+      loadCestas();
     } catch (err) {
       toast.error('Error: ' + err.message);
     }
@@ -532,6 +539,28 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
                     onChange={e => setCestaForm(p => ({ ...p, items: e.target.value }))}
                   />
                 </div>
+                <div className="form-group">
+                  <label>Imagen de la cesta</label>
+                  <div className="cesta-img-upload">
+                    {(cestaImagePreview || (editingCesta?.imagen)) && (
+                      <img
+                        src={cestaImagePreview || (editingCesta.imagen.startsWith('http') ? editingCesta.imagen : `${BASE_URL}${editingCesta.imagen}`)}
+                        alt="Preview"
+                        className="cesta-img-preview"
+                      />
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={e => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        setCestaImageFile(file);
+                        setCestaImagePreview(URL.createObjectURL(file));
+                      }}
+                    />
+                  </div>
+                </div>
                 <div className="form-actions">
                   <button type="submit" className="btn-primary">
                     {editingCesta ? 'Guardar cambios' : 'Crear cesta'}
@@ -553,9 +582,16 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
                 </button>
               </div>
             ) : (
-              <div className="products-mobile-cards">
+              <div className="cestas-list">
                 {cestas.map(cesta => (
-                  <div className="product-card" key={cesta.id}>
+                  <div className="cesta-card" key={cesta.id}>
+                    {cesta.imagen && (
+                      <img
+                        src={cesta.imagen.startsWith('http') ? cesta.imagen : `${BASE_URL}${cesta.imagen}`}
+                        alt={cesta.nombre}
+                        className="cesta-card-img"
+                      />
+                    )}
                     <div className="product-card-header">
                       <div className="product-card-title">
                         <h3>{cesta.nombre}</h3>

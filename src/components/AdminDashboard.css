@@ -122,7 +122,7 @@
   border-bottom: 2px solid #e0e0e0;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #555;
+  color: #ffffff;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -400,6 +400,53 @@
   display: none;
   flex-direction: column;
   gap: 1rem;
+}
+
+/* ── Cestas list (always visible, desktop + mobile) ── */
+.cestas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cesta-card {
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0 0 1rem;
+}
+
+.cesta-card .product-card-header,
+.cesta-card > p,
+.cesta-card .product-card-footer {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.cesta-card .product-card-header { padding-top: 0.75rem; }
+
+.cesta-card-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.cesta-img-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cesta-img-preview {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
 }
 
 .product-card {
