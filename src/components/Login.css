@@ -1,7 +1,7 @@
 .login-page {
   width: 100%;
   min-height: var(--full-vh);
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,16 +43,16 @@
   min-height: 52px;
   font-size: 18px;
   font-family: inherit;
-  color: #8b2332;
+  color: var(--color-brand);
   background-color: white;
   border: none;
-  border-radius: 50px;
+  border-radius: var(--radius-btn);
   outline: none;
   text-align: center;
 }
 
 .login-input::placeholder {
-  color: #8b2332;
+  color: var(--color-brand);
   opacity: 0.8;
 }
 
@@ -82,7 +82,7 @@
   background-color: rgba(0, 0, 0, 0.25);
   color: #ffc8c8;
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   text-align: center;
   font-size: 0.9rem;
   margin: 0;
@@ -95,10 +95,10 @@
   font-size: 18px;
   font-family: 'Alfa Slab One', cursive;
   font-weight: 400;
-  color: #8b2332;
+  color: var(--color-brand);
   background-color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   margin-top: 20px;

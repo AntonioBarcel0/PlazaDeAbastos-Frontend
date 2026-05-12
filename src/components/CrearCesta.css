@@ -20,7 +20,7 @@
 
 /* ── Lado izquierdo ── */
 .cc-left {
-  background: #8b2332;
+  background: var(--color-brand);
   display: flex;
   align-items: center;
   padding: 60px 70px;
@@ -70,7 +70,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   padding: 0.75rem 2.5rem;
-  border-radius: 50px;
+  border-radius: var(--radius-btn);
   cursor: pointer;
   transition: background 0.22s ease, border-color 0.22s ease, color 0.22s ease;
 }
@@ -78,7 +78,7 @@
 .cc-btn:hover {
   background: #ffffff;
   border-color: #ffffff;
-  color: #8b2332;
+  color: var(--color-brand);
 }
 
 /* ── Lado derecho — imagen ── */

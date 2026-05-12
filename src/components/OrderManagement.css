@@ -23,9 +23,9 @@
   padding: 0.6rem 1.25rem;
   min-height: 40px;
   background: white;
-  color: #8b2332;
-  border: 1.5px solid #8b2332;
-  border-radius: 8px;
+  color: var(--color-brand);
+  border: 1.5px solid var(--color-brand);
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
@@ -33,7 +33,7 @@
 }
 
 .btn-refresh:hover {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
 }
 
@@ -50,7 +50,7 @@
 .filter-select {
   padding: 0.5rem 1rem;
   border: 1.5px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
   cursor: pointer;
   font-family: inherit;
@@ -59,7 +59,7 @@
 
 .filter-select:focus {
   outline: none;
-  border-color: #8b2332;
+  border-color: var(--color-brand);
 }
 
 /* ── Stats row ───────────────────────────────────── */
@@ -74,14 +74,14 @@
 .order-management .stat-card {
   background: white;
   padding: 1.25rem;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   border: 1px solid #e8e8e8;
   text-align: center;
   box-shadow: none;
 }
 
 .order-management .stat-card h3 {
-  color: #8b2332;
+  color: var(--color-brand);
   font-size: 2rem;
   font-weight: bold;
   margin: 0 0 0.2rem;
@@ -96,7 +96,7 @@
 /* ── Orders table ────────────────────────────────── */
 .orders-table {
   background: white;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   border: 1px solid #e8e8e8;
   overflow: hidden;
 }
@@ -107,7 +107,7 @@
 }
 
 .orders-table thead {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
 }
 
 .orders-table th {
@@ -138,13 +138,13 @@
 
 .total {
   font-weight: 700;
-  color: #8b2332;
+  color: var(--color-brand);
 }
 
 /* ── Status select ───────────────────────────────── */
 .status-select {
   padding: 0.4rem 0.75rem;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   border: none;
   font-size: 0.8rem;
   font-weight: 600;
@@ -163,9 +163,9 @@
 .btn-ver-detalles {
   padding: 0.4rem 0.9rem;
   background: white;
-  color: #8b2332;
-  border: 1.5px solid #8b2332;
-  border-radius: 6px;
+  color: var(--color-brand);
+  border: 1.5px solid var(--color-brand);
+  border-radius: var(--radius-sm);
   font-size: 0.82rem;
   font-weight: 500;
   cursor: pointer;
@@ -174,7 +174,7 @@
 }
 
 .btn-ver-detalles:hover {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
 }
 
@@ -183,7 +183,7 @@
   text-align: center;
   padding: 4rem 2rem;
   background: white;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   border: 1px solid #e8e8e8;
   color: #888;
   font-size: 0.95rem;
@@ -193,7 +193,7 @@
   background: #fee2e2;
   color: #991b1b;
   padding: 1rem 1.25rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   margin-bottom: 1.25rem;
   font-size: 0.9rem;
 }
@@ -211,7 +211,7 @@
 
 .modal-content {
   background: white;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   width: 90%;
   max-width: 900px;
   max-height: 90vh;
@@ -274,7 +274,7 @@
   font-size: 1rem;
   font-weight: 600;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #8b2332;
+  border-bottom: 2px solid var(--color-brand);
 }
 
 .info-section p {
@@ -291,8 +291,8 @@
 .notas {
   background: #fafafa;
   padding: 0.85rem 1rem;
-  border-radius: 6px;
-  border-left: 3px solid #8b2332;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-brand);
   font-style: italic;
   color: #555;
   font-size: 0.9rem;
@@ -306,7 +306,7 @@
 }
 
 .products-table th {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   padding: 0.7rem 0.85rem;
   text-align: left;
@@ -338,7 +338,7 @@
   min-height: 90px;
   padding: 0.75rem 1rem;
   border: 1.5px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-family: inherit;
   font-size: 0.9rem;
   resize: vertical;
@@ -348,14 +348,14 @@
 
 .vendor-notes:focus {
   outline: none;
-  border-color: #8b2332;
+  border-color: var(--color-brand);
 }
 
 /* ── Badge (inline, inside modal) ───────────────── */
 .badge {
   display: inline-block;
   padding: 0.25rem 0.65rem;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   font-size: 0.8rem;
   font-weight: 600;
 }
@@ -363,7 +363,7 @@
 .total-price {
   font-size: 1.4rem;
   font-weight: bold;
-  color: #8b2332;
+  color: var(--color-brand);
 }
 
 /* ── Modal footer ────────────────────────────────── */
@@ -379,7 +379,7 @@
   background: white;
   color: #555;
   border: 1.5px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;

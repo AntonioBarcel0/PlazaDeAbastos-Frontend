@@ -40,13 +40,16 @@ export function CartProvider({ children }) {
   const addToCart = (producto, vendedor, gramos = null) => {
     const porPeso = isKg(producto.unidad);
     const cantidadInicial = porPeso ? (gramos ?? 250) : 1;
+    const vid = vendedor.id;
 
     setCart(prev => {
-      const existing = prev.find(item => item.productId === producto.id);
+      const existing = prev.find(
+        item => item.productId === producto.id && item.vendedorId === vid
+      );
       if (existing) {
         if (porPeso) {
           return prev.map(item =>
-            item.productId === producto.id
+            item.productId === producto.id && item.vendedorId === vid
               ? { ...item, cantidad: gramos ?? item.cantidad }
               : item
           );
@@ -56,7 +59,7 @@ export function CartProvider({ children }) {
           return prev;
         }
         return prev.map(item =>
-          item.productId === producto.id
+          item.productId === producto.id && item.vendedorId === vid
             ? { ...item, cantidad: item.cantidad + 1 }
             : item
         );
@@ -69,7 +72,7 @@ export function CartProvider({ children }) {
         imagen: producto.imagen,
         cantidad: cantidadInicial,
         stock: producto.stock ?? null,
-        vendedorId: vendedor.id,
+        vendedorId: vid,
         vendedorNombre: vendedor.nombreCompleto || `${vendedor.nombre} ${vendedor.apellidos}`,
       }];
     });
@@ -105,24 +108,29 @@ export function CartProvider({ children }) {
     return { success: true };
   };
 
-  const removeFromCart = (id) => {
-    setCart(prev => prev.filter(item =>
-      item.itemType === 'cesta' ? item.cestaId !== id : item.productId !== id
-    ));
+  // id puede ser productId/cestaId; vendedorId solo es necesario para productos
+  const removeFromCart = (id, vendedorId = null) => {
+    setCart(prev => prev.filter(item => {
+      if (item.itemType === 'cesta') return item.cestaId !== id;
+      if (vendedorId !== null) return !(item.productId === id && item.vendedorId === vendedorId);
+      return item.productId !== id;
+    }));
   };
 
   // Para kg: `cantidad` son gramos (mínimo 50g, máximo stock*1000 g)
   // `id` puede ser productId o cestaId según el tipo de ítem
-  const updateQuantity = (id, cantidad) => {
+  const updateQuantity = (id, cantidad, vendedorId = null) => {
     if (cantidad <= 0) {
-      removeFromCart(id);
+      removeFromCart(id, vendedorId);
       return;
     }
     setCart(prev =>
       prev.map(item => {
         const matches = item.itemType === 'cesta'
           ? item.cestaId === id
-          : item.productId === id;
+          : vendedorId !== null
+            ? item.productId === id && item.vendedorId === vendedorId
+            : item.productId === id;
         if (!matches) return item;
         if (item.itemType === 'cesta') {
           return { ...item, cantidad: Math.max(1, cantidad) };

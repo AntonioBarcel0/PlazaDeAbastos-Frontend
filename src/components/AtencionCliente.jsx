@@ -128,7 +128,7 @@ function AtencionCliente({
           <h2 className="info-section-title">Gestión de tu cuenta</h2>
           <p className="info-text">
             Desde tu perfil puedes actualizar tus datos personales, cambiar tu contraseña y
-            consultar el historial completo de tus compras. Si deseas eliminar tu cuenta de
+            consultar el historial completo de tus pedidos. Si deseas eliminar tu cuenta de
             forma permanente, escríbenos a <strong>privacidad@plazadeabastos.es</strong> y
             procesaremos tu solicitud en un plazo máximo de 30 días, en cumplimiento del RGPD.
           </p>

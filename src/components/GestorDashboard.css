@@ -38,9 +38,9 @@
   padding: 0.65rem 1.5rem;
   min-height: 44px;
   background: white;
-  color: #8b2332;
-  border: 1.5px solid #8b2332;
-  border-radius: 8px;
+  color: var(--color-brand);
+  border: 1.5px solid var(--color-brand);
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
@@ -49,7 +49,7 @@
 }
 
 .gd-btn-refresh:hover {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
 }
 
@@ -64,7 +64,7 @@
 .gd-stat-card {
   background: white;
   border: 1px solid #e8e8e8;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   padding: 1.5rem 1.25rem;
   display: flex;
   flex-direction: column;
@@ -73,8 +73,8 @@
 }
 
 .gd-stat-card--accent {
-  background-color: #8b2332;
-  border-color: #8b2332;
+  background-color: var(--color-brand);
+  border-color: var(--color-brand);
 }
 
 .gd-stat-card--accent .gd-stat-num,
@@ -85,7 +85,7 @@
 .gd-stat-num {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #8b2332;
+  color: var(--color-brand);
   line-height: 1;
 }
 
@@ -132,15 +132,15 @@
 }
 
 .gd-tab.active {
-  color: #8b2332;
-  border-bottom-color: #8b2332;
+  color: var(--color-brand);
+  border-bottom-color: var(--color-brand);
   font-weight: 600;
 }
 
 .gd-select {
   padding: 0.55rem 1rem;
   border: 1.5px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
   font-family: inherit;
   color: #555;
@@ -151,14 +151,14 @@
 
 .gd-select:focus {
   outline: none;
-  border-color: #8b2332;
+  border-color: var(--color-brand);
 }
 
 /* ── Table ───────────────────────────────────────── */
 .gd-table-wrapper {
   background: white;
   border: 1px solid #e8e8e8;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
 }
 
@@ -168,7 +168,7 @@
 }
 
 .gd-table thead {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
 }
 
 .gd-table th {
@@ -240,7 +240,7 @@
 
 .gd-total {
   font-weight: 700;
-  color: #8b2332;
+  color: var(--color-brand);
   white-space: nowrap;
 }
 
@@ -248,7 +248,7 @@
 .gd-modo-badge {
   display: inline-block;
   padding: 0.2rem 0.6rem;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   font-size: 0.78rem;
   font-weight: 600;
   white-space: nowrap;
@@ -268,7 +268,7 @@
 .gd-estado-badge {
   display: inline-block;
   padding: 0.22rem 0.6rem;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -295,7 +295,7 @@
   background: white;
   color: #555;
   border: 1.5px solid #e0e0e0;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.82rem;
   font-weight: 500;
   cursor: pointer;
@@ -309,10 +309,10 @@
 
 .gd-btn-deliver {
   padding: 0.35rem 0.75rem;
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
@@ -321,7 +321,7 @@
 }
 
 .gd-btn-deliver:hover:not(:disabled) {
-  background-color: #6d1a27;
+  background-color: var(--color-brand-dark);
 }
 
 .gd-btn-deliver:disabled {
@@ -334,7 +334,7 @@
   text-align: center;
   padding: 4rem 2rem;
   background: white;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   border: 1px solid #e8e8e8;
   color: #888;
   font-size: 0.95rem;
@@ -354,7 +354,7 @@
 
 .gd-modal {
   background: white;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   width: 100%;
   max-width: 860px;
   max-height: 90vh;
@@ -424,7 +424,7 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding-bottom: 0.4rem;
-  border-bottom: 2px solid #8b2332;
+  border-bottom: 2px solid var(--color-brand);
 }
 
 .gd-info-section p {
@@ -441,13 +441,13 @@
 .gd-modal-total {
   font-size: 1.3rem;
   font-weight: bold;
-  color: #8b2332;
+  color: var(--color-brand);
 }
 
 /* Sub-order blocks */
 .gd-sub-block {
   border: 1px solid #e8e8e8;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 0.85rem 1rem;
   margin-bottom: 0.75rem;
 }
@@ -528,10 +528,10 @@
 
 .gd-btn-deliver-modal {
   padding: 0.75rem 2rem;
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -539,7 +539,7 @@
 }
 
 .gd-btn-deliver-modal:hover:not(:disabled) {
-  background-color: #6d1a27;
+  background-color: var(--color-brand-dark);
 }
 
 .gd-btn-deliver-modal:disabled {
@@ -552,7 +552,7 @@
   background: white;
   color: #555;
   border: 1.5px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;

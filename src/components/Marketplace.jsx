@@ -3,15 +3,14 @@ import { Store } from 'lucide-react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
-import { api } from '../services/api';
+import { api, BASE_URL } from '../services/api';
 import VENDOR_IMAGES from '../utils/vendorImages';
 import './Marketplace.css';
 
-const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
 const EXCLUDED_KEYWORDS = ['carnicer', 'pescader', 'charcuter', 'carne', 'pescado', 'marisco'];
 
-function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick }) {
+function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick, onLoginClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedores, setVendedores] = useState([]);
   const [filteredVendedores, setFilteredVendedores] = useState([]);
@@ -94,7 +93,7 @@ function Marketplace({ user, onLogout, onDashboardClick, onStoreClick, onHomeCli
 
   const headerProps = {
     onMenuClick: handleMenuClick,
-    onLoginClick: () => {},
+    onLoginClick,
     onLogoClick: handleLogoClick,
     user,
     onLogout,

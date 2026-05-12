@@ -1,14 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
-import { LogIn, ShoppingBasket, User, ClipboardList, LayoutDashboard, LogOut } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import { LogIn, ShoppingBasket, User, ClipboardList, LayoutDashboard, LogOut, X } from 'lucide-react';
+import { useCart, isKg, itemSubtotal, isCestaItem } from '../context/CartContext';
+import { BASE_URL } from '../services/api';
 import './Header.css';
 
 function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDashboardClick, onCartClick, onOrdersClick }) {
-  const { cartCount } = useCart();
+  const { cart, cartCount, cartByVendor, cartTotal, removeFromCart, updateQuantity, clearCart } = useCart();
   const [profileOpen, setProfileOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const profileRef = useRef(null);
 
-  // Cerrar dropdown al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
@@ -18,6 +19,21 @@ function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDash
     if (profileOpen) document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [profileOpen]);
+
+  const handleCartToggle = () => {
+    setCartOpen(prev => !prev);
+    setProfileOpen(false);
+  };
+
+  const handleProfileToggle = () => {
+    setProfileOpen(prev => !prev);
+    setCartOpen(false);
+  };
+
+  const handleCheckout = () => {
+    setCartOpen(false);
+    onCartClick();
+  };
 
   return (
     <header className="header">
@@ -38,8 +54,9 @@ function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDash
           <div className="profile-wrapper" ref={profileRef}>
             <button
               className="profile-btn"
-              onClick={() => setProfileOpen(!profileOpen)}
+              onClick={handleProfileToggle}
               aria-label="Mi perfil"
+              aria-expanded={profileOpen}
             >
               <User size={22} strokeWidth={2.2} />
               <span className="profile-btn-name">{user.nombre}</span>
@@ -86,12 +103,161 @@ function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDash
           </button>
         )}
 
-        <button className="cart-btn" onClick={onCartClick} aria-label="Carrito de compra">
+        {/* ── Botón carrito ── */}
+        <button
+          className="cart-btn"
+          onClick={handleCartToggle}
+          aria-label="Carrito de compra"
+          aria-expanded={cartOpen}
+        >
           <ShoppingBasket size={44} strokeWidth={2.3} color="white" />
           {cartCount > 0 && (
             <span className="cart-badge">{cartCount}</span>
           )}
         </button>
+      </div>
+
+      {/* ── Backdrop ── */}
+      <div
+        className={`cart-backdrop ${cartOpen ? 'open' : ''}`}
+        onClick={() => setCartOpen(false)}
+        aria-hidden="true"
+      />
+
+      {/* ── Panel lateral del carrito ── */}
+      <div
+        className={`cart-panel ${cartOpen ? 'open' : ''}`}
+        role="dialog"
+        aria-label="Carrito de compra"
+        aria-modal="true"
+      >
+        {/* Cabecera del panel */}
+        <div className="cart-panel-header">
+          <div className="cart-panel-title-row">
+            <h2 className="cart-panel-title">Tu carrito</h2>
+            {cartCount > 0 && (
+              <span className="cart-panel-count">{cartCount}</span>
+            )}
+          </div>
+          <button
+            className="cart-panel-close"
+            onClick={() => setCartOpen(false)}
+            aria-label="Cerrar carrito"
+          >
+            <X size={22} strokeWidth={2.2} />
+          </button>
+        </div>
+
+        {/* Cuerpo */}
+        {cart.length === 0 ? (
+          <div className="cart-panel-empty">
+            <ShoppingBasket size={48} strokeWidth={1.4} color="#ccc" />
+            <p>Tu carrito está vacío</p>
+          </div>
+        ) : (
+          <>
+            {/* Items con scroll */}
+            <div className="cart-panel-items">
+              {Object.keys(cartByVendor).map(vid => {
+                const group = cartByVendor[vid];
+                return (
+                  <div key={vid} className="cart-panel-vendor">
+                    <p className="cart-panel-vendor-name">{group.nombre}</p>
+
+                    {group.items.map(item => {
+                      const isCesta = isCestaItem(item);
+                      const itemId = isCesta ? item.cestaId : item.productId;
+                      return (
+                        <div key={itemId} className="cart-panel-item">
+                          <div className="cart-panel-item-img">
+                            {!isCesta && item.imagen ? (
+                              <img src={`${BASE_URL}${item.imagen}`} alt={item.nombre} />
+                            ) : (
+                              <span className="cart-panel-item-placeholder">
+                                {isCesta ? '🧺' : '📦'}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="cart-panel-item-info">
+                            <p className="cart-panel-item-name">{item.nombre}</p>
+                            <p className="cart-panel-item-subtotal">
+                              {itemSubtotal(item).toFixed(2)}€
+                            </p>
+
+                            <div className="cart-panel-item-controls">
+                              <button
+                                className="cp-qty-btn"
+                                onClick={() => updateQuantity(itemId, item.cantidad - (isKg(item.unidad) ? 50 : 1), isCesta ? null : item.vendedorId)}
+                                disabled={isKg(item.unidad) && item.cantidad <= 50}
+                                aria-label="Reducir cantidad"
+                              >
+                                −
+                              </button>
+                              <span className="cp-qty-value">
+                                {isKg(item.unidad)
+                                  ? (item.cantidad >= 1000
+                                      ? `${(item.cantidad / 1000).toFixed(item.cantidad % 1000 === 0 ? 0 : 1)} kg`
+                                      : `${item.cantidad} g`)
+                                  : item.cantidad}
+                              </span>
+                              <button
+                                className="cp-qty-btn"
+                                onClick={() => updateQuantity(itemId, item.cantidad + (isKg(item.unidad) ? 50 : 1), isCesta ? null : item.vendedorId)}
+                                disabled={
+                                  !isCesta && (isKg(item.unidad)
+                                    ? (item.stock != null && item.cantidad >= item.stock * 1000)
+                                    : (item.stock !== null && item.stock !== undefined && item.cantidad >= item.stock))
+                                }
+                                aria-label="Aumentar cantidad"
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+
+                          <button
+                            className="cart-panel-item-remove"
+                            onClick={() => removeFromCart(itemId, isCesta ? null : item.vendedorId)}
+                            aria-label={`Eliminar ${item.nombre}`}
+                          >
+                            <X size={16} strokeWidth={2.5} />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Pie fijo */}
+            <div className="cart-panel-footer">
+              <div className="cart-panel-total">
+                <span>Total</span>
+                <strong>{cartTotal.toFixed(2)}€</strong>
+              </div>
+
+              {!user && (
+                <p className="cart-panel-login-notice">
+                  Inicia sesión para poder realizar el pedido.
+                </p>
+              )}
+
+              <button
+                className="cart-panel-checkout"
+                onClick={handleCheckout}
+                disabled={!user}
+              >
+                Confirmar pedido →
+              </button>
+
+              <button className="cart-panel-clear" onClick={clearCart}>
+                Vaciar carrito
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </header>
   );

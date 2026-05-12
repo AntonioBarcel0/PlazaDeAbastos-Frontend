@@ -7,15 +7,16 @@ import SeasonBadge from './SeasonBadge';
 import VENDOR_IMAGES from '../utils/vendorImages';
 import OriginBadge from './OriginBadge';
 import { useCart, isKg } from '../context/CartContext';
-import { api } from '../services/api';
+import { api, BASE_URL } from '../services/api';
+import toast from 'react-hot-toast';
 import './StoreView.css';
 
-const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
-function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onProductClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick }) {
+function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onProductClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick, onLoginClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedor, setVendedor] = useState(null);
   const [productos, setProductos] = useState([]);
+  const [cestas, setCestas] = useState([]);
   const [filteredProductos, setFilteredProductos] = useState([]);
   const [selectedCategoria, setSelectedCategoria] = useState('Todos');
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,7 +24,7 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
   const [error, setError] = useState(null);
   // gramPicker: { [productId]: gramos } — productos kg con picker abierto
   const [gramPicker, setGramPicker] = useState({});
-  const { cart, addToCart, updateQuantity } = useCart();
+  const { cart, addToCart, addCestaToCart, updateQuantity } = useCart();
 
   const GRAM_STEP = 50;
   const GRAM_MIN  = 50;
@@ -57,12 +58,19 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
       const data = await api.getVendedor(vendedorId);
       setVendedor(data.vendedor);
       setProductos(data.vendedor.productos || []);
+      setCestas(data.vendedor.cestas || []);
     } catch (err) {
       console.error('Error al cargar vendedor:', err);
       setError('No se pudo cargar el puesto.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleAddCestaToCart = (cesta) => {
+    if (!vendedor) return;
+    addCestaToCart(cesta, vendedor);
+    toast.success(`"${cesta.nombre}" añadida al carrito`);
   };
 
   const filterProductos = () => {
@@ -90,7 +98,7 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
 
   const headerProps = {
     onMenuClick: () => setSidebarOpen(!sidebarOpen),
-    onLoginClick: () => {},
+    onLoginClick,
     onLogoClick: onHomeClick,
     user,
     onLogout,
@@ -206,6 +214,46 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
               </div>
             )}
           </div>
+
+          {/* Cestas predefinidas del puesto */}
+          {cestas.length > 0 && (
+            <div className="sv-cestas-section">
+              <h2 className="sv-cestas-title">Cestas predefinidas</h2>
+              <div className="sv-cestas-grid">
+                {cestas.map(cesta => {
+                  const cestaCartItem = cart.find(i => i.cestaId === cesta.id);
+                  return (
+                    <div key={cesta.id} className="sv-cesta-card">
+                      <div className="sv-cesta-card-body">
+                        <p className="sv-cesta-tipo">{cesta.tipo}</p>
+                        <h3 className="sv-cesta-nombre">{cesta.nombre}</h3>
+                        {cesta.descripcion && (
+                          <p className="sv-cesta-desc">{cesta.descripcion}</p>
+                        )}
+                        {cesta.items && cesta.items.length > 0 && (
+                          <p className="sv-cesta-items">{cesta.items.join(' · ')}</p>
+                        )}
+                      </div>
+                      <div className="sv-cesta-card-footer">
+                        <span className="sv-cesta-precio">{parseFloat(cesta.precio).toFixed(2)} €</span>
+                        {cestaCartItem ? (
+                          <div className="product-qty-control">
+                            <button onClick={() => updateQuantity(cesta.id, cestaCartItem.cantidad - 1)}>−</button>
+                            <span>{cestaCartItem.cantidad}</span>
+                            <button onClick={() => updateQuantity(cesta.id, cestaCartItem.cantidad + 1)}>+</button>
+                          </div>
+                        ) : (
+                          <button className="product-add-btn" onClick={() => handleAddCestaToCart(cesta)}>
+                            añadir
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Grid de productos */}
           <div className="products-grid">

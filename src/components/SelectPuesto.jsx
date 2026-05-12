@@ -3,11 +3,10 @@ import { Store } from 'lucide-react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
-import { api } from '../services/api';
+import { api, BASE_URL } from '../services/api';
 import VENDOR_IMAGES from '../utils/vendorImages';
 import './SelectPuesto.css';
 
-const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
 
 const CATEGORIAS = ['Todos', 'Frutería', 'Comestibles', 'Quesos', 'Panadería', 'Encurtidos', 'Frutos Secos'];
 
@@ -29,7 +28,7 @@ const SORT_OPTIONS = [
   { value: 'cat', label: 'Categoría' },
 ];
 
-function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHomeClick, onMarketplaceClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick }) {
+function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHomeClick, onMarketplaceClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick, onLoginClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [vendedores, setVendedores] = useState([]);
   const [filteredVendedores, setFilteredVendedores] = useState([]);
@@ -117,7 +116,7 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
 
   const headerProps = {
     onMenuClick: () => setSidebarOpen(!sidebarOpen),
-    onLoginClick: () => {},
+    onLoginClick,
     onLogoClick: onHomeClick,
     user,
     onLogout,
@@ -172,6 +171,7 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
             type="text"
             className="sp-search"
             placeholder="Buscar"
+            aria-label="Buscar puestos"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -210,14 +210,15 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
                 {currentSortLabel}
               </button>
               {sortOpen && (
-                <ul className="sp-sort-dropdown">
+                <ul className="sp-sort-dropdown" role="listbox" aria-label="Ordenar puestos">
                   {SORT_OPTIONS.map(opt => (
-                    <li
-                      key={opt.value}
-                      className={`sp-sort-option ${sortBy === opt.value ? 'selected' : ''}`}
-                      onClick={() => { setSortBy(opt.value); setSortOpen(false); }}
-                    >
-                      {opt.label}
+                    <li key={opt.value} role="option" aria-selected={sortBy === opt.value}>
+                      <button
+                        className={`sp-sort-option ${sortBy === opt.value ? 'selected' : ''}`}
+                        onClick={() => { setSortBy(opt.value); setSortOpen(false); }}
+                      >
+                        {opt.label}
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -234,7 +235,15 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
             </p>
           ) : (
             filteredVendedores.map(vendedor => (
-              <div key={vendedor.id} className="sp-card" onClick={() => onPuestoSelect(vendedor.id)}>
+              <div
+                key={vendedor.id}
+                className="sp-card"
+                onClick={() => onPuestoSelect(vendedor.id)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && onPuestoSelect(vendedor.id)}
+                aria-label={`Ver puesto de ${vendedor.nombreCompleto}`}
+              >
                 {/* Panel izquierdo — info */}
                 <div className="sp-card-info">
                   <div className="sp-card-center">
@@ -250,6 +259,7 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
                     <button
                       className="sp-card-btn"
                       onClick={e => { e.stopPropagation(); onPuestoSelect(vendedor.id); }}
+                      aria-label={`Ir al puesto de ${vendedor.nombreCompleto}`}
                     >
                       Ir al puesto →
                     </button>
@@ -265,7 +275,7 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
                       className="sp-card-image"
                     />
                   ) : (
-                    <div className="sp-card-placeholder"><Store size={48} strokeWidth={1.5} color="#8b2332" /></div>
+                    <div className="sp-card-placeholder"><Store size={48} strokeWidth={1.5} color="var(--color-brand)" /></div>
                   )}
                 </div>
               </div>

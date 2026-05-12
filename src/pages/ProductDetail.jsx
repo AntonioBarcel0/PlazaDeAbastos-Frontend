@@ -4,10 +4,10 @@ import Sidebar from '../components/Sidebar';
 import SeasonBadge from '../components/SeasonBadge';
 import OriginBadge from '../components/OriginBadge';
 import { useCart, isKg } from '../context/CartContext';
+import { BASE_URL } from '../services/api';
 import toast from 'react-hot-toast';
 import './ProductDetail.css';
 
-const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '');
 
 const GRAM_STEP = 50;
 const GRAM_MIN  = 50;
@@ -18,7 +18,7 @@ function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, on
   const { cart, addToCart, updateQuantity } = useCart();
 
   const porPeso = isKg(product.unidad);
-  const cartItem = cart.find(i => i.productId === product.id);
+  const cartItem = cart.find(i => i.productId === product.id && i.vendedorId === vendedor?.id);
   const agotado = product.stock !== null && product.stock !== undefined && product.stock === 0;
   const maxGramos = product.stock != null ? product.stock * 1000 : 10000;
 
@@ -85,7 +85,7 @@ function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, on
               cartItem ? (
                 <div className="product-detail-qty">
                   <button
-                    onClick={() => updateQuantity(product.id, cartItem.cantidad - GRAM_STEP)}
+                    onClick={() => updateQuantity(product.id, cartItem.cantidad - GRAM_STEP, vendedor?.id)}
                     disabled={cartItem.cantidad <= GRAM_MIN}
                   >−</button>
                   <span>
@@ -94,7 +94,7 @@ function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, on
                       : `${cartItem.cantidad} g`}
                   </span>
                   <button
-                    onClick={() => updateQuantity(product.id, cartItem.cantidad + GRAM_STEP)}
+                    onClick={() => updateQuantity(product.id, cartItem.cantidad + GRAM_STEP, vendedor?.id)}
                     disabled={cartItem.cantidad >= maxGramos}
                   >+</button>
                 </div>
@@ -125,10 +125,10 @@ function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, on
               /* ── Control por unidad (comportamiento original) ── */
               cartItem ? (
                 <div className="product-detail-qty">
-                  <button onClick={() => updateQuantity(product.id, cartItem.cantidad - 1)}>−</button>
+                  <button onClick={() => updateQuantity(product.id, cartItem.cantidad - 1, vendedor?.id)}>−</button>
                   <span>{cartItem.cantidad}</span>
                   <button
-                    onClick={() => updateQuantity(product.id, cartItem.cantidad + 1)}
+                    onClick={() => updateQuantity(product.id, cartItem.cantidad + 1, vendedor?.id)}
                     disabled={product.stock != null && cartItem.cantidad >= product.stock}
                   >+</button>
                 </div>

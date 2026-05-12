@@ -81,7 +81,7 @@
 .postal-btn {
   width: 100%;
   padding: 0.85rem 1.5rem;
-  border-radius: 50px;
+  border-radius: var(--radius-btn);
   font-family: 'Afacad', sans-serif;
   font-size: 1rem;
   font-weight: 700;

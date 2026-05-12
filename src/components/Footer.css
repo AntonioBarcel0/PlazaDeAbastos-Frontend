@@ -36,7 +36,7 @@
   border-bottom: 1px solid #bbb;
   padding: 14px 0;
   font-size: 0.95rem;
-  color: #8b2332;
+  color: var(--color-brand);
   background: transparent;
   outline: none;
   font-family: inherit;
@@ -45,12 +45,12 @@
 }
 
 .footer-input::placeholder {
-  color: #8b2332;
+  color: var(--color-brand);
   opacity: 0.65;
 }
 
 .footer-input:focus {
-  border-bottom-color: #8b2332;
+  border-bottom-color: var(--color-brand);
 }
 
 .footer-textarea {
@@ -60,7 +60,7 @@
 .footer-submit {
   align-self: flex-start;
   margin-top: 28px;
-  background: #8b2332;
+  background: var(--color-brand);
   color: #fff;
   border: none;
   padding: 14px 45px;
@@ -74,7 +74,7 @@
 }
 
 .footer-submit:hover {
-  background: #6d1b27;
+  background: var(--color-brand-dark);
 }
 
 /* --- Navegación --- */
@@ -95,7 +95,7 @@
 
 .footer-link {
   text-decoration: none;
-  color: #8b2332;
+  color: var(--color-brand);
   font-size: 0.95rem;
   line-height: 1.3;
   transition: opacity 0.2s ease;

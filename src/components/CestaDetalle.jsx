@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import { useCart } from '../context/CartContext';
-import { api } from '../services/api';
+import { api, BASE_URL } from '../services/api';
 import toast from 'react-hot-toast';
 import './CestaDetalle.css';
+
 
 const TIPO_LABELS = {
   frutas: 'Frutas',
@@ -29,7 +30,7 @@ function CestaDetalle({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [cestas, setCestas] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { addCestaToCart } = useCart();
+  const { cart, addCestaToCart, updateQuantity } = useCart();
 
   useEffect(() => {
     const load = async () => {
@@ -100,32 +101,57 @@ function CestaDetalle({
             </div>
           ) : (
             <div className="cd-grid">
-              {cestas.map(cesta => (
-                <article key={cesta.id} className="cd-card">
-                  <div className="cd-card-body">
-                    <p className="cd-vendor">
-                      {cesta.vendedor
-                        ? `${cesta.vendedor.nombre} ${cesta.vendedor.apellidos}`
-                        : 'Puesto del mercado'}
-                    </p>
-                    <h2 className="cd-card-name">{cesta.nombre}</h2>
-                    {cesta.descripcion && (
-                      <p className="cd-card-desc">{cesta.descripcion}</p>
-                    )}
-                    {cesta.items && cesta.items.length > 0 && (
-                      <p className="cd-card-items">
-                        {cesta.items.join(' · ')}
+              {cestas.map(cesta => {
+                const cestaCartItem = cart.find(i => i.cestaId === cesta.id);
+                return (
+                  <article key={cesta.id} className="cd-card">
+                    {/* Imagen */}
+                    <div className="cd-card-image">
+                      {cesta.imagen ? (
+                        <img
+                          src={cesta.imagen.startsWith('http') ? cesta.imagen : `${BASE_URL}${cesta.imagen}`}
+                          alt={cesta.nombre}
+                          className="cd-card-img"
+                        />
+                      ) : (
+                        <div className="cd-card-img-placeholder">🧺</div>
+                      )}
+                    </div>
+
+                    {/* Info */}
+                    <div className="cd-card-body">
+                      <p className="cd-vendor">
+                        {cesta.vendedor
+                          ? `${cesta.vendedor.nombre} ${cesta.vendedor.apellidos}`
+                          : 'Puesto del mercado'}
                       </p>
-                    )}
-                  </div>
-                  <div className="cd-card-footer">
-                    <span className="cd-card-price">{parseFloat(cesta.precio).toFixed(2)} €</span>
-                    <button className="cd-add-btn" onClick={() => handleAdd(cesta)}>
-                      Añadir al carrito
-                    </button>
-                  </div>
-                </article>
-              ))}
+                      <h2 className="cd-card-name">{cesta.nombre}</h2>
+                      {cesta.descripcion && (
+                        <p className="cd-card-desc">{cesta.descripcion}</p>
+                      )}
+                      {cesta.items && cesta.items.length > 0 && (
+                        <p className="cd-card-items">{cesta.items.join(' · ')}</p>
+                      )}
+                    </div>
+
+                    {/* Footer: precio + botón */}
+                    <div className="cd-card-footer">
+                      <span className="cd-card-price">{parseFloat(cesta.precio).toFixed(2)} €</span>
+                      {cestaCartItem ? (
+                        <div className="cd-qty-control">
+                          <button onClick={() => updateQuantity(cesta.id, cestaCartItem.cantidad - 1)}>−</button>
+                          <span>{cestaCartItem.cantidad}</span>
+                          <button onClick={() => updateQuantity(cesta.id, cestaCartItem.cantidad + 1)}>+</button>
+                        </div>
+                      ) : (
+                        <button className="cd-add-btn" onClick={() => handleAdd(cesta)}>
+                          Añadir
+                        </button>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           )}
         </div>

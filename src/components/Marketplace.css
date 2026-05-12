@@ -30,14 +30,14 @@
   max-width: 500px;
   padding: 1rem 1.5rem;
   border: 2px solid #e0e0e0;
-  border-radius: 50px;
+  border-radius: var(--radius-btn);
   font-size: 1rem;
   background-color: white;
 }
 
 .marketplace-search:focus {
   outline: none;
-  border-color: #8b2332;
+  border-color: var(--color-brand);
 }
 
 .marketplace-actions {
@@ -51,7 +51,7 @@
   min-height: 44px;
   border: none;
   background-color: white;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
@@ -94,7 +94,7 @@
   min-height: 44px;
   border: none;
   background-color: white;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
@@ -108,7 +108,7 @@
 }
 
 .category-btn.active {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
 }
 
@@ -121,7 +121,7 @@
 
 .store-card {
   background-color: white;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s;
@@ -174,7 +174,7 @@
 }
 
 .store-view-btn:hover {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   transform: translateX(-50%) translateY(-2px);
   box-shadow: 0 4px 12px rgba(139, 35, 50, 0.3);
@@ -188,7 +188,7 @@
   margin: 0 0 0.5rem 0;
   font-size: 1.3rem;
   font-weight: bold;
-  color: #8b2332;
+  color: var(--color-brand);
 }
 
 .store-category {

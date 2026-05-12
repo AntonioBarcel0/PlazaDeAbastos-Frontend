@@ -28,11 +28,11 @@
 }
 
 .mp-empty-btn {
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   color: white;
   border: none;
   padding: 0.75rem 2rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
@@ -40,7 +40,7 @@
 }
 
 .mp-empty-btn:hover {
-  background-color: #6d1a27;
+  background-color: var(--color-brand-dark);
 }
 
 /* ── List ────────────────────────────────────────── */
@@ -54,7 +54,7 @@
 .mp-card {
   background: white;
   border: 1px solid #e8e8e8;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
 }
 
@@ -63,7 +63,7 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 1rem 1.25rem;
-  background-color: #8b2332;
+  background-color: var(--color-brand);
   gap: 1rem;
 }
 
@@ -97,7 +97,7 @@
   font-size: 0.72rem;
   font-weight: 600;
   padding: 0.22rem 0.6rem;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -193,14 +193,14 @@
   margin-top: 0.5rem;
   padding: 0.5rem 0.75rem;
   background: #fafafa;
-  border-left: 3px solid #8b2332;
+  border-left: 3px solid var(--color-brand);
   border-radius: 0 4px 4px 0;
 }
 
 /* ── Card footer ─────────────────────────────────── */
 .mp-card-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1.25rem;
   border-top: 1px solid #e8e8e8;
@@ -210,8 +210,29 @@
 .mp-total {
   font-weight: 700;
   font-size: 1rem;
-  color: #8b2332;
+  color: var(--color-brand);
   white-space: nowrap;
+}
+
+.mp-cancel-btn {
+  background: none;
+  border: 1px solid #d9534f;
+  color: #d9534f;
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.mp-cancel-btn:hover:not(:disabled) {
+  background: #d9534f;
+  color: #fff;
+}
+
+.mp-cancel-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 /* ── Responsive ──────────────────────────────────── */

@@ -64,7 +64,7 @@
   font-family: 'Alfa Slab One', serif;
   font-size: 3.5rem;
   font-weight: 400;
-  color: #8b2332;
+  color: var(--color-brand);
   text-decoration: none;
   line-height: 1.6;
   display: block;
@@ -85,7 +85,7 @@
   font-family: 'Afacad', serif;
   font-size: 1.7rem;
   font-weight: 600;
-  color: #8b2332;
+  color: var(--color-brand);
   text-decoration: none;
   line-height: 2.7;
   display: block;

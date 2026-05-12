@@ -3,6 +3,7 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
 import { api } from '../services/api';
+import toast from 'react-hot-toast';
 import './MisPedidos.css';
 
 const ESTADO_LABEL = {
@@ -19,11 +20,12 @@ const MODO_LABEL = {
   domicilio: 'Entrega a domicilio',
 };
 
-function MisPedidos({ user, onLogout, onDashboardClick, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick }) {
+function MisPedidos({ user, onLogout, onDashboardClick, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick, onLoginClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [cancelando, setCancelando] = useState(null);
 
   useEffect(() => {
     loadPedidos();
@@ -48,9 +50,23 @@ function MisPedidos({ user, onLogout, onDashboardClick, onHomeClick, onMarketpla
     return d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
   };
 
+  const handleCancelar = async (pedidoId) => {
+    if (!window.confirm('¿Seguro que quieres cancelar este pedido? Esta acción no se puede deshacer.')) return;
+    setCancelando(pedidoId);
+    try {
+      await api.cancelOrder(pedidoId);
+      toast.success('Pedido cancelado correctamente');
+      await loadPedidos();
+    } catch (err) {
+      toast.error(err.message || 'No se pudo cancelar el pedido');
+    } finally {
+      setCancelando(null);
+    }
+  };
+
   const headerProps = {
     onMenuClick: () => setSidebarOpen(!sidebarOpen),
-    onLoginClick: () => {},
+    onLoginClick,
     onLogoClick: onHomeClick,
     user,
     onLogout,
@@ -172,6 +188,15 @@ function MisPedidos({ user, onLogout, onDashboardClick, onHomeClick, onMarketpla
 
                 <div className="mp-card-footer">
                   <span className="mp-total">Total: {parseFloat(pedido.total).toFixed(2)}€</span>
+                  {pedido.estado === 'pendiente' && (
+                    <button
+                      className="mp-cancel-btn"
+                      onClick={() => handleCancelar(pedido.id)}
+                      disabled={cancelando === pedido.id}
+                    >
+                      {cancelando === pedido.id ? 'Cancelando...' : 'Cancelar pedido'}
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

@@ -38,7 +38,7 @@
 }
 
 .cb-col:hover {
-  background: #8b2332;
+  background: var(--color-brand);
 }
 
 /* ── Contenido centrado ── */
@@ -52,9 +52,9 @@
 /* ── Título ── */
 .cb-title {
   font-family: 'Alfa Slab One', serif;
-  font-size: 4rem;
+  font-size: 3.5rem;
   font-weight: 400;
-  color: #8b2332;
+  color: var(--color-brand);
   margin: 0;
   line-height: 1.1;
   transition: transform 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94),
@@ -71,7 +71,7 @@
   font-family: 'Afacad', sans-serif;
   font-size: 1.05rem;
   font-weight: 600;
-  color: #8b2332;
+  color: var(--color-brand);
   margin: 0;
   letter-spacing: 0.02em;
   transition: color 0.32s ease;
@@ -85,7 +85,7 @@
 .cb-products {
   font-family: 'Afacad', sans-serif;
   font-size: 0.95rem;
-  color: #8b2332;
+  color: var(--color-brand);
   margin: 0;
   line-height: 1.65;
   max-width: 220px;
