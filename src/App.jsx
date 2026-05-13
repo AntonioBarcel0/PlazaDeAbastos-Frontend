@@ -25,6 +25,7 @@ import FAQ from './components/FAQ';
 import Privacidad from './components/Privacidad';
 import Terminos from './components/Terminos';
 import Cookies from './components/Cookies';
+import LogoutModal from './components/LogoutModal';
 import { CartProvider } from './context/CartContext';
 import { api } from './services/api';
 import { Toaster } from 'react-hot-toast';
@@ -46,8 +47,10 @@ function App() {
   const [selectedTipo, setSelectedTipo] = useState(() => sessionStorage.getItem('selectedTipo') || null);
   const [postalCode, setPostalCode] = useState(() => sessionStorage.getItem('postalCode') || null);
   const [postalPendingView, setPostalPendingView] = useState(null);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const navigate = (view) => {
+    window.scrollTo(0, 0);
     window.history.pushState({ view }, '');
     sessionStorage.setItem('currentView', view);
     setCurrentView(view);
@@ -58,6 +61,7 @@ function App() {
   };
 
   const goHome = () => {
+    window.scrollTo(0, 0);
     window.history.pushState({ view: 'home' }, '');
     sessionStorage.setItem('currentView', 'home');
     setCurrentView('home');
@@ -70,6 +74,9 @@ function App() {
     const handlePopState = (e) => {
       const view = e.state?.view || 'home';
       sessionStorage.setItem('currentView', view);
+      if (view === 'store-view') {
+        setSelectedVendedorId(sessionStorage.getItem('selectedVendedorId'));
+      }
       setCurrentView(view);
     };
     window.addEventListener('popstate', handlePopState);
@@ -93,6 +100,11 @@ function App() {
   };
 
   const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
+    setShowLogoutModal(false);
     api.logout();
     setUser(null);
     goHome();
@@ -570,6 +582,12 @@ function App() {
         {renderView()}
       </div>
       <Toaster position="top-right" />
+      {showLogoutModal && (
+        <LogoutModal
+          onConfirm={confirmLogout}
+          onCancel={() => setShowLogoutModal(false)}
+        />
+      )}
     </CartProvider>
   );
 }

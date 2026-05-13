@@ -303,4 +303,30 @@
   }
 
   .sp-card-name { font-size: 1.3rem; }
+
+  .sp-cat-btn {
+    padding: 0.45rem 0.8rem;
+    font-size: 0.88rem;
+    min-height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sp-title { font-size: 1.6rem; }
+
+  .sp-card-image-wrap {
+    height: 180px;
+  }
+
+  .sp-card-info {
+    padding: 1rem;
+    min-height: 120px;
+  }
+
+  .sp-card-name { font-size: 1.1rem; }
+
+  .sp-card-btn {
+    padding: 0.45rem 1rem;
+    font-size: 0.85rem;
+  }
 }

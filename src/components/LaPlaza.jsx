@@ -142,9 +142,7 @@ function LaPlaza({ onMarketplaceClick, onStoreClick }) {
       {/* Productos de temporada */}
       {seasonalProducts.length > 0 && (
         <section className="seasonal-section">
-          <div className="seasonal-badge-wrap">
-            <span className="seasonal-badge">Productos de temporada</span>
-          </div>
+          <h3 className="seasonal-title">Productos de temporada</h3>
 
           <div className="seasonal-carousel" ref={carouselRef}>
             <button

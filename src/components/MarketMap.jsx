@@ -1,22 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import { api } from '../services/api';
 import './MarketMap.css';
 
 const CAT_COLOR = {
-  'Frutas':      '#3d7a35',
-  'Panadería':   '#9a7a2a',
-  'Especias':    '#3a7a6a',
-  'Comestibles': '#5a4a8a',
-  'Jardinería':  '#4a7a3a',
-};
-
-const CAT_ICON = {
-  'Frutas':      '🍓',
-  'Panadería':   '🍞',
-  'Especias':    '🌿',
-  'Comestibles': '🧀',
-  'Jardinería':  '🌱',
+  'Frutas':      '#c0392b',
+  'Panadería':   '#d4850a',
+  'Especias':    '#1a8a6e',
+  'Comestibles': '#7b3fa0',
+  'Jardinería':  '#27833a',
 };
 
 // Building exterior polygon points (irregular, matches real Mercado de Úbeda footprint)
@@ -35,72 +28,22 @@ const CORRIDORS = [
 // 13 stalls — irregular sizes and positions, distributed by section, NOT grouped by category
 // Sections: A (top-left), B (top-center), C (top-right), D (mid-left), E (right), F (bottom-left)
 const STALLS = [
-  {
-    id: 1, x: 77,  y: 37,  w: 88,  h: 176,
-    vid: '34d59fe5-c14e-493c-9059-0e69520d2748',
-    label: 'Jurado',     full: 'Juan Jurado Ruíz',            cat: 'Frutas',
-  },
-  {
-    id: 2, x: 170, y: 37,  w: 88,  h: 176,
-    vid: 'fd93ea56-4cfc-4bae-b23e-415d55d8b80e',
-    label: 'Molina Hig.', full: 'Mª del Mar Molina Higueras', cat: 'Panadería',
-  },
-  {
-    id: 3, x: 308, y: 23,  w: 78,  h: 190,
-    vid: 'bfa9c04f-c6c4-4803-99a0-faace7612128',
-    label: 'Padilla',    full: 'Francisco Padilla Quesada',   cat: 'Frutas',
-  },
-  {
-    id: 4, x: 390, y: 23,  w: 78,  h: 190,
-    vid: 'ce8544ae-f625-4b5e-866c-e2d9aee24c10',
-    label: 'Moyano',     full: 'Bartolomé Moyano Hurtado',    cat: 'Especias',
-  },
-  {
-    id: 5, x: 472, y: 23,  w: 84,  h: 190,
-    vid: '1a33b0b8-6e9a-4000-8146-b2846b2981d6',
-    label: 'Rodríguez',  full: 'Rosa Mª Rodríguez',           cat: 'Comestibles',
-  },
-  {
-    id: 6, x: 605, y: 23,  w: 100, h: 190,
-    vid: '819ce9c1-ce5a-448e-8362-598fbbcc6fe3',
-    label: 'Molina B.',  full: 'Salvador Molina Barbero',     cat: 'Frutas',
-  },
-  {
-    id: 7, x: 689, y: 92,  w: 62,  h: 121,
-    vid: 'e2141f28-8775-4d1c-8876-8683794a4a99',
-    label: 'Moreno',     full: 'Alonso Moreno Manjón',        cat: 'Jardinería',
-  },
-  {
-    id: 8, x: 77,  y: 270, w: 155, h: 133,
-    vid: 'f82d133b-e9c3-4264-8acc-2682a368bd0f',
-    label: 'Muñoz',      full: 'Dolores Muñoz Guerrero',      cat: 'Panadería',
-  },
-  {
-    id: 9, x: 236, y: 270, w: 157, h: 133,
-    vid: 'c1070484-ff1d-4a8b-8bf4-85e4bb9bb439',
-    label: 'Juan Cortés', full: 'Ginés Juan Cortés',          cat: 'Frutas',
-  },
-  {
-    id: 10, x: 443, y: 270, w: 148, h: 234,
-    vid: 'dd1991e7-ae8a-4b7d-8bda-e56f2c3084f9',
-    label: 'Molina M.',  full: 'Gaspar Molina Muñoz',         cat: 'Frutas',
-  },
-  {
-    id: 11, x: 595, y: 270, w: 152, h: 234,
-    vid: '095b2fcd-f30d-4bf1-b402-e1883fee661a',
-    label: 'Molina Hip.', full: 'Mª Josefa Molina Hipólito',  cat: 'Comestibles',
-  },
-  {
-    id: 12, x: 77,  y: 450, w: 156, h: 54,
-    vid: 'a9f57f59-bbd3-43dd-8bba-2c92bbc1286e',
-    label: 'López',      full: 'Rosendo López Alaminos',      cat: 'Frutas',
-  },
-  {
-    id: 13, x: 237, y: 450, w: 157, h: 54,
-    vid: '2e0b6709-687f-4f3c-8271-37e8500ccd43',
-    label: 'Ruíz Pasc.', full: 'Mª Dolores Ruíz Pascual',    cat: 'Comestibles',
-  },
+  { id: 1,  x: 77,  y: 37,  w: 88,  h: 176, label: 'Jurado',      full: 'Juan Jurado Ruíz',            cat: 'Frutas' },
+  { id: 2,  x: 170, y: 37,  w: 88,  h: 176, label: 'Molina Hig.', full: 'Mª del Mar Molina Higueras',  cat: 'Panadería' },
+  { id: 3,  x: 308, y: 23,  w: 78,  h: 190, label: 'Padilla',     full: 'Francisco Padilla Quesada',   cat: 'Frutas' },
+  { id: 4,  x: 390, y: 23,  w: 78,  h: 190, label: 'Moyano',      full: 'Bartolomé Moyano Hurtado',    cat: 'Especias' },
+  { id: 5,  x: 472, y: 23,  w: 84,  h: 190, label: 'Rodríguez',   full: 'Rosa Mª Rodríguez',           cat: 'Comestibles' },
+  { id: 6,  x: 605, y: 23,  w: 100, h: 190, label: 'Molina B.',   full: 'Salvador Molina Barbero',      cat: 'Frutas' },
+  { id: 7,  x: 689, y: 92,  w: 62,  h: 121, label: 'Moreno',      full: 'Alonso Moreno Manjón',         cat: 'Jardinería' },
+  { id: 8,  x: 77,  y: 270, w: 155, h: 133, label: 'Muñoz',       full: 'Dolores Muñoz Guerrero',       cat: 'Panadería' },
+  { id: 9,  x: 236, y: 270, w: 157, h: 133, label: 'Juan Cortés', full: 'Ginés Juan Cortés',            cat: 'Frutas' },
+  { id: 10, x: 443, y: 270, w: 148, h: 234, label: 'Molina M.',   full: 'Gaspar Molina Muñoz',          cat: 'Frutas' },
+  { id: 11, x: 595, y: 270, w: 152, h: 234, label: 'Molina Hip.', full: 'Mª Josefa Molina Hipólito',   cat: 'Comestibles' },
+  { id: 12, x: 77,  y: 450, w: 156, h: 54,  label: 'López',       full: 'Rosendo López Alaminos',       cat: 'Frutas' },
+  { id: 13, x: 237, y: 450, w: 157, h: 54,  label: 'Ruíz Pasc.',  full: 'Mª Dolores Ruíz Pascual',     cat: 'Comestibles' },
 ];
+
+const normalize = (s) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
 function MarketMap({
   user, onLogout, onDashboardClick, onCartClick, onOrdersClick,
@@ -109,6 +52,25 @@ function MarketMap({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [hovered, setHovered]         = useState(null);
   const [hoveredCat, setHoveredCat]   = useState(null);
+  const [vendorMap, setVendorMap]     = useState({});
+
+  useEffect(() => {
+    api.getVendedores().then(data => {
+      const vendors = data.vendedores || [];
+      const map = {};
+      STALLS.forEach(s => {
+        const nFull = normalize(s.full);
+        const match = vendors.find(v => normalize(v.nombreCompleto).includes(nFull) || nFull.includes(normalize(v.nombreCompleto)));
+        if (match) map[s.id] = match.id;
+      });
+      setVendorMap(map);
+    }).catch(() => {});
+  }, []);
+
+  const handleStallClick = (stall) => {
+    const realId = vendorMap[stall.id];
+    if (realId && onStoreClick) onStoreClick(realId);
+  };
 
   const headerProps = {
     onMenuClick: () => setSidebarOpen(s => !s),
@@ -159,7 +121,7 @@ function MarketMap({
               const hasCatFilter = hoveredCat !== null;
               const color = CAT_COLOR[s.cat];
               const cx    = s.x + s.w / 2;
-              const tall  = s.h >= 80;
+              const cy    = s.y + s.h / 2;
 
               const opacity     = hasCatFilter ? (isCatHov ? 1 : 0.18) : (isHov ? 1 : 0.82);
               const strokeColor = (isHov || (hasCatFilter && isCatHov)) ? 'white' : 'rgba(0,0,0,0.15)';
@@ -168,10 +130,10 @@ function MarketMap({
               return (
                 <g
                   key={s.id}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: vendorMap[s.id] ? 'pointer' : 'default' }}
                   onMouseEnter={() => setHovered(s)}
                   onMouseLeave={() => setHovered(null)}
-                  onClick={() => onStoreClick && onStoreClick(s.vid)}
+                  onClick={() => handleStallClick(s)}
                 >
                   <rect
                     x={s.x} y={s.y} width={s.w} height={s.h}
@@ -189,19 +151,9 @@ function MarketMap({
                   >
                     {s.id}
                   </text>
-                  {/* icono (solo si hay espacio) */}
-                  {tall && (
-                    <text
-                      x={cx} y={s.y + s.h * 0.42}
-                      textAnchor="middle" fontSize="20"
-                      dominantBaseline="middle"
-                    >
-                      {CAT_ICON[s.cat]}
-                    </text>
-                  )}
                   {/* nombre */}
                   <text
-                    x={cx} y={s.y + s.h - (tall ? 12 : s.h * 0.32)}
+                    x={cx} y={cy + 4}
                     textAnchor="middle" fill="white"
                     fontSize="10" fontWeight="700"
                     fontFamily="Afacad, sans-serif"
@@ -267,7 +219,7 @@ function MarketMap({
           {/* ── Tooltip ── */}
           {hovered && !hoveredCat && (
             <div className="map-tooltip">
-              <span className="map-tooltip-icon">{CAT_ICON[hovered.cat]}</span>
+              <span className="map-tooltip-dot" style={{ backgroundColor: CAT_COLOR[hovered.cat] }} />
               <div className="map-tooltip-body">
                 <p className="map-tooltip-name">{hovered.full}</p>
                 <p className="map-tooltip-cat">{hovered.cat}</p>

@@ -622,4 +622,22 @@
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .sv-vendor-name {
+    font-size: 1.4rem;
+  }
+
+  .product-name {
+    font-size: 1rem;
+  }
+
+  .product-card-top {
+    padding: 0.75rem 0.75rem 0.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
 }

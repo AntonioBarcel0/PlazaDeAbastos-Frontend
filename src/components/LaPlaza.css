@@ -138,23 +138,15 @@
   padding: 50px 50px 80px;
 }
 
-.seasonal-badge-wrap {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 45px;
-}
-
-.seasonal-badge {
+.seasonal-title {
+  text-align: center;
   font-family: 'Alfa Slab One', serif;
   font-size: 1rem;
   font-weight: 400;
   color: var(--color-brand);
-  border: 1.5px solid var(--color-brand);
-  border-radius: var(--radius-btn);
-  padding: 12px 40px;
-  background: transparent;
-  letter-spacing: 0.5px;
-  cursor: default;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 /* --- Carrusel --- */
@@ -421,5 +413,47 @@
   .seasonal-btn {
     padding: 8px 22px;
     font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .laplaza-section {
+    padding: 35px 0 20px;
+  }
+
+  .laplaza-title {
+    font-size: 1.1rem;
+  }
+
+  .recommendations-wrap {
+    padding: 0 12px;
+  }
+
+  .recommendations-title {
+    font-size: 0.85rem;
+  }
+
+  .vendor-item {
+    font-size: 1.1rem;
+  }
+
+  .vendors-track {
+    gap: 35px;
+  }
+
+  .vendors-marquee {
+    margin-bottom: 40px;
+  }
+
+  .seasonal-section {
+    padding: 30px 12px 40px;
+  }
+
+  .seasonal-name {
+    font-size: 1rem;
+  }
+
+  .seasonal-overlay-bottom {
+    padding: 14px 12px 18px;
   }
 }
