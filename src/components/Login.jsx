@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Header from './Header';
+import Sidebar from './Sidebar';
 import './Login.css';
 import { api } from '../services/api';
 
@@ -16,7 +17,8 @@ function validateFields(email, password) {
   return errors;
 }
 
-function Login({ onBack, onMenuClick, onLogoClick, onLoginSuccess }) {
+function Login({ onBack, onLogoClick, onLoginSuccess, onSelectPuestoClick, onMapClick, onInstruccionesClick, onPageClick, onOrdersClick, onDashboardClick, user }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [touched, setTouched] = useState({ email: false, password: false });
@@ -47,7 +49,18 @@ function Login({ onBack, onMenuClick, onLogoClick, onLoginSuccess }) {
 
   return (
     <>
-      <Header onMenuClick={onMenuClick} onLoginClick={onBack} onLogoClick={onLogoClick} />
+      <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} onLoginClick={onBack} onLogoClick={onLogoClick} />
+      <Sidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onSelectPuestoClick={onSelectPuestoClick}
+        onMapClick={onMapClick}
+        onInstruccionesClick={onInstruccionesClick}
+        onPageClick={onPageClick}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={onDashboardClick}
+        user={user}
+      />
       <div className="login-page">
         <div className="login-container">
           <h1 className="login-title">Plaza de Abastos</h1>

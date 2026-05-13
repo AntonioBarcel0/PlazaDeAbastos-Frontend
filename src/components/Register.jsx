@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Header from './Header';
+import Sidebar from './Sidebar';
 import './Register.css';
 import { api } from '../services/api';
 
@@ -36,7 +37,8 @@ function validateFields(f) {
 const FIELDS = ['nombre', 'apellidos', 'email', 'telefono', 'direccion', 'password', 'confirmPassword'];
 const initialTouched = Object.fromEntries(FIELDS.map(f => [f, false]));
 
-function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick, onLoginSuccess }) {
+function Register({ onBack, onSwitchToLogin, onLogoClick, onLoginSuccess, onSelectPuestoClick, onMapClick, onInstruccionesClick, onPageClick, onOrdersClick, onDashboardClick, user }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [formData, setFormData] = useState({
     nombre: '', apellidos: '', email: '', telefono: '',
     direccion: '', role: 'cliente', password: '', confirmPassword: '',
@@ -93,7 +95,18 @@ function Register({ onBack, onSwitchToLogin, onMenuClick, onLogoClick, onLoginSu
 
   return (
     <>
-      <Header onMenuClick={onMenuClick} onLoginClick={onBack} onLogoClick={onLogoClick} />
+      <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} onLoginClick={onBack} onLogoClick={onLogoClick} />
+      <Sidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onSelectPuestoClick={onSelectPuestoClick}
+        onMapClick={onMapClick}
+        onInstruccionesClick={onInstruccionesClick}
+        onPageClick={onPageClick}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={onDashboardClick}
+        user={user}
+      />
       <div className="register-page">
         <div className="register-container">
           <h1 className="register-title">Plaza de Abastos</h1>
