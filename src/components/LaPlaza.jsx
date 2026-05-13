@@ -49,19 +49,29 @@ function LaPlaza({ onMarketplaceClick, onStoreClick }) {
 
   useEffect(() => {
     const key = todayKey();
-    const cached = localStorage.getItem(key);
-    if (cached) { try { setRecos(JSON.parse(cached)); } catch {} }
 
     api.getProducts().then(data => {
       const products = (data.products || data.productos || []).filter(p => p.disponible !== false && p.stock !== 0);
 
-      // Recomendaciones
-      if (!cached) {
-        const rand = seededRand(dateSeed());
-        const sel = pickN(products, 3, rand);
-        localStorage.setItem(key, JSON.stringify(sel));
-        setRecos(sel);
+      // Validar caché: descartar si algún producto ya no existe o no tiene imagen
+      const cached = localStorage.getItem(key);
+      let sel = null;
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          const ids = new Set(products.map(p => p.id));
+          const valid = parsed.every(p => p && ids.has(p.id));
+          if (valid) sel = parsed.map(p => products.find(fp => fp.id === p.id) || p);
+        } catch {}
       }
+
+      if (!sel) {
+        const rand = seededRand(dateSeed());
+        sel = pickN(products, 3, rand);
+        localStorage.setItem(key, JSON.stringify(sel));
+      }
+
+      setRecos(sel);
 
       // Productos de temporada
       const seasonal = products.filter(isSeasonalProduct);
