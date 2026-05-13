@@ -333,9 +333,15 @@ function App() {
           <Login
             onSwitchToRegister={() => navigate('register')}
             onBack={goBack}
-            onMenuClick={() => {}}
             onLogoClick={goHome}
             onLoginSuccess={handleLoginSuccess}
+            onSelectPuestoClick={() => navigate('select-puesto')}
+            onMapClick={() => navigate('map')}
+            onInstruccionesClick={() => navigate('instrucciones')}
+            onPageClick={navigate}
+            onOrdersClick={() => navigate('mis-pedidos')}
+            onDashboardClick={() => navigate('dashboard')}
+            user={user}
           />
         );
 
@@ -344,9 +350,15 @@ function App() {
           <Register
             onSwitchToLogin={() => navigate('login')}
             onBack={goBack}
-            onMenuClick={() => {}}
             onLogoClick={goHome}
             onLoginSuccess={handleLoginSuccess}
+            onSelectPuestoClick={() => navigate('select-puesto')}
+            onMapClick={() => navigate('map')}
+            onInstruccionesClick={() => navigate('instrucciones')}
+            onPageClick={navigate}
+            onOrdersClick={() => navigate('mis-pedidos')}
+            onDashboardClick={() => navigate('dashboard')}
+            user={user}
           />
         );
 
