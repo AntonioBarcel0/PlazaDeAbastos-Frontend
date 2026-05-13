@@ -91,6 +91,10 @@ function Footer() {
           alt="Plaza de Abastos"
           className="footer-brand-logo"
         />
+        <p className="footer-disclaimer">
+          Este sitio web es un proyecto académico sin ánimo de lucro, desarrollado como Trabajo de Fin de Grado.
+          Todos los datos, pagos y transacciones son ficticios.
+        </p>
       </div>
     </footer>
   );
