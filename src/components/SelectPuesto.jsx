@@ -24,7 +24,6 @@ const FILTER_KEYWORDS = {
 
 const SORT_OPTIONS = [
   { value: 'az', label: 'Nombre (A–Z)' },
-  { value: 'za', label: 'Nombre (Z–A)' },
   { value: 'cat', label: 'Categoría' },
 ];
 
@@ -95,7 +94,6 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
 
     result.sort((a, b) => {
       if (sortBy === 'az') return a.nombreCompleto.localeCompare(b.nombreCompleto);
-      if (sortBy === 'za') return b.nombreCompleto.localeCompare(a.nombreCompleto);
       if (sortBy === 'cat') {
         const catA = (a.categorias && a.categorias[0]) || '';
         const catB = (b.categorias && b.categorias[0]) || '';
@@ -192,15 +190,6 @@ function SelectPuesto({ user, onLogout, onDashboardClick, onPuestoSelect, onHome
           </div>
 
           <div className="sp-actions">
-            {/* Filtrar — las categorías ya actúan de filtro */}
-            <button
-              className="sp-action-btn"
-              onClick={() => setSelectedCategoria('Todos')}
-              title="Quitar filtros"
-            >
-              Filtrar
-            </button>
-
             {/* Ordenar con dropdown */}
             <div className="sp-sort-wrapper" ref={sortRef}>
               <button

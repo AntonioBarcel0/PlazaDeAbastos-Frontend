@@ -1,33 +1,84 @@
 import { useState, useRef, useEffect } from 'react';
-import { LogIn, ShoppingBasket, User, ClipboardList, LayoutDashboard, LogOut, X } from 'lucide-react';
+import { LogIn, ShoppingBasket, User, ClipboardList, LayoutDashboard, LogOut, X, Search, ArrowLeft } from 'lucide-react';
 import { useCart, isKg, itemSubtotal, isCestaItem } from '../context/CartContext';
-import { BASE_URL } from '../services/api';
+import { api, BASE_URL } from '../services/api';
 import './Header.css';
 
 function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDashboardClick, onCartClick, onOrdersClick }) {
   const { cart, cartCount, cartByVendor, cartTotal, removeFromCart, updateQuantity, clearCart } = useCart();
   const [profileOpen, setProfileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const profileRef = useRef(null);
+  const searchRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
         setProfileOpen(false);
       }
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setSearchOpen(false);
+      }
     };
-    if (profileOpen) document.addEventListener('mousedown', handleClickOutside);
+    if (profileOpen || searchOpen) document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [profileOpen]);
+  }, [profileOpen, searchOpen]);
+
+  // Cargar productos una sola vez cuando se abre el buscador
+  useEffect(() => {
+    if (searchOpen && allProducts.length === 0) {
+      api.getProducts().then(data => {
+        const products = (data.products || data.productos || []).filter(p => p.disponible !== false && p.stock !== 0);
+        setAllProducts(products);
+      }).catch(() => {});
+    }
+  }, [searchOpen]);
+
+  useEffect(() => {
+    if (!searchTerm.trim()) { setSearchResults([]); return; }
+    const q = searchTerm.toLowerCase();
+    const results = allProducts.filter(p =>
+      p.nombre.toLowerCase().includes(q) ||
+      (p.categoria && p.categoria.toLowerCase().includes(q))
+    ).slice(0, 8);
+    setSearchResults(results);
+  }, [searchTerm, allProducts]);
 
   const handleCartToggle = () => {
     setCartOpen(prev => !prev);
     setProfileOpen(false);
+    setSearchOpen(false);
   };
 
   const handleProfileToggle = () => {
     setProfileOpen(prev => !prev);
     setCartOpen(false);
+    setSearchOpen(false);
+  };
+
+  const handleSearchToggle = () => {
+    setSearchOpen(prev => !prev);
+    setProfileOpen(false);
+    setCartOpen(false);
+    setSearchTerm('');
+    setSearchResults([]);
+  };
+
+  const handleSearchSelect = (product) => {
+    setSearchOpen(false);
+    setSearchTerm('');
+    setSearchResults([]);
+    if (product.vendedorId) {
+      sessionStorage.setItem('selectedVendedorId', product.vendedorId);
+      sessionStorage.setItem('currentView', 'store-view');
+      window.scrollTo(0, 0);
+      window.history.pushState({ view: 'store-view' }, '');
+      window.dispatchEvent(new PopStateEvent('popstate', { state: { view: 'store-view' } }));
+    }
   };
 
   const handleCheckout = () => {
@@ -35,11 +86,21 @@ function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDash
     onCartClick();
   };
 
+  const currentView = sessionStorage.getItem('currentView') || 'home';
+  const showBack = currentView !== 'home';
+
   return (
     <header className="header">
-      <button className="menu-btn" onClick={onMenuClick} aria-label="Abrir menú">
-        Menú
-      </button>
+      <div className="header-left">
+        {showBack && (
+          <button className="back-arrow-btn" onClick={() => window.history.back()} aria-label="Volver">
+            <ArrowLeft size={22} strokeWidth={2.4} />
+          </button>
+        )}
+        <button className="menu-btn" onClick={onMenuClick} aria-label="Abrir menú">
+          Menú
+        </button>
+      </div>
 
       <button className="logo" onClick={onLogoClick} aria-label="Ir al inicio">
         <img
@@ -50,6 +111,58 @@ function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDash
       </button>
 
       <div className="right-section">
+        {/* Buscador */}
+        <div className="search-wrapper" ref={searchRef}>
+          <button
+            className="search-btn"
+            onClick={handleSearchToggle}
+            aria-label="Buscar productos"
+            aria-expanded={searchOpen}
+          >
+            <Search size={22} strokeWidth={2.4} />
+          </button>
+
+          {searchOpen && (
+            <div className="search-dropdown">
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Buscar producto..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                autoFocus
+              />
+              {searchResults.length > 0 && (
+                <ul className="search-results">
+                  {searchResults.map(product => (
+                    <li key={product.id}>
+                      <button
+                        className="search-result-item"
+                        onClick={() => handleSearchSelect(product)}
+                      >
+                        {product.imagen && (
+                          <img
+                            src={product.imagen.startsWith('http') ? product.imagen : `${BASE_URL}${product.imagen}`}
+                            alt=""
+                            className="search-result-img"
+                          />
+                        )}
+                        <div className="search-result-info">
+                          <span className="search-result-name">{product.nombre}</span>
+                          <span className="search-result-price">{parseFloat(product.precio).toFixed(2)}/{product.unidad}</span>
+                        </div>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {searchTerm.trim() && searchResults.length === 0 && (
+                <p className="search-no-results">Sin resultados</p>
+              )}
+            </div>
+          )}
+        </div>
+
         {user ? (
           <div className="profile-wrapper" ref={profileRef}>
             <button

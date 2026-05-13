@@ -153,11 +153,24 @@
 }
 
 @media (max-width: 480px) {
+  .footer {
+    padding: 40px 16px 30px;
+  }
+
   .footer-nav {
     grid-template-columns: 1fr;
   }
 
   .footer-brand-logo {
-    height: 70px;
+    height: 60px;
+  }
+
+  .footer-submit {
+    font-size: 1.2rem;
+    padding: 12px 30px;
+  }
+
+  .footer-disclaimer {
+    font-size: 0.72rem;
   }
 }
