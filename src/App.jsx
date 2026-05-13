@@ -259,7 +259,10 @@ function App() {
           onSelectPuestoClick={() => navigate('select-puesto')}
           onCartClick={handleCartClick}
           onOrdersClick={handleOrdersClick}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
           onPageClick={handlePageClick}
+          onLoginClick={() => navigate('loginOptions')}
         />;
 
       case 'cart':
@@ -325,6 +328,13 @@ function App() {
             onRegisterClick={() => navigate('register')}
             onBack={goBack}
             onLogoClick={goHome}
+            onSelectPuestoClick={() => navigate('select-puesto')}
+            onMapClick={handleMapClick}
+            onInstruccionesClick={handleInstruccionesClick}
+            onPageClick={handlePageClick}
+            onOrdersClick={handleOrdersClick}
+            onDashboardClick={() => navigate('admin-dashboard')}
+            user={user}
           />
         );
 

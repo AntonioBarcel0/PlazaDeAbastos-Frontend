@@ -142,6 +142,7 @@ function StoreView({ vendedorId, user, onLogout, onDashboardClick, onBack, onHom
         user={user}
         onOrdersClick={onOrdersClick}
         onDashboardClick={onDashboardClick}
+        onLoginClick={onLoginClick}
       />
 
       {/* ── Hero del puesto ── */}

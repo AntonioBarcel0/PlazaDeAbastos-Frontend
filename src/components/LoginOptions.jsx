@@ -1,13 +1,28 @@
+import { useState } from 'react';
 import Header from './Header';
+import Sidebar from './Sidebar';
 import './LoginOptions.css';
 
-function LoginOptions({ onRegisterClick, onLoginClick, onMenuClick, onBack, onLogoClick }) {
+function LoginOptions({ onRegisterClick, onLoginClick, onBack, onLogoClick, onSelectPuestoClick, onMapClick, onInstruccionesClick, onPageClick, onOrdersClick, onDashboardClick, user }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <>
-      <Header 
-        onMenuClick={onMenuClick} 
+      <Header
+        onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         onLoginClick={onBack}
         onLogoClick={onLogoClick}
+      />
+      <Sidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onSelectPuestoClick={onSelectPuestoClick}
+        onMapClick={onMapClick}
+        onInstruccionesClick={onInstruccionesClick}
+        onPageClick={onPageClick}
+        onOrdersClick={onOrdersClick}
+        onDashboardClick={onDashboardClick}
+        onLoginClick={onLoginClick}
+        user={user}
       />
       <div className="login-options-page">
         <div className="login-options-container">

@@ -12,7 +12,7 @@ import './ProductDetail.css';
 const GRAM_STEP = 50;
 const GRAM_MIN  = 50;
 
-function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick, onPageClick }) {
+function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, onBack, onHomeClick, onMarketplaceClick, onSelectPuestoClick, onCartClick, onOrdersClick, onMapClick, onInstruccionesClick, onPageClick, onLoginClick }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [gramos, setGramos] = useState(250); // solo para productos por peso
   const { cart, addToCart, updateQuantity } = useCart();
@@ -36,7 +36,7 @@ function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, on
     <div className="product-detail-container">
       <Header
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
-        onLoginClick={() => {}}
+        onLoginClick={onLoginClick}
         onLogoClick={onHomeClick}
         user={user}
         onLogout={onLogout}
@@ -49,10 +49,13 @@ function ProductDetail({ product, vendedor, user, onLogout, onDashboardClick, on
         onClose={() => setSidebarOpen(false)}
         onMarketplaceClick={onMarketplaceClick}
         onSelectPuestoClick={onSelectPuestoClick}
+        onMapClick={onMapClick}
+        onInstruccionesClick={onInstruccionesClick}
         onPageClick={onPageClick}
         user={user}
         onOrdersClick={onOrdersClick}
         onDashboardClick={onDashboardClick}
+        onLoginClick={onLoginClick}
       />
 
       <div className="product-detail-layout">
