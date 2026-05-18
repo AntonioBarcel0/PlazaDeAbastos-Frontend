@@ -25,11 +25,15 @@ import FAQ from './components/FAQ';
 import Privacidad from './components/Privacidad';
 import Terminos from './components/Terminos';
 import Cookies from './components/Cookies';
+import ClientProfile from './components/ClientProfile';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 import LogoutModal from './components/LogoutModal';
 import { CartProvider } from './context/CartContext';
 import { api } from './services/api';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import './App.css';
+import './components/AuthForms.css';
 
 function App() {
   const [currentView, setCurrentView] = useState(() => {
@@ -84,6 +88,32 @@ function App() {
     // Verificar si hay usuario logueado
     const userData = api.getCurrentUser();
     if (userData) setUser(userData);
+
+    // Manejar tokens de verificación y reset en la URL
+    const params = new URLSearchParams(window.location.search);
+    const verifyToken = params.get('verify');
+    const resetToken = params.get('reset');
+    if (verifyToken) {
+      api.verifyEmail(verifyToken).then(data => {
+        toast.success(data.message || 'Email verificado correctamente');
+        // Actualizar usuario en localStorage si está logueado
+        if (userData) {
+          const updated = { ...userData, emailVerificado: true };
+          localStorage.setItem('user', JSON.stringify(updated));
+          setUser(updated);
+        }
+      }).catch(err => {
+        toast.error(err.message || 'Error al verificar email');
+      }).finally(() => {
+        window.history.replaceState({}, '', window.location.pathname);
+      });
+    }
+    if (resetToken) {
+      sessionStorage.setItem('resetToken', resetToken);
+      window.history.replaceState({}, '', window.location.pathname);
+      sessionStorage.setItem('currentView', 'reset-password');
+      setCurrentView('reset-password');
+    }
 
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
@@ -364,6 +394,7 @@ function App() {
             onOrdersClick={() => navigate('mis-pedidos')}
             onDashboardClick={() => navigate('dashboard')}
             user={user}
+            onForgotPassword={() => navigate('forgot-password')}
           />
         );
 
@@ -383,6 +414,40 @@ function App() {
             user={user}
           />
         );
+
+      case 'forgot-password':
+        return (
+          <ForgotPassword
+            onBack={() => navigate('login')}
+            onLogoClick={goHome}
+          />
+        );
+
+      case 'reset-password':
+        return (
+          <ResetPassword
+            onLoginClick={() => navigate('login')}
+            onLogoClick={goHome}
+          />
+        );
+
+      case 'mi-perfil':
+        if (!user) { goHome(); return null; }
+        return <ClientProfile
+          user={user}
+          onLogout={handleLogout}
+          onDashboardClick={() => navigate('admin-dashboard')}
+          onHomeClick={goHome}
+          onMarketplaceClick={() => navigate('marketplace')}
+          onSelectPuestoClick={() => navigate('select-puesto')}
+          onCartClick={handleCartClick}
+          onOrdersClick={handleOrdersClick}
+          onMapClick={handleMapClick}
+          onInstruccionesClick={handleInstruccionesClick}
+          onPageClick={handlePageClick}
+          onLoginClick={() => navigate('loginOptions')}
+          onUserUpdate={(updated) => setUser(updated)}
+        />;
 
       case 'mis-pedidos':
         if (!user) { goHome(); return null; }
@@ -576,9 +641,24 @@ function App() {
     }
   };
 
+  const handleResendVerification = async () => {
+    try {
+      await api.resendVerification();
+      toast.success('Email de verificación reenviado');
+    } catch (err) {
+      toast.error(err.message || 'Error al reenviar');
+    }
+  };
+
   return (
     <CartProvider>
       <div className="app">
+        {user && user.emailVerificado === false && (
+          <div className="email-verify-banner">
+            <span>Tu email no está verificado. Revisa tu bandeja de entrada.</span>
+            <button onClick={handleResendVerification}>Reenviar email</button>
+          </div>
+        )}
         {renderView()}
       </div>
       <Toaster position="top-right" />

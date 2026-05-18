@@ -1,6 +1,15 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext(null);
+
+const CART_STORAGE_KEY = 'plaza_cart';
+
+const loadCart = () => {
+  try {
+    const raw = localStorage.getItem(CART_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+};
 
 // Unidades que se venden por peso y cuya cantidad se almacena en gramos
 export const isKg = (unidad) => unidad === 'kg';
@@ -17,7 +26,11 @@ export const isCestaItem = (item) => item.itemType === 'cesta';
 export function CartProvider({ children }) {
   // Cada item almacena: productId, nombre, precio, unidad, imagen, cantidad, stock,
   //                      vendedorId, vendedorNombre
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(loadCart);
+
+  useEffect(() => {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  }, [cart]);
 
   // Los productos por peso cuentan como 1 en el badge, no como sus gramos
   const cartCount = cart.reduce(
@@ -153,6 +166,7 @@ export function CartProvider({ children }) {
 
   const clearCart = () => {
     setCart([]);
+    localStorage.removeItem(CART_STORAGE_KEY);
   };
 
   return (

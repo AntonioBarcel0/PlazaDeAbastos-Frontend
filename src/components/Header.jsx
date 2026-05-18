@@ -184,6 +184,18 @@ function Header({ onMenuClick, onLoginClick, onLogoClick, user, onLogout, onDash
                   </p>
                 </div>
                 <div className="profile-dropdown-divider" />
+                {user.role === 'cliente' && (
+                  <button className="profile-dropdown-item" onClick={() => {
+                    setProfileOpen(false);
+                    sessionStorage.setItem('currentView', 'mi-perfil');
+                    window.scrollTo(0, 0);
+                    window.history.pushState({ view: 'mi-perfil' }, '');
+                    window.dispatchEvent(new PopStateEvent('popstate', { state: { view: 'mi-perfil' } }));
+                  }}>
+                    <User size={18} strokeWidth={2} />
+                    Mi perfil
+                  </button>
+                )}
                 {user.role === 'cliente' && onOrdersClick && (
                   <button className="profile-dropdown-item" onClick={() => { setProfileOpen(false); onOrdersClick(); }}>
                     <ClipboardList size={18} strokeWidth={2} />

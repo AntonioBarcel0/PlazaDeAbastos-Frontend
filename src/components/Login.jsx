@@ -17,7 +17,7 @@ function validateFields(email, password) {
   return errors;
 }
 
-function Login({ onBack, onLogoClick, onLoginSuccess, onSelectPuestoClick, onMapClick, onInstruccionesClick, onPageClick, onOrdersClick, onDashboardClick, user }) {
+function Login({ onBack, onLogoClick, onLoginSuccess, onSelectPuestoClick, onMapClick, onInstruccionesClick, onPageClick, onOrdersClick, onDashboardClick, user, onForgotPassword }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -103,6 +103,12 @@ function Login({ onBack, onLogoClick, onLoginSuccess, onSelectPuestoClick, onMap
             <button type="submit" className="login-button" disabled={loading}>
               {loading ? 'Iniciando sesión...' : 'Enviar'}
             </button>
+
+            {onForgotPassword && (
+              <button type="button" className="login-forgot" onClick={onForgotPassword}>
+                ¿Has olvidado tu contraseña?
+              </button>
+            )}
           </form>
         </div>
       </div>

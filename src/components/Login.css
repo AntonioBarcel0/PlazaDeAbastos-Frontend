@@ -113,6 +113,21 @@
   transform: scale(0.98);
 }
 
+.login-forgot {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 4px;
+  transition: color 0.2s;
+}
+
+.login-forgot:hover {
+  color: white;
+}
+
 @media (max-width: 768px) {
   .login-page {
     padding-top: 90px;
