@@ -1,0 +1,210 @@
+.auth-page {
+  width: 100%;
+  min-height: var(--full-vh);
+  background-color: var(--color-brand);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.auth-header {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.auth-back {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.auth-back:hover {
+  color: white;
+}
+
+.auth-logo {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.auth-logo-img {
+  height: 40px;
+}
+
+.auth-main {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 60px;
+  gap: 32px;
+}
+
+.auth-title {
+  font-family: 'Alfa Slab One', cursive;
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: white;
+  text-align: center;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.auth-subtitle {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  text-align: center;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.auth-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.auth-field {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.auth-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  align-self: flex-start;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 16px 20px;
+  min-height: 52px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--color-brand);
+  background-color: white;
+  border: none;
+  border-radius: var(--radius-btn);
+  outline: none;
+  text-align: center;
+}
+
+.auth-input::placeholder {
+  color: var(--color-brand);
+  opacity: 0.6;
+}
+
+.auth-btn {
+  width: 100%;
+  max-width: 400px;
+  padding: 16px;
+  min-height: 52px;
+  background-color: white;
+  color: var(--color-brand);
+  border: none;
+  border-radius: var(--radius-btn);
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 8px;
+}
+
+.auth-btn:hover:not(:disabled) {
+  background-color: #f0e0e2;
+}
+
+.auth-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.auth-success p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.auth-hint {
+  font-size: 0.88rem !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* ── Email verification banner ─────────────── */
+.email-verify-banner {
+  position: fixed;
+  top: 120px;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  background-color: #fff8e1;
+  border-bottom: 1px solid #f9a825;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 0.92rem;
+  color: #555;
+}
+
+.email-verify-banner button {
+  background-color: var(--color-brand);
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.email-verify-banner button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .auth-title {
+    font-size: 2rem;
+  }
+
+  .auth-main {
+    padding-top: 40px;
+  }
+
+  .email-verify-banner {
+    top: 55px;
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-size: 0.85rem;
+  }
+}

@@ -62,6 +62,68 @@ export const api = {
     return user ? JSON.parse(user) : null;
   },
 
+  getProfile: async () => {
+    const response = await fetch(`${API_URL}/auth/profile`, {
+      headers: getAuthHeaders()
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al obtener perfil');
+    return data;
+  },
+
+  verifyEmail: async (token) => {
+    const response = await fetch(`${API_URL}/auth/verify/${token}`);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al verificar email');
+    return data;
+  },
+
+  resendVerification: async () => {
+    const response = await fetch(`${API_URL}/auth/resend-verification`, {
+      method: 'POST',
+      headers: getAuthHeaders()
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al reenviar verificación');
+    return data;
+  },
+
+  forgotPassword: async (email) => {
+    const response = await fetch(`${API_URL}/auth/forgot-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al procesar solicitud');
+    return data;
+  },
+
+  resetPassword: async (token, password) => {
+    const response = await fetch(`${API_URL}/auth/reset-password/${token}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al restablecer contraseña');
+    return data;
+  },
+
+  updateProfile: async (profileData) => {
+    const response = await fetch(`${API_URL}/auth/profile`, {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(profileData)
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al actualizar perfil');
+    if (data.user) {
+      localStorage.setItem('user', JSON.stringify(data.user));
+    }
+    return data;
+  },
+
   // ============== PRODUCTOS ==============
 
   getProducts: async (filters = {}) => {
