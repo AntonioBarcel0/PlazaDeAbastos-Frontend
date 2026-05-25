@@ -110,16 +110,13 @@ describe('SelectPuesto', () => {
   });
 
   // 7
-  test('ordenar Z-A invierte el orden de los puestos visibles', async () => {
+  test('el orden por defecto (A-Z) muestra los puestos de menor a mayor nombre', async () => {
     await renderAndWait();
 
-    fireEvent.click(screen.getByRole('button', { name: /nombre \(a/i }));
-    fireEvent.click(screen.getByText('Nombre (Z–A)'));
-
     const nombres = screen.getAllByRole('heading', { level: 3 }).map(h => h.textContent);
-    // Z-A: María (M) > Juan (J) > Dolores (D)
-    expect(nombres[0]).toBe('María Josefa Molina');
-    expect(nombres[nombres.length - 1]).toBe('Dolores Muñoz Guerrero');
+    // A-Z: Dolores (D) < Juan (J) < María (M)
+    expect(nombres[0]).toBe('Dolores Muñoz Guerrero');
+    expect(nombres[nombres.length - 1]).toBe('María Josefa Molina');
   });
 
   // 8
@@ -158,13 +155,13 @@ describe('SelectPuesto', () => {
   });
 
   // 11
-  test('el botón "Filtrar" resetea el filtro de categoría', async () => {
+  test('el botón "Todos" resetea el filtro de categoría', async () => {
     await renderAndWait();
 
     fireEvent.click(screen.getByRole('button', { name: 'Frutería' }));
     expect(screen.queryByText('Dolores Muñoz Guerrero')).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Filtrar' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Todos' }));
     expect(screen.getByText('Dolores Muñoz Guerrero')).toBeInTheDocument();
   });
 

@@ -175,7 +175,9 @@ describe('ProductDetail', () => {
   test('muestra el precio calculado según los gramos seleccionados', () => {
     renderDetail({ product: PRODUCT_KG });
     // 250 g × 1.80 €/kg = 0.45 €
-    expect(screen.getByText(/0\.45€/)).toBeInTheDocument();
+    expect(screen.getByText((_, el) =>
+      el?.classList?.contains('product-detail-gram-price') && el?.textContent?.includes('0.45')
+    )).toBeInTheDocument();
   });
 
   // 16
