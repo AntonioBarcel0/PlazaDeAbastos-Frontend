@@ -518,7 +518,7 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
                       type="number"
                       required
                       min="0"
-                      step="0.01"
+                      step="any"
                       placeholder="0.00"
                       value={cestaForm.precio}
                       onChange={e => setCestaForm(p => ({ ...p, precio: e.target.value }))}
