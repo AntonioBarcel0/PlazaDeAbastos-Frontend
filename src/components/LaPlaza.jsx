@@ -36,24 +36,29 @@ function pickN(arr, n, rand) {
 function todayKey() { const d = new Date(); return `recos_${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }
 function dateSeed() { const d = new Date(); return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate(); }
 
-function LaPlaza({ onMarketplaceClick, onStoreClick }) {
+function LaPlaza({ onMarketplaceClick, onStoreClick, onProductClick }) {
   const [recos, setRecos] = useState([null, null, null]);
   const [seasonalProducts, setSeasonalProducts] = useState([]);
   const [seasonalPage, setSeasonalPage] = useState(0);
   const [isSliding, setIsSliding] = useState(false);
   const [slideDirection, setSlideDirection] = useState('next');
   const [vendors, setVendors] = useState([]);
+  const [vendorsMap, setVendorsMap] = useState({});
   const carouselRef = useRef(null);
 
   useEffect(() => {
     api.getVendedores().then(data => {
       const normalize = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-      const filtered = (data.vendedores || []).filter(v => {
+      const all = data.vendedores || [];
+      const filtered = all.filter(v => {
         const esp = normalize(v.especialidad || '');
         const cats = (v.categorias || []).map(normalize);
         return !EXCLUDED_KEYWORDS.some(kw => esp.includes(kw) || cats.some(c => c.includes(kw)));
       });
       setVendors(filtered);
+      const map = {};
+      all.forEach(v => { map[v.id] = v; });
+      setVendorsMap(map);
     }).catch(() => {});
   }, []);
 
@@ -139,8 +144,8 @@ function LaPlaza({ onMarketplaceClick, onStoreClick }) {
               <div
                 key={i}
                 className="rec-card"
-                onClick={() => producto?.vendedorId && onStoreClick && onStoreClick(producto.vendedorId)}
-                style={{ cursor: producto?.vendedorId ? 'pointer' : 'default' }}
+                onClick={() => producto && onProductClick && onProductClick(producto, vendorsMap[producto.vendedorId])}
+                style={{ cursor: producto ? 'pointer' : 'default' }}
               >
                 {producto?.imagen && (
                   <img src={producto.imagen.startsWith('http') ? producto.imagen : `${BASE_URL}${producto.imagen}`} alt={producto.nombre} className="rec-image" />
@@ -178,8 +183,8 @@ function LaPlaza({ onMarketplaceClick, onStoreClick }) {
                   <div
                     key={product.id}
                     className="seasonal-card"
-                    onClick={() => product.vendedorId && onStoreClick && onStoreClick(product.vendedorId)}
-                    style={{ cursor: product.vendedorId ? 'pointer' : 'default' }}
+                    onClick={() => onProductClick && onProductClick(product, vendorsMap[product.vendedorId])}
+                    style={{ cursor: 'pointer' }}
                   >
                     {product.imagen ? (
                       <img
@@ -197,7 +202,7 @@ function LaPlaza({ onMarketplaceClick, onStoreClick }) {
                       <div className="seasonal-overlay-bottom">
                         <h3 className="seasonal-name">{product.nombre}</h3>
                         <p className="seasonal-price">{parseFloat(product.precio).toFixed(2)}€/{product.unidad}</p>
-                        <button className="seasonal-btn" onClick={(e) => { e.stopPropagation(); product.vendedorId && onStoreClick && onStoreClick(product.vendedorId); }}>
+                        <button className="seasonal-btn" onClick={(e) => { e.stopPropagation(); onProductClick && onProductClick(product, vendorsMap[product.vendedorId]); }}>
                           Ver producto
                         </button>
                       </div>

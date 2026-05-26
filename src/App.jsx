@@ -232,6 +232,7 @@ function App() {
           onInstruccionesClick={handleInstruccionesClick}
           onPageClick={handlePageClick}
           onStoreClick={handleStoreClick}
+          onProductClick={handleProductClick}
         />;
 
       case 'select-puesto':
