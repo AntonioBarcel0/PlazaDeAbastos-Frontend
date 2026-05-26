@@ -515,10 +515,9 @@ function AdminDashboard({ user: propUser, onLogout, onBackHome, onSelectPuestoCl
                   <div className="form-group">
                     <label>Precio (€)</label>
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="decimal"
                       required
-                      min="0"
-                      step="any"
                       placeholder="0.00"
                       value={cestaForm.precio}
                       onChange={e => setCestaForm(p => ({ ...p, precio: e.target.value }))}
