@@ -5,10 +5,7 @@ import { api, BASE_URL } from '../services/api';
 import './LaPlaza.css';
 
 
-const VENDORS = [
-  'Frutas Jurado', 'Frutas Padilla', 'Frutas Molina', 'Comestibles Rodríguez',
-  'Especias Moyano', 'Panadería Muñoz', 'Verduras Cortés', 'Jardinería Moreno',
-];
+const EXCLUDED_KEYWORDS = ['carnicer', 'pescader', 'charcuter', 'carne', 'pescado', 'marisco'];
 
 /* Keywords de temporada por estación (sin tildes, minúsculas) */
 const SEASON_KEYWORDS = {
@@ -45,7 +42,20 @@ function LaPlaza({ onMarketplaceClick, onStoreClick }) {
   const [seasonalPage, setSeasonalPage] = useState(0);
   const [isSliding, setIsSliding] = useState(false);
   const [slideDirection, setSlideDirection] = useState('next');
+  const [vendors, setVendors] = useState([]);
   const carouselRef = useRef(null);
+
+  useEffect(() => {
+    api.getVendedores().then(data => {
+      const normalize = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const filtered = (data.vendedores || []).filter(v => {
+        const esp = normalize(v.especialidad || '');
+        const cats = (v.categorias || []).map(normalize);
+        return !EXCLUDED_KEYWORDS.some(kw => esp.includes(kw) || cats.some(c => c.includes(kw)));
+      });
+      setVendors(filtered);
+    }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     const key = todayKey();
@@ -105,13 +115,21 @@ function LaPlaza({ onMarketplaceClick, onStoreClick }) {
         <h2 className="laplaza-title">La Plaza</h2>
 
         {/* Marquee de nombres de vendedores */}
-        <div className="vendors-marquee">
-          <div className="vendors-track">
-            {[...VENDORS, ...VENDORS].map((vendor, i) => (
-              <span key={i} className="vendor-item">{vendor}</span>
-            ))}
+        {vendors.length > 0 && (
+          <div className="vendors-marquee">
+            <div className="vendors-track">
+              {[...vendors, ...vendors].map((vendor, i) => (
+                <span
+                  key={i}
+                  className="vendor-item vendor-item--clickable"
+                  onClick={() => onStoreClick && onStoreClick(vendor.id)}
+                >
+                  {vendor.nombreCompleto}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Recomendaciones */}
         <div className="recommendations-wrap">
